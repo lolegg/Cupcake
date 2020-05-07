@@ -1,0 +1,77 @@
+﻿@model Cupcake.Plugin.PluginManagement.Models.PluginsModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.SystemName, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.SystemName)
+                                @Html.HiddenFor(p => p.Id)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.SystemName)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.FriendlyName, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.FriendlyName)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.FriendlyName)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Author, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Author)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Author)
+                        </div>
+                    </div>
+                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.BigVersion, new { @class = "input-group-addon" })
+                    @Html.Editor("BigVersion", "Enum4Bootstrap", new { selectList = Model.BigVersionList })
+                </div>
+                @Html.ValidationMessageFor(m => m.BigVersion)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.SmallVersion, new { @class = "input-group-addon" })
+                    @Html.Editor("SmallVersion", "Enum4Bootstrap", new { selectList = Model.SmallVersionList })
+                </div>
+                @Html.ValidationMessageFor(m => m.SmallVersion)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.Description, new { @class = "input-group-addon" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(m => m.Description)
+            </div>
+        </div>
+    </div>
+            }
+        </div>
+    </div>
+</div>

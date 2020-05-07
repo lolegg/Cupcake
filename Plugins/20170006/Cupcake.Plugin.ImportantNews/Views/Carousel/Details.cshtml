@@ -1,0 +1,119 @@
+﻿@model Cupcake.Plugin.ImportantNews.Models.CarouselModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Plugin.ImportantNews.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div id="not">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                      
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                     <div class="col-md-12">
+                         <div class="form-group">
+                             <div class="input-group">
+                                 <label class="input-group-addon" for="Title">轮播图所属模块</label>
+                                 @if (Model.CarouselType != null)
+                                 {  <div class="form-control"> @DataDictionaryHelper.GetSelectName(Model.CarouselType)</div>}
+                                 else
+                                 { <div class="form-control"> </div> }
+                             </div>
+                            
+                         </div>
+                     </div>
+                </div>
+                 <div class="row">
+                     <div class="col-md-12">
+                         <div class="form-group">
+                             <div class="input-group">
+                                 <label class="input-group-addon" for="Title">路径所属模块</label>
+                                 @if (Model.DetailsType != null)
+                                 {  <div class="form-control"> @DataDictionaryHelper.GetSelectName(Model.DetailsType)</div>}
+                                 else
+                                 { <div class="form-control"> </div> }
+                               
+                             </div>
+                       
+                         </div>
+                     </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">路径ID</label>
+                                @Html.EditorFor(m => m.PictureJumpPath)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.PictureJumpPath)
+                        </div>
+                    </div>
+                </div>
+                     <div class="row clearfix" id="imglit">
+                        @{
+                    if (Model.PictureUrl != null)
+                                    {
+                                        string[] imge = Model.PictureUrl.Split(',');
+                                        foreach (var it in imge)
+                                        {
+                                            if (it != "")
+                                            {
+                                                <div class="img_pailie"><img src="@it" style="width:100px; height:100px;margin-left:10px;"></div>
+                                            }
+                                        }
+                                    }
+                        }
+                 </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#edui1").prop('disabled', 'disabled')
+        $("#not input").prop('disabled', 'disabled')
+
+    });
+</script>
+<style>
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+
+        .img_pailie a {
+            position: absolute;
+            top: -14px;
+            right: -7px;
+        }
+</style>

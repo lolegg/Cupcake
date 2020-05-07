@@ -1,0 +1,97 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.NetWork.Domain.ErrorReporting>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetWork.Helper;
+@using Cupcake.Plugin.NetWork.Services;
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "表格错误报告");}
+                <div class="widget-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">标题</label>
+                                    @Html.Editor("Title", "String4Bootstrap")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                <button type="button" class="btn btn-default shiny" onclick="loadListView();"><i class="fa fa-search"></i> 查 找</button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        标题
+                                    </th>
+                                    <th>
+                                        所属下载
+                                    </th>
+                                    <th>
+                                        内容
+                                    </th>
+                                    <th>
+                                        创建时间
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{  
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Title
+                                        </td>
+                                        <td>
+                                            @*@service.GetByType(item.TheTitle)*@
+                                        </td>
+                                        <td>
+                                            @item.Content
+                                        </td>
+                                        <td>
+                                            @item.CreateDate
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-default btn-xs" onclick="showViewModal1('查看','/FormDownload/Details/@item.Id')"><i class="fa fa-info"></i> 查 看</button>
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否删除?','警告','/FormDownload/Delete/@item.Id')"><i class="glyphicon glyphicon-trash"></i> 删 除</button>
+                                        </td>
+                                    </tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+    </script>

@@ -1,0 +1,104 @@
+﻿    @model Cupcake.Plugin.News.Models.NewsModel
+    @using Cupcake.Web
+    @using Cupcake.Web.Models
+    @using Cupcake.Plugin.News.Helper
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    <style>
+    .wrap {
+        background: #fff;
+        margin: auto;
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 20px;
+        border-radius: 2px 2px 2px 2px;
+        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    }
+</style>
+<div id="not">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">标题</label>
+                                    @Html.EditorFor(m => m.Title)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">类型</label>
+                                   @if (Model.NewsType!=null){  <div class="form-control"> @DataDictionaryHelper.GetSelectName(Model.NewsType)</div>}
+                                     else{ <div class="form-control"> </div> }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                      <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布人</label>
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布时间</label>
+                                <span class="form-control">    @(string.Format("{0:g}", Model.publicTime))</span>
+                            </div>
+                           
+
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">内容</label>
+                                    <div class="wrap">
+                                        @(new HtmlString(Model.Content))
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@*<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+</script>*@
+
+<script>
+    $(document).ready(function () {
+        $("#edui1").prop('disabled', 'disabled')
+        $("#not input").prop('disabled', 'disabled')
+
+      
+    });
+</script>

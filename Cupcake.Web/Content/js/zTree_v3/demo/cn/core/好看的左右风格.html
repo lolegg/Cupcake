@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>metro-zTree</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../../../css/metro.css" rel="stylesheet" />
+    <script src="../../../js/jquery-1.4.4.min.js"></script>
+    <script src="../../../js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="../../../js/jquery.ztree.exedit.js"></script>
+    
+    <link href="../../../../../css/bootstrap-3.3.6.min.css" rel="stylesheet" />
+    <style type="text/css">
+        .container {
+            margin-left: 0px;
+            padding-left: 5px;
+            max-width:1366px;
+        }
+
+        .col-lg-4 {
+            padding-right: 5px;
+        }
+        .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+            padding-right:5px;
+        }
+
+        .row {
+            margin-top:10px;
+        }
+        .ztree input {
+            min-height:16px;
+            padding:0px;
+            margin:0px;
+        }
+
+        @media (min-width: 1200px){
+            .container {
+                width: 1355px;
+            }
+        }
+
+
+
+    </style>
+    <script src="../../../../../../Scripts/respond.min.js"></script>
+    <script>
+        var zTree;
+        var demoIframe;
+
+        function addHoverDom(treeId, treeNode) {
+           
+            var sObj = $("#" + treeNode.tId + "_span");
+            if (treeNode.editNameFlag || $("#addBtn_" + treeNode.tId).length > 0) return;
+            //var addStr = "<span class='button remove' id='removeBtn_" + treeNode.tId
+            //        + "' title='add node' onfocus='this.blur();'></span>";
+
+            var  addStr = "<span class='button add' id='addBtn_" + treeNode.tId + "'></span>";
+            //addStr += "<span class='button edit' id='editBtn_" + treeNode.tId + "'></span>";
+            sObj.after(addStr);
+            var btn = $("#addBtn_" + treeNode.tId);
+            if (btn) btn.bind("click", function () {
+                var newCount =100;
+                var zTree = $.fn.zTree.getZTreeObj("tree");
+                zTree.addNodes(treeNode, { id: (1000 + newCount), pId: treeNode.id, name: "new node" + (newCount++) });
+                return false;
+            });
+        };
+
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_" + treeNode.tId).unbind().remove();
+            $("#removeBtn_" + treeNode.tId).unbind().remove();
+            $("#editBtn_" + treeNode.tId).unbind().remove();
+        };
+
+        function zTreeOnRemove(event, treeId, treeNode) {
+            alert(treeNode.tId + ", " + treeNode.name);
+        }
+
+        var setting = {
+            check: {
+                enable: false
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: true
+            },
+            view: {
+                addHoverDom: addHoverDom,
+                removeHoverDom: removeHoverDom,
+                dblClickExpand: false,
+                showLine: true,
+                selectedMulti: false
+            },
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "parentid",
+                    rootPId: ""
+                }
+            },
+            callback: {
+                beforeClick: function (treeId, treeNode) {
+                    var zTree = $.fn.zTree.getZTreeObj("tree");
+
+                    alert(11111);
+
+                    if (treeNode.isParent) {
+                        zTree.expandNode(treeNode);
+                        return false;
+                    } else {
+                        location.href = treeNode.file + ".html";
+                        demoIframe.attr("src", treeNode.file + ".html");
+                        return true;
+                    }
+                },
+                onRemove: zTreeOnRemove
+            }
+        };
+
+        var zNodes = [
+            { id: 1, parentid: 0, Name: "[core] 基本功能 演示", open: true },
+            { id: 101, parentid: 1, Name: "最简单的树", file: "standardData" },
+           
+            { id: 2, parentid: 0, Name: "[excheck] 复/单选框功能 演示", open: false },
+            { id: 201, parentid: 2, Name: "Checkbox 勾选操作", file: "checkbox" },
+            { id: 206, parentid: 2, Name: "Checkbox nocheck 演示", file: "excheck/checkbox" },
+            { id: 207, parentid: 2, Name: "Checkbox chkDisabled 演示", file: "excheck/checkbox_chkDisabled" },
+            { id: 208, parentid: 2, Name: "Checkbox halfCheck 演示", file: "excheck/checkbox_halfCheck" },
+            { id: 202, parentid: 2, Name: "Checkbox 勾选统计", file: "excheck/checkbox_count" },
+            { id: 203, parentid: 2, Name: "用 zTree 方法 勾选 Checkbox", file: "excheck/checkbox_fun" },
+            { id: 204, parentid: 2, Name: "Radio 勾选操作", file: "excheck/radio" },
+            { id: 209, parentid: 2, Name: "Radio nocheck 演示", file: "excheck/radio_nocheck" },
+            { id: 210, parentid: 2, Name: "Radio chkDisabled 演示", file: "excheck/radio_chkDisabled" },
+            { id: 211, parentid: 2, Name: "Radio halfCheck 演示", file: "excheck/radio_halfCheck" },
+            { id: 205, parentid: 2, Name: "用 zTree 方法 勾选 Radio", file: "excheck/radio_fun" },
+
+            { id: 3, parentid: 0, Name: "[exedit] 编辑功能 演示", open: false },
+            { id: 301, parentid: 3, Name: "拖拽 节点 基本控制", file: "exedit/drag" },
+            { id: 302, parentid: 3, Name: "拖拽 节点 高级控制", file: "exedit/drag_super" },
+            { id: 303, parentid: 3, Name: "用 zTree 方法 移动 / 复制 节点", file: "exedit/drag_fun" },
+            { id: 304, parentid: 3, Name: "基本 增 / 删 / 改 节点", file: "exedit/edit" },
+            { id: 305, parentid: 3, Name: "高级 增 / 删 / 改 节点", file: "exedit/edit_super" },
+            { id: 306, parentid: 3, Name: "用 zTree 方法 增 / 删 / 改 节点", file: "exedit/edit_fun" },
+            { id: 307, parentid: 3, Name: "异步加载 & 编辑功能 共存", file: "exedit/async_edit" },
+            { id: 308, parentid: 3, Name: "多棵树之间 的 数据交互", file: "exedit/multiTree" },
+
+            { id: 4, parentid: 0, Name: "大数据量 演示", open: false },
+            { id: 401, parentid: 4, Name: "一次性加载大数据量", file: "bigdata/common" },
+            { id: 402, parentid: 4, Name: "分批异步加载大数据量", file: "bigdata/diy_async" },
+            { id: 403, parentid: 4, Name: "分批异步加载大数据量", file: "bigdata/page" },
+
+            { id: 5, parentid: 0, Name: "组合功能 演示", open: false },
+            { id: 501, parentid: 5, Name: "冻结根节点", file: "super/oneroot" },
+            { id: 502, parentid: 5, Name: "单击展开/折叠节点", file: "super/oneclick" },
+            { id: 503, parentid: 5, Name: "保持展开单一路径", file: "super/singlepath" },
+            { id: 504, parentid: 5, Name: "添加 自定义控件", file: "super/diydom" },
+            { id: 505, parentid: 5, Name: "checkbox / radio 共存", file: "super/checkbox_radio" },
+            { id: 506, parentid: 5, Name: "左侧菜单", file: "super/left_menu" },
+            { id: 513, parentid: 5, Name: "OutLook 样式的左侧菜单", file: "super/left_menuForOutLook" },
+            { id: 507, parentid: 5, Name: "下拉菜单", file: "super/select_menu" },
+            { id: 509, parentid: 5, Name: "带 checkbox 的多选下拉菜单", file: "super/select_menu_checkbox" },
+            { id: 510, parentid: 5, Name: "带 radio 的单选下拉菜单", file: "super/select_menu_radio" },
+            { id: 508, parentid: 5, Name: "右键菜单 的 实现", file: "super/rightClickMenu" },
+            { id: 511, parentid: 5, Name: "与其他 DOM 拖拽互动", file: "super/dragWithOther" },
+            { id: 512, parentid: 5, Name: "异步加载模式下全部展开", file: "super/asyncForAll" },
+
+            { id: 6, parentid: 0, Name: "其他扩展功能 演示", open: false },
+            { id: 601, parentid: 6, Name: "隐藏普通节点", file: "exhide/common" },
+            { id: 602, parentid: 6, Name: "配合 checkbox 的隐藏", file: "exhide/checkbox" },
+            { id: 603, parentid: 6, Name: "配合 radio 的隐藏", file: "exhide/radio" },
+             { id: 701, parentid: 101, Name: "测试", file: "exhide/radio" }
+        ];
+
+        $(document).ready(function () {
+            var t = $("#tree");
+            t = $.fn.zTree.init(t, setting, zNodes);
+            demoIframe = $("#testIframe");
+            demoIframe.bind("load", loadReady);
+            var zTree = $.fn.zTree.getZTreeObj("tree");
+            zTree.selectNode(zTree.getNodeByParam("id", 101));
+
+        });
+
+
+        function LoadTree()
+        {
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                <div class="panel panel-default" style="width:100%">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            角色
+                            <span class="panel-title   btn-group-xs navbar-right">
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-new-window" title="添加根节点"></span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-cloud" title="展开"></span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-eye-close" title="折叠"></span>
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-search" title="搜索"></span>
+                                </button>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="panel-body" style="height:443px;overflow-y: auto;padding:0px">
+                        <ul id="tree" class="ztree" style="width:100%; height:100% "></ul>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-xs-12" >
+                <div class="panel panel-default" style="width:100%">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            用户信息
+                            <span class="panel-title  btn-group-xs navbar-right">
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-user"></span> 新增
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm">
+                                    <span class="glyphicon glyphicon-user"></span> 选择
+                                </button>
+                            </span>
+                        </h3>
+                        
+                    </div>
+                    <div class="panel-body" style="height:400px;overflow-y: auto;">
+                        <div class="panel panel-default">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>姓名</th>
+                                        <th>手机</th>
+                                        <th>地址</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="success"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="warning"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="success"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="warning"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="success"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="warning"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="success"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                    <tr class="warning"><td>1</td><td>张三</td><td>18356146521</td><td>虹口区</td><td><a>编辑</a></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="panel-title">
+                            分页列表
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 地图标点
+SystemName: MapPoint
+Version: 1.0
+SupportedVersions: 2.0
+Author: Aaron
+DisplayOrder: 1
+FileName: Cupcake.Plugin.MapPoint.dll
+Description: 自定义地图标点

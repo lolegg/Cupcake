@@ -1,0 +1,115 @@
+﻿@model Cupcake.Core.IPagedList<MapModel>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.MapPoint.Domain
+@using Cupcake.Plugin.MapPoint.Models
+@using Cupcake.Web.Framework
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "地图信息");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Name">名称</label>
+                                @Html.Editor("Name", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">创建时间从</label>
+                                @Html.Editor("BeginDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                                <label class="input-group-addon">到</label>
+                                @Html.Editor("EndDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加地图', '/MapPoint/Create');")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    名称
+                                </th>
+                                <th>
+                                    图片
+                                </th>
+                                <th>
+                                    创建时间
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                       @if (item.ImageUrls.Count>0)
+                                       {
+                                           <img src="@item.ImageUrls[0]" />
+                                       }
+                                    </td>
+                                    <td>
+                                        @item.CreateDate
+                                    </td>
+                                    <td>
+                                        @Html.ButtonXS("添加坐标点", "glyphicon-map-marker", "showEditModal1('添加坐标点','/User/Edit/" + item.Id + "')")
+                                        @Html.ButtonXS("删除", "fa-times", "deleteDialog('删除','/User/AssignRoles/" + item.Id + "')", ButtonCss.Danger)
+                                        @*@if (item.Status == ObjectStatus.Enable)
+                                        {
+                                            @Html.ButtonXS("删除", "fa-delete", "disableDialog('/User/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                        }*@
+                                        <button type="button" class="btn btn-default btn-xs" onclick="showModal('编辑','/MapInformation/Modify/@item.Id')"><i class="fa fa-edit"></i> 修 改</button>
+                                        <button type="button" class="btn btn-default btn-xs" onclick="groupLoad('/MapInformation/Coordinate/@item.Id')"><i class="fa fa-plus"></i>添加坐标点</button>
+
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="disable('/MapInformation/Delete/@item.Id')"><i class="fa fa-frown-o"></i> 删 除</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });   
+</script>

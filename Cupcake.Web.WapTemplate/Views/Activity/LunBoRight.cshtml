@@ -1,0 +1,235 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModelsListModel
+@using Cupcake.Web.WapTemplate.Models
+@using Cupcake.Web.WapTemplate.Helper
+<link href="~/Content/base.css" rel="stylesheet" />
+<div class="width_auto clearfix">
+    <div class="width_auto clearfix">
+        <div class="box fl">
+            <div class="box_img">
+                <ul>
+                    @{
+                        if (Model!=null)
+                        {
+                            foreach (var item in Model.List)
+                            {
+                                if (item.Imgurl!=null)
+                                {
+                                    string[] imge = item.Imgurl.Split(',');
+                                    <li><img id="@item.Id" src="@imge[0]" height="176" width="256" alt="" /></li>
+                                }
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="box_tab"></div>
+        </div>
+        <div class="fr right_links" style="float:right">
+            <p class="zui">最新活动</p>
+            
+                @{
+                    if (Model != null)
+                    {
+                        foreach (var item in Model.List)
+                        {
+                            <p class="font14 title"><a name="@item.Id" href="/Activity/Details?Id=@item.Id">@item.Title</a></p>
+                            <span class="times" style="padding-top:0px;">@CommonHelper.ToYYYYMMDD(item.ReleaseDate)</span>
+                        }
+                    }
+                }
+           
+        </div>
+    </div>
+</div>
+<style>
+    .box_img img{
+        height:340px;
+        width:732px;
+    }
+</style>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".zui").next().children().css("color", "red");
+        var timejg = 3000;//轮播间隔时间
+        var size = $('.box_img ul li').size();
+        for (var i = 1; i <= size; i++) {
+            $('.box_tab').append('<a href="javascript:(void)">' + i + '</a>')
+        }
+        $('.box_img ul li').eq(0).show();
+        $('.box_tab a').eq(0).addClass('active')
+        $('.box_tab a').mouseover(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = $(this).index();
+            i = index;
+            $('.box_img ul li').eq(index).stop().fadeIn(300).siblings().stop().fadeOut(300);
+            var b = $('.box_img ul li').eq(i).children().attr("id");
+            $("[class='font14 title']").each(function () {
+                $(this).children().css("color", "");
+                var t = $(this).children().attr("name");
+                if (t == b) {
+                    $(this).children().css("color", "red");
+                }
+            })
+        });
+
+        var i = 0;
+        var time = setInterval(move, timejg);
+
+        function move() {
+            i++;
+            if (i == size) {
+                i = 0;
+            }
+
+            $('.box_tab a').eq(i).addClass('active').siblings().removeClass('active');
+            $('.box_img ul li').eq(i).fadeIn(300).siblings().fadeOut(300);
+
+             var b= $('.box_img ul li').eq(i).children().attr("id");
+             $("[class='font14 title']").each(function () {
+                 $(this).children().css("color", "");
+                var t = $(this).children().attr("name");
+                if(t==b)
+                {
+                    $(this).children().css("color", "red");
+                }
+            })
+        }
+
+        $('.box').hover(function () {
+            clearInterval(time);
+        }, function () {
+            time = setInterval(move, timejg);
+        });
+    });
+</script>
+
+
+<style>
+    .ztbh {
+        color:red;
+    }
+    .ygb_ch_img img {
+        width: 100%;
+        height: 150px;
+    }
+
+    .setDiv a {
+        display: inline-block;
+        color: #fff;
+        background: #B71818;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-size: 19px;
+        width: 241px;
+        height: 45px;
+        font-weight: bold;
+    }
+
+    .setDiv {
+        margin-top: -50px;
+        text-align: center;
+    }
+
+    .list_image li {
+        margin: 0px 15px 15px 15px;
+    }
+
+        .list_image li span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #000000;
+        }
+
+    .zui {
+        font-size: 17px;
+        margin-top: 10px;
+        padding-bottom: 21px;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 732px;
+        height: 340px;
+        margin: 10px auto 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .box_img {
+        width: 732px;
+        height: 340px;
+        overflow: hidden;
+    }
+
+        .box_img ul li {
+            position: absolute;
+            display: none;
+        }
+
+            .box_img ul li a {
+                display: block;
+                width: 732px;
+                height: 340px;
+                font-size: 100px;
+                text-align: center;
+                line-height: 250px;
+                color: #fff;
+            }
+
+                .box_img ul li a img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+    .box_tab {
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+
+        .box_tab a {
+            display: inline-block;
+            border-radius: 50%;
+            height: 12px;
+            width: 12px;
+            font-size: 0px;
+            background: #fff;
+            margin: 0 5px;
+            color: #333;
+        }
+
+            .box_tab a.active {
+                background: #09b;
+                color: #fff;
+            }
+
+    .zui {
+        background: url(/Content/zuixin.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    #wenjuan {
+        background: url(/Content/img/bi.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    .title {
+        width: 330px;
+        height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-bottom: 0px;
+    }
+</style>

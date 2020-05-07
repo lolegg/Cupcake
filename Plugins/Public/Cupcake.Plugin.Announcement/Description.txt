@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 通知公告
+SystemName: Announcement
+Version: 1.0
+SupportedVersions: 2.0
+Author: Aaron
+DisplayOrder: 1
+FileName: Cupcake.Plugin.Announcement.dll
+Description:通知公告模块

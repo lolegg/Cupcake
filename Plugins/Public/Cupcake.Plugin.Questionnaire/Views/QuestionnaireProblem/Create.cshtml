@@ -1,0 +1,52 @@
+﻿@model Cupcake.Plugin.Questionnaire.Models.QuestionnaireProblemModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Questionnaire
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.QuestionType, new { @class = "input-group-addon" })
+                                @Html.Editor("QuestionType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("答案类型") })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.QuestionType)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.IsRequired, new { @class = "input-group-addon" })
+                                @Html.Editor("IsRequired", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("是否必填") })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.IsRequired)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

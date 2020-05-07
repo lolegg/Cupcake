@@ -1,0 +1,5 @@
+﻿@if (ViewData.TemplateInfo.FormattedModelValue!=null)
+{
+    @Html.TextBox("", ViewData.TemplateInfo.FormattedModelValue, new { @class = "form-control date-picker", data_date_format = "yyyy-mm-dd" })
+}
+

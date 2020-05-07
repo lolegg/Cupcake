@@ -1,0 +1,124 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Questionnaire.Domain.QuestionnaireInfo>
+    @using Cupcake.Web
+    @using Cupcake.Web.Models
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.Questionnaire.Helper
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "问卷调查列表");}
+                <div class="widget-body">
+                    @using (Html.BeginForm(new AjaxOptions() { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">问卷调查名称</label>
+                                        @Html.Editor("Title", "String4Bootstrap")
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/Questionnaire/Create')")
+                                @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        问卷调查名称
+                                    </th>
+                                    <th >
+                                        描述
+                                    </th>
+                                    <th >
+                                        是否发布
+                                    </th>
+                                    <th>
+                                        发布时间
+                                    </th>
+                                    <th >操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i++)
+                                        </td>
+                                        <td width="200px">
+                                            <p style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; ">
+                                                @item.Title
+                                            </p>
+                                        </td>
+                                        <td width="300px"><p style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1; overflow: hidden; ">
+                                            @item.Desc
+                                            </p></td>
+                                        <td >
+                                            @(item.IsRelease == true ? "是" : "否")
+                                        </td>
+                                        <td>
+                                            @(item.IsRelease == true ? CommonHelper.ToYYYYMMDD(item.UpdateDate):"")
+                                        </td>
+                                        <td>
+                                            @if (item.IsRelease == false)
+                                            {
+                                                @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/Questionnaire/Edit/" + item.Id + "')")
+                                                @Html.ButtonXS("发布", "fa-hand-o-right", "dialog('是否确认发布?','提示','/Questionnaire/Activate/" + item.Id + "')")
+                                                @Html.ButtonXS("管理题目", "fa-file-text-o", "groupLoad('/QuestionnaireProblem/Index?QuestionSurveyId=" + item.Id + "')")
+                                            }
+                                            else
+                                            {
+                                                @Html.ButtonXS("取消发布", "fa-hand-o-left", "dialog('是否取消发布?','提示','/Questionnaire/Activate/" + item.Id + "')")
+                                                 @Html.ButtonXS("统计结果", "fa-list-ul", "showViewModal1('统计结果','/Questionnaire/Statistical/" + item.Id + "')")
+                                            }
+                                            @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/Questionnaire/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            initFormDate();
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+
+        function groupLoad(href) {
+            $('.page-body').load(href);
+        }
+    </script>
+<style>
+    .btn, .btn-default, .btn:focus, .btn-default:focus {
+        margin-right: 5px;
+    }
+</style>

@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 用户
+SystemName: MembersForWeb
+Version: 1.0
+SupportedVersions: 2.0
+Author: WHY
+DisplayOrder: 1
+FileName: Cupcake.Plugin.MembersForWeb.dll
+Description: plugin example that show how to develop a plugin

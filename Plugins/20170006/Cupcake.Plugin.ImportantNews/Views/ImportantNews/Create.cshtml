@@ -1,0 +1,77 @@
+﻿@model Cupcake.Plugin.ImportantNews.Models.ImportantNewsModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">新闻类型</label>
+                                @Html.DropDownListFor(m => m.NewsType, DataDictionaryHelper.GetSelectList("新闻类型"), new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.NewsType)
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布时间</label>
+                                @Html.Editor("ReleaseTime", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                                @Html.TextAreaFor(m => m.Content)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- 配置文件 -->
+<script src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script  src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var editor = new UE.ui.Editor({ initialFrameWidth: 487 });
+    editor.render("Content");
+   
+    $("#ReleaseTime").click(function () {
+        WdatePicker({ dateFmt: 'yyyy-MM-dd HH:mm', readOnly: true });
+    });
+
+</script>

@@ -1,0 +1,12 @@
+﻿@model Paging
+@using Cupcake.Web.Framework
+
+<div class="DTTTFooter">
+    <div class="col-md-6 form-group">
+        @Html.PagingInfo(Model)
+        @Html.Editor("PageSize", "PageSize4Bootstrap", new { selectList = EnumExtensions.GetPageSizeList() })
+    </div>
+    <div class="col-md-6 form-group text-right">
+        @Html.Pager(Model)
+    </div>
+</div>

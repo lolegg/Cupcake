@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 公众服务
+SystemName: PublicService
+Version: 1.0
+SupportedVersions: 2.0
+Author: tgh
+DisplayOrder: 1
+FileName: Cupcake.Plugin.PublicService.dll
+Description: plugin example that show how to develop a plugin

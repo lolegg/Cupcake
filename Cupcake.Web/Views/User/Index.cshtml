@@ -1,0 +1,129 @@
+﻿@model Cupcake.Core.IPagedList<UserModel>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "用户");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserName">用户名</label>
+                                @Html.Editor("UserName", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserType">用户类型</label>
+                                @Html.Editor("UserType", "Enum4Bootstrap", new { selectList = EnumExtensions.GetSelectList(typeof(UserType), "", "0") })
+                            </div>
+                        </div>  
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">创建时间从</label>
+                                @Html.Editor("BeginDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                                <label class="input-group-addon">到</label>
+                                @Html.Editor("EndDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                            </div>
+                        </div>                          
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加用户','/User/Create')")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    用户名
+                                </th>
+                                <th>
+                                    姓名
+                                </th>
+                                <th>
+                                    类型
+                                </th>
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    创建时间
+                                </th>
+                                <th>
+                                    上次登录时间
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @item.UserName
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                                <td>
+                                    @item.UserTypeDesc
+                                </td>
+                                <td>
+                                    @item.StatusDesc
+                                </td>
+                                <td>
+                                    @item.CreateDate
+                                </td>
+                                <td>
+                                    @item.LastLoginDate
+                                </td>
+                                <td>
+                                    @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑用户','/User/Edit/" + item.Id + "')")
+                                    @Html.ButtonXS("分配角色", "fa-users", "showEditModal1('分配角色','/User/AssignRoles/" + item.Id + "')")
+                                    @if (item.Status == ObjectStatus.Enable)
+                                    {
+                                        @Html.ButtonXS("禁用", "fa-pause", "disableDialog('/User/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                    }
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+</script>

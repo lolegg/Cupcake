@@ -1,0 +1,73 @@
+﻿@using Cupcake.Web.WapTemplate.edmx
+@using Cupcake.Web.WapTemplate.Helper
+
+
+
+<div class="fr right_links">
+    <p class="zui">最新新闻</p>
+
+    @{
+        var List = ViewBag.Newslist as List<News_News>;
+        if (List.Count>0)
+        {
+            foreach (var item in List)
+            {
+                <p class="font14 title"><a name="@item.Id" href="/News/Details?Id=@item.Id">@item.Title</a></p>
+                <span class="times" style="padding-top:0px;">@CommonHelper.ToYYYYMMDD(item.publicTime)</span>
+            }
+        }
+    }
+    <p class="look_more">
+        <a href="/News/SeeMore">查看更多</a>
+    </p>
+</div>
+
+<style>
+    .zui {
+        font-size: 17px;
+        margin-top: 10px;
+        padding-bottom: 21px;
+        font-weight: bold;
+        background: url(/Content/zuixin.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+    .title {
+        width: 330px;
+        height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-bottom: 0px;
+    }
+    .right_links p a {
+        color: #444444;
+        text-decoration: none;
+    }
+    .font14 {
+        font-size: 14px;
+    }
+    .right_links span {
+        display: block;
+        padding-bottom: 10px;
+        margin-bottom: 7px;
+        border-bottom: solid 1px #ccc;
+        color: #B8B1B1;
+        font-size: 12px;
+    }
+    .look_more {
+        height: 35px;
+        width: 100%;
+        text-align: center;
+        line-height: 35px;
+        background: #e1e1e1;
+    }
+        .look_more a {
+            display: block;
+            height: 100%;
+            color: #858585;
+            font-size: 16px;
+            text-decoration: none;
+        }
+</style>

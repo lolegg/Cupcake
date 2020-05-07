@@ -1,0 +1,394 @@
+﻿@model Cupcake.Web.Models.CreateTableModel
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Helper
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<script>
+    $(function () {
+
+        $('#tabs li:eq(0) a').tab('show');
+
+        $('#tabs a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+    });
+
+
+    function AddColumn()
+    {
+        var vtrnum = $("#tbcolumn tbody tr").length+1;
+
+        var vtr = "<tr><td>" + vtrnum + "</td><td><input name='ColumnName' class='form-control' placeholder='请输入列名' /></td><td><select name = 'ColumnType' class='form-control'><option value='-1'>请选择</option><option value='0'>NVarchar</option><option value='1'>Int</option><option value='2'>Bit</option><option value='3'>Date</option><option value='4'>NChar</option><option value='5'>Decimal</option><option value='6'>Float</option><option value='7'>NText</option></select></td><td><input class='form-control' name='ColumnLength' placeholder='请输入' type='text'/></td></tr>";
+        $("#tbcolumn tbody").append(vtr);
+    }
+
+    //基础信息保存
+    function SaveSubmit()
+    {
+        var vtablename = $("#TableName").val();
+        if(vtablename == undefined || vtablename == "")
+        {
+            alert("请输入表名");
+            $("#TableName").focus();
+            return;
+        }
+        var vresult = [];
+
+        $("#tbcolumn tbody tr").each(function () {
+
+            var vColumnName = $(this).children().children("input[name='ColumnName']").val();
+            var vColumnType = $(this).children().children("select").val();
+            var vColumnLength = $(this).children().children("input[name='ColumnLength']").val();            
+
+            if (vColumnName != undefined && vColumnName != '') {
+                if (vColumnLength == "")
+                {
+                    vColumnLength = "0";
+                }
+
+                var vData = '{"ColumnName":"' + vColumnName + '","ColumnType":"' + vColumnType + '","ColumnLength":"' + vColumnLength + '"}';
+                vresult.push(vData);
+            }
+        });
+
+        if(vresult.length != 0)
+        {
+            var vresult = "[" + vresult + "]";
+
+            var url = "@(Url.Action("CreateTable", "SetForm"))";
+            var vdata = "tablename=" + vtablename + "&column=" + vresult;
+
+            $.post(url, vdata, function (response) {
+                if (response.result == "fail")
+                {
+                    alert("建表失败,"+ response.msg);
+                }
+                else
+                {
+                    alert("建表成功！");
+                    //赋值
+                    var i = 1;
+                    $("#iTableName").append("<option>" + vtablename + "</option>");
+                    $("#tbcolumn tbody tr").each(function () {
+                        var vColumnName = $(this).children().children("input[name='ColumnName']").val();
+
+                        if (vColumnName != undefined && vColumnName != '') {
+                            var vtr = "<tr><td>" + i + "</td><td>" + vColumnName + "</td><td><input class='form-control' name='rowItemName' placeholder='请输入' type='text'/></td><td><select><option value='text'>文本框</option><option value='div'>标签</option><option value='textarea'>文本域</option><option value='radio'>单选按钮</option><option value='checkbox'>复选按钮</option></select></td></tr>";
+                            $("#itbcolumn tbody").append(vtr);
+
+                            i++;
+                        }
+                    });
+
+                    //清空
+                    $("#TableName").val("");
+                    $("#tbcolumn tbody tr").each(function () {
+                        $(this).children().children("input[name='ColumnName']").val("");
+                        $(this).children().children("select").val("-1");
+                        $(this).children().children("input[name='ColumnLength']").val("");
+                    });
+
+                    $('#tabs li:eq(1) a').tab('show');
+                }
+            });
+        }
+        else
+        {
+            alert("请输入列名");
+        }
+    }
+
+    //录入定义保存
+    function iSaveSubmit()
+    {
+        var vtablename = $("#iTableName").val();
+        if (vtablename == undefined || vtablename == "") {
+            alert("请选择表名");
+            $("#iTableName").focus();
+            return;
+        }
+        var vfunctionname = $("#FunctionName").val();
+        if (vfunctionname == undefined || vfunctionname == "") {
+            alert("请输入功能名");
+            $("#FunctionName").focus();
+            return;
+        }
+
+        var vresult = [];
+
+        $("#itbcolumn tbody tr").each(function () {
+
+            var vIndex = $(this).find("td:eq(0)").text();
+            var vColumnName = $(this).find("td:eq(1)").text();
+            
+            var vItemName = $(this).children().children("input[name='rowItemName']").val();
+            var vInputType = $(this).children().children("select").val();
+
+            if (vItemName != undefined && vItemName != '') {
+                
+                var vData = '{"Index":"' + vIndex + '","ColumnName":"' + vColumnName + '","ItemName":"' + vItemName + '","InputType":"' + vInputType + '"}';
+                vresult.push(vData);
+            }
+        });
+
+        if (vresult.length != 0)
+        {
+            var vresult = "[" + vresult + "]";
+
+            var url = "@(Url.Action("InputSet", "SetForm"))";
+            var vdata = "tablename=" + vtablename + "&functionname=" + vfunctionname + "&items=" + vresult;
+
+            $.post(url, vdata, function (response) {
+                if (response.result == "fail") {
+                    alert("设置失败," + response.msg);
+                }
+                else {
+                    alert("设置成功！");
+
+                    //赋值
+                    var i = 1;
+                    $("#tTableName").append("<option>" + vtablename + "</option>");
+                    $("#tFunctionName").val(vfunctionname);
+
+                    $("#itbcolumn tbody tr").each(function () {
+
+                        var vIndex = $(this).find("td:eq(0)").text();
+                        var vColumnName = $(this).find("td:eq(1)").text();
+                        var vItemName = $(this).children().children("input[name='rowItemName']").val();
+
+                        if (vColumnName != undefined && vColumnName != '') {
+                            var vtr = "<tr><td>" + i + "</td><td>" + vColumnName + "</td><td>" + vItemName + "</td><td><input type='checkbox' name='tcheck'/></td></tr>";
+                            $("#ttbcolumn tbody").append(vtr);
+
+                            i++;
+                        }
+                    });
+
+                    $('#tabs li:eq(2) a').tab('show');
+                }
+            });
+        }
+    }
+
+    //查询设置保存
+    function tSaveSubmit()
+    {
+        var vtablename = $("#iTableName").val();
+        if (vtablename == undefined || vtablename == "") {
+            alert("请选择表名");
+            $("#iTableName").focus();
+            return;
+        }
+
+        var vresult = [];
+
+        var i = 1;
+
+        $("#ttbcolumn tbody tr").each(function () {
+
+            var vColumnName = $(this).find("td:eq(1)").text();
+            var vItemName = $(this).find("td:eq(2)").text();
+            var vChecked = $(this).children().children("input[name='tcheck']").is(":checked");
+
+            if (vColumnName != undefined && vColumnName != '' && vChecked) {
+                
+                var vData = '{"Index":"' + i + '","ColumnName":"' + vColumnName + '","ItemName":"' + vItemName + '"}';
+                vresult.push(vData);
+
+                i++;
+            }
+        });
+
+        if (vresult.length != 0)
+        {
+            var vresult = "[" + vresult + "]";
+
+            var url = "@(Url.Action("QuerySet", "SetForm"))";
+            var vdata = "tablename=" + vtablename + "&items=" + vresult;
+
+            $.post(url, vdata, function (response) {
+                if (response.result == "fail") {
+                    alert("设置失败," + response.msg);
+                }
+                else {
+                    alert("设置成功！");                    
+                }
+            });
+        }
+    }
+
+</script>
+
+
+<div>
+    <ul id="tabs" class="nav nav-tabs">
+        <li><a href="#tabs-1" data-toggle="tab" class="active">基础信息</a></li>
+        <li><a href="#tabs-2" data-toggle="tab">录入定义</a></li>
+        <li><a href="#tabs-3" data-toggle="tab">查询设置</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div id="tabs-1" class="tab-pane fade in active">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="widget">
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">表名</label>
+                                        @Html.Editor("TableName", "String4Bootstrap")
+                                    </div>
+                                </div>
+                                <div class="col-md-8 form-group text-right">
+                                    <button type="button" onclick="AddColumn()" class="btn btn-sm"><i class="fa fa-plus"></i>添加列</button>
+                                    <button type="button" onclick="SaveSubmit()" class="btn btn-sm"><i class="fa fa-save"></i>保存</button>
+                                </div>
+                            </div>
+                            <div class="flip-scroll">
+                                <table id="tbcolumn" class="table table-bordered table-striped table-condensed flip-content">
+                                    <thead class="flip-content bordered-palegreen">
+                                        <tr>
+                                            <th>
+                                                序号
+                                            </th>
+                                            <th>
+                                                列名
+                                            </th>
+                                            <th>
+                                                字段类型
+                                            </th>
+                                            <th>
+                                                字段长度
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (var i = 0; i < Model.List.Count; i++)
+                                        {
+                                            int index = i + 1;
+                                            <tr>
+                                                <td>
+                                                    @index
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="ColumnName" class='form-control' placeholder='请输入列名' />
+                                                </td>
+                                                <td>
+                                                    @*@Html.DropDownListFor(m => Model.List[i].ColumnType, Cupcake.Web.Helper.EnumExtensions.GetSelectList(typeof(Cupcake.Core.Domain.ColumnType), "请选择"), new { @class = "form-control" })*@
+                                                </td>
+                                                <td>
+                                                    <input type="text" name="ColumnLength" class='form-control' placeholder='请输入数字类型' />
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-2" class="tab-pane fade">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="widget">
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">表名</label>
+                                        <select id="iTableName"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">功能名</label>
+                                        <input class='form-control' type="text" id="FunctionName" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group text-right">
+                                    <button type="button" onclick="iSaveSubmit()" class="btn btn-sm"><i class="fa fa-save"></i>保存</button>
+                                </div>
+                            </div>
+                            <div class="flip-scroll">
+                                <table id="itbcolumn" class="table table-bordered table-striped table-condensed flip-content">
+                                    <thead class="flip-content bordered-palegreen">
+                                        <tr>
+                                            <th>
+                                                序号
+                                            </th>
+                                            <th>
+                                                列名
+                                            </th>
+                                            <th>
+                                                项目名称
+                                            </th>
+                                            <th>
+                                                数据域输入类型
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tabs-3" class="tab-pane fade">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="widget">
+                        <div class="widget-body">
+                            <div class="row">
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">表名</label>
+                                        <select id="tTableName"></select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">功能名</label>
+                                        <input class='form-control' type="text" id="tFunctionName" />
+                                    </div>
+                                </div>
+                                <div class="col-md-4 form-group text-right">
+                                    <button type="button" onclick="tSaveSubmit()" class="btn btn-sm"><i class="fa fa-save"></i>保存</button>
+                                </div>
+                            </div>
+                            <div class="flip-scroll">
+                                <table id="ttbcolumn" class="table table-bordered table-striped table-condensed flip-content">
+                                    <thead class="flip-content bordered-palegreen">
+                                        <tr>
+                                            <th>
+                                                序号
+                                            </th>
+                                            <th>
+                                                列名
+                                            </th>
+                                            <th>
+                                                项目名称
+                                            </th>
+                                            <th>
+                                                是否选择
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

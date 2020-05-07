@@ -1,0 +1,78 @@
+﻿@using Cupcake.Web.Helper
+@using Cupcake.Core.Domain
+
+<style type="text/css">
+    .searchInput {
+        line-height: 22px;
+        width: 100px;
+        border-width: 0 !important;
+        background-color: white !important;
+    }
+</style>
+
+<link href="~/Content/js/zTree_v3/css/metro.css" rel="stylesheet" />
+<script src="~/Content/js/zTree_v3/js/jquery.ztree.all-3.5.min.js"></script>
+<script src="~/Scripts/jquery.ztree.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+        $.BaseSimpleTree({ 'controller': '@ViewBag.c' });
+    });
+</script>
+
+<div class="row">
+    <input type="hidden" id="hidParams" value="" />
+
+    <div class="col-md-3" id="treeViewLeft">
+        <div class="widget">
+            <div class="widget-header with-footer">
+                <span class="widget-caption">
+                    <input type="text" class="searchInput" placeholder="请输入节点名称" id="inputKey">
+                    <a href="#" id="btnSearch" title="搜索">
+                        @Html.IconFonts("glyphicon-search")
+                    </a>
+                </span>
+                <div class="widget-buttons">
+                    <a href="#" id="btnAddRoot" title="添加根节点" style="display:none">
+                        @Html.IconFonts("glyphicon-new-window")
+                    </a>
+                    <a href="#" id="btnExpandAll" title="全部展开">
+                        @Html.IconFonts("glyphicon-chevron-down")
+                    </a>
+                    <a href="#" id="btnCloseAll" title="全部折叠">
+                        @Html.IconFonts("glyphicon-chevron-up")
+                    </a>
+                </div>
+            </div>
+            <div class="widget-body">
+                <ul id="tree" class="ztree"></ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-9" id="treeViewRight" style="padding-left:5px">
+        @*<div class="panel panel-default" style="width:100%">
+
+                <div class="panel-heading">
+                    <h3 class="panel-title" id="menetitle">
+                        &nbsp;
+                    </h3>
+                </div>
+
+                <div id="divData">
+
+                </div>
+
+                <div class="panel-footer" style="padding: 2px;">
+                    <div class="panel-title" style="margin-right: 2px;margin-top:2px;">
+                        <div class="row">
+                            <div class="col-lg-12 text-right" id="page">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>*@
+    </div>
+</div>

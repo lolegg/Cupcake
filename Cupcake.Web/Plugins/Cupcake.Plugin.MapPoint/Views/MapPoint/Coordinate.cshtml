@@ -1,0 +1,359 @@
+﻿@model Reloadsoft.OuYangDangJianTouch.Admin.Models.MapInformationModel
+@using Reloadsoft.OuYangDangJianTouch.Admin;
+@using Reloadsoft.OuYangDangJianTouch.Model;
+@using Reloadsoft.OuYangDangJianTouch.Admin.Helper;
+<script src="~/Scripts/drag.js"></script>
+<style>
+    #tupian {
+        height: 100%;
+        width: 100%;
+    }
+
+
+        #ditu1 dl {
+            position: absolute;
+            top: 100px;
+            left: 200px;
+        }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header  with-footer">
+                <span class="widget-caption">欧阳街道E空间</span>
+                <div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="widget-body">
+                <button type="button" class="btn btn-default shiny" data-toggle="modal" data-target="#myModal">
+                    <i class="fa fa-plus"></i>添加坐标点
+                </button>
+                <button type="button" class="btn btn-default shiny" onclick="zuobiaodian()"><i class="fa fa-plus"></i>保 存</button>
+                <div class="flip-scroll" style="margin-top:20px;">
+                    @*<div id="tupian" style="background:pink url(@Model.ImageUrl);background-size:100% 100%;"></div>*@
+                    <div id="ditu1" >
+                        <img src="@Model.ImageUrl">
+
+                        <div class="tankuang_me" id="qing" style="display:none">
+                            <p class="clearfix"><span class="fl  names">名称：</span> <span class="fl leirong" id="cooname"></span></p>
+                            <p class="clearfix"><span class="fl names">地址：</span><span class="fl leirong" id="cooaddress"></span></p>
+                            <div class="delete"><button onclick="del()">删除</button></div>
+                            <em></em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.Id)
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">添加坐标点</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserName">坐标名称</label>
+                                <input type="text" id="CoordinateName" style="height: 28px; width: 280px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserName">坐标地址</label>
+                                <input type="text" id="CoordinateAddress" style="height:28px;width:280px;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserName">坐标类型</label>
+                                <select id="zi" style="width:280px;">
+                                    <option value="1">居民区党支部</option>
+                                    <option value="2">两新党组织</option>
+                                    <option value="3">区域化党建单位</option>
+                                    <option value="4">二级支部</option>
+                                    <option value="5">漂亮楼道</option>
+                                    <option value="6">美丽阳台</option>
+                                    <option value="7">自治楼组</option>
+                                    <option value="8">自定义</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        $("#zi").change(function () {
+                            var b = $("#zi option:checked").val();
+                            if (b == "5") {
+                                $("#zidingyi").attr("style", "")
+                            }
+                            else {
+                                $("#zidingyi").attr("style", "display:none")
+                            }
+                        })
+
+                    </script>
+                </div>
+                <div class="row">
+                    <div class="col-xs-10" style="display:none" id="zidingyi">
+                        @Html.Partial("~/Views/Section/UploadFileImgUrl.cshtml", new ViewDataDictionary { { "imgid", "Image" }, { "ImgUrl", Model.Image } })
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+                <button type="button" class="btn btn-primary" onclick="add()">保 存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .tankuang_me {
+        top: 300px;
+        border: solid 1px #e6e6e6;
+        background: rgba(255,255,255,0.9);
+        border-radius: 10px;
+        left: 300px;
+        position: absolute;
+        z-index: 1000;
+        padding: 10px;
+        width: 270px;
+    }
+
+        .tankuang_me p {
+            margin-bottom: 0px;
+
+        }
+
+            .tankuang_me p span.names {
+                width: 40px;
+                display: block;
+            }
+
+    .leirong {
+        width: 207px;
+        display: block;
+        height:44px;
+
+    }
+
+    .fl {
+        float: left;
+    }
+
+    .tankuang_me em {
+        background: url(/Content/img/snajiao.png);
+        bottom: -15px;
+        left: 120px;
+        position: absolute;
+        height: 17px;
+        width: 19px;
+    }
+
+    .delete {
+        text-align: right;
+    }
+
+        .delete button {
+            color: #fff;
+            border-radius: 3px;
+            border: none;
+            background: #b20909;
+        }
+</style>
+<script>
+
+    $(function () {
+        $(document).bind("click", function (e) {
+            var target = $(e.target);
+            if (target.closest("#qing").length == 0) {
+                $("#qing").hide();
+            }
+        })
+    })
+    $(document).ready(function () {
+    debugger
+        var id = $("#Id").val();
+      
+        jiazuobiao(id)
+    });
+
+    function del() {
+        var id = $("#qing").attr("cid");
+        $.ajax({
+            type: "post",
+            url: "/MapInformation/DeleteCoordinate?Id=" + id + "",
+            data: id,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data != "0") {
+                    $("#qing").attr("style", "display:none");
+                    $("#" + id + "").remove();
+                }
+            }
+        });
+    }
+    function jiazuobiao(id) {
+        $.ajax({
+            type: "post",
+            url: "/MapInformation/CoordinateList?Id=" + id + "",
+            data: id,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data != null) {
+                    var content = "";
+                    for (var i = 0; i < data.MapCoordinateListModel.length; i++) {
+                        content += "<dl class=\"jia\" style=\" position: absolute;left:" + data.MapCoordinateListModel[i].CoordinateX + "px;Top:" + data.MapCoordinateListModel[i].CoordinateY + "px\" id=\"" + data.MapCoordinateListModel[i].Id + "\" onclick=\"xiangxi(this)\"   X=\"" + data.MapCoordinateListModel[i].CoordinateX + "\" Y=\"" + data.MapCoordinateListModel[i].CoordinateY + "\"><img  src=\"" + data.MapCoordinateListModel[i].CoordinateImageUrl + "\"></dl>";
+                    }
+                    $("#ditu1").append(content);
+                }
+                $('#ditu1 dl').each(function () {
+                    $(this).dragging({
+                        move: 'both',
+                        randomPosition: false
+                    });
+                });
+                $("#ditu1").attr("style", "overflow: scroll; position: relative;")
+            }
+        });
+    }
+    function add() {
+
+        var id = $("#Id").val();
+        var name = $("#CoordinateName").val();
+        var address = $("#CoordinateAddress").val();
+        var type = $("#zi option:checked").val();
+        var img = $("#Image").val();
+        $.ajax({
+            type: "post",
+            url: "/MapInformation/AddCoordinate?Id=" + id + "&name=" + name + "&adderss=" + address + "&type=" + type + "&imageurl=" + img + "",
+            data: id,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.n == "1") {
+                    var content = "";
+                    $("#myModal").modal('hide');
+                    alert("添加成功")
+                    content += "<dl class=\"jia\" style=\" position: absolute;left:" + data.CoordinateX + "px;Top:" + data.CoordinateY + "px\" id=\"" + data.Id + "\" onclick=\"xiangxi(this)\"   X=\"" + data.CoordinateX + "\" Y=\"" + data.CoordinateY + "\"><img  src=\"" + data.CoordinateImageUrl + "\"></dl>";
+                    $("#ditu1").append(content);
+                    $('#ditu1 dl').each(function () {
+                        $(this).dragging({
+                            move: 'both',
+                            randomPosition: false
+                        });
+                    });
+                }
+                else { alert("添加失败") }
+                $("#ditu1").attr("style", "overflow: scroll; position: relative;")
+                $("#CoordinateName").val("");
+                $("#CoordinateAddress").val("");
+                $("#Image").val("");
+            }
+        });
+
+    }
+    function zuobiaodian() {
+        $(".loading-container").removeClass("loading-inactive");
+        var index = 0;
+        var str = "";
+        var Cid = $("#Id").val();
+        $("#ditu1 dl").each(function () {
+            var id = $(this).attr("id");
+            var x = $(this).attr("X");
+            var y = $(this).attr("Y");
+            if (index == 0) {
+                str += "{id:\"" + id + "\",x:\"" + x + "\",y:\"" + y + "\"}";
+            }
+            else {
+                str += ",{id:\"" + id + "\",x:\"" + x + "\",y:\"" + y + "\"}";
+            }
+            index += 1;
+        });
+        var list = "[" + str + "]"
+        if (list != "[]") {
+            var ajax = $.ajax({
+                type: "post",
+                url: "/MapInformation/Add",
+                data: {
+                    "Id": Cid,
+                    "List": list
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data != "0") {
+                        alert("保存成功！");
+                        //window.location.href = "/WXShoppingMall/ShoppingCartList";
+
+                    }
+                    else {
+                        alert("保存失败！");
+                    }
+                    $(".loading-container").addClass("loading-inactive");
+                }
+            });
+        }
+
+    }
+
+    function xiangxi(obj) {
+        var X = $(obj).position().left;
+        var Y = $(obj).position().top;
+        var xx = $(obj).attr("X", X);
+        var yy = $(obj).attr("Y", Y);
+    }
+
+    $("#ditu1").on('dblclick',"dl", function () {
+        var xz = $(this).attr("X");
+        var yz = $(this).attr("Y")
+        debugger
+        var id = $(this).attr("id");
+        var ajax = $.ajax({
+            type: "post",
+            url: "/MapInformation/GetCordinateDetail",
+            data: {
+                "Id": id
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data != null) {
+                    $("#cooaddress").html(data.CoordinateAddress);
+                    $("#cooname").html(data.CoordinateName);
+                    var Xzhou = "";
+                    var Yzhou = ""
+                    Xzhou = parseInt(xz - 120);
+                    Yzhou = parseInt(yz - 144);
+                    $("#qing").attr("style", "left:" + Xzhou + "px;top:" + Yzhou + "px;")
+                    $("#qing").attr("cid", data.Id)
+                }
+                else {
+                    alert("失败！");
+                }
+
+            }
+        });
+    });
+
+</script>

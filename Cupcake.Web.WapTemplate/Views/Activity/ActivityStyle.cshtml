@@ -1,0 +1,225 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModels
+@using Cupcake.Web.WapTemplate.Models
+@using Cupcake.Web.WapTemplate.Helper
+
+
+<style>
+    li {
+        display: list-item;
+        text-align: -webkit-match-parent;
+    }
+    .big_tits {
+        text-align:center;
+    }
+    .big_tits strong {
+        font-size: 20px;
+        color: #000;
+        padding-bottom: 5px;
+        border-bottom: solid 1px #333;
+    }
+    .about_tuijian {
+        padding: 30px 0;
+        margin: auto;
+        width: 1100px;
+        height: 170px;
+        background: #f1f1f1;
+        margin-bottom: 25px;
+        margin-top: 20px;
+    }
+    .width_auto {
+        width: 1100px;
+        margin: 0px auto;
+    }
+    .clearfix {
+        zoom: 1;
+    }
+    ul, ol, li, dl, dd, dt {
+        list-style: none;
+    }
+    a {
+        text-decoration: none;
+        color: #039;
+    }
+    .list_image li img {
+        display: block;
+    }
+    .ygb_ch_img img {
+        width: 100%;
+        height: 150px;
+    }
+    .list_image li span {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        color: #000000;
+        text-align: center;
+    }
+
+    .setDiv a {
+        display: inline-block;
+        color: #fff;
+        background: #B71818;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-size: 19px;
+        width: 241px;
+        height: 45px;
+        font-weight: bold;
+    }
+
+    .setDiv {
+        margin-top: -50px;
+        text-align: center;
+    }
+
+    .list_image li {
+        margin: 0px 15px 15px 15px;
+    }
+
+        .list_image li span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #000000;
+        }
+
+    .zui {
+        font-size: 17px;
+        margin-top: 10px;
+        padding-bottom: 21px;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 732px;
+        height: 340px;
+        margin: 10px auto 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .box_img {
+        width: 732px;
+        height: 340px;
+        overflow: hidden;
+    }
+
+        .box_img ul li {
+            position: absolute;
+            display: none;
+        }
+
+            .box_img ul li a {
+                display: block;
+                width: 732px;
+                height: 340px;
+                font-size: 100px;
+                text-align: center;
+                line-height: 250px;
+                color: #fff;
+            }
+
+                .box_img ul li a img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+    .box_tab {
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+
+        .box_tab a {
+            display: inline-block;
+            border-radius: 50%;
+            height: 12px;
+            width: 12px;
+            font-size: 0px;
+            background: #fff;
+            margin: 0 5px;
+            color: #333;
+        }
+
+        .box_tab a.active {
+            background: #09b;
+            color: #fff;
+        }
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+    .zui {
+        background: url(/Content/img/zuixin.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    #wenjuan {
+        background: url(/Content/img/bi.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    .title {
+        width: 330px;
+        height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-bottom: 0px;
+    }
+</style>
+<div>
+    <div class="big_tits">
+        <strong>活动风采</strong>
+    </div>
+    <div class="about_tuijian">
+        <div class="width_auto" id="wrap3">
+            <ol class="clearfix list_image ygb_ch_img">
+                @{
+                    if (Model != null && Model.ActivityStyle.Count > 0)
+                    {
+                        foreach (var item in Model.ActivityStyle)
+                        {
+                            <li style="border: 0px; padding: inherit; width: 200px; float: left;">
+                                <a href="/Activity/ActivityStyleDetails?Id=@item.Id">
+                                    @if (item.Imgurl != null)
+                                    {
+                                        string[] imge = item.Imgurl.Split(',');
+                                        <img id="@item.Id" src="@imge[0]" height="100" width="80" alt="" />
+                                    }
+                                    <span>@item.Title</span>
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+            </ol>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/marquee.js"></script>
+<script>
+    $(function () {
+        $('#wrap3').marquee({
+            auto: true,
+            interval: 3000,
+            speed: 1000,
+            showNum: 4,
+            stepLen: 1
+        });
+    })
+</script>

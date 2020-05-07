@@ -1,0 +1,75 @@
+﻿@model Cupcake.Web.Models.DataDictionaryModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions()))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name)
+                                @Html.HiddenFor(m => m.Id)
+                                @Html.HiddenFor(m => m.ParentId)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.CustomAttributes, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.CustomAttributes)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Tips, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(m => m.Tips, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.CustomType, new { @class = "input-group-addon" })
+                    @Html.EditorFor(m => m.CustomType, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(m => m.CustomType)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.Sort, new { @class = "input-group-addon" })
+                    @Html.EditorFor(m => m.Sort, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(m => m.Sort)
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="input-group">
+                    @Html.LabelFor(model => model.Value, new { @class = "input-group-addon" })
+                    @Html.EditorFor(m => m.Value, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+        </div>
+        </div>
+        }
+    </div>
+    </div>
+</div>

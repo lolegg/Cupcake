@@ -1,0 +1,120 @@
+﻿@model Cupcake.Plugin.NetInteraction.Models.OnlineComplaintsModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetInteraction
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+              
+                @Html.HiddenFor(m => m.Id)
+
+       <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">姓名</label>
+                                @Html.Editor("Name", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m =>m.Name)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">联系地址</label>
+                                @Html.Editor("Address", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">电子邮箱</label>
+                                @Html.Editor("Email", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Email)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                
+                
+            
+                
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">手机号码</label>
+                                @Html.Editor("Phone", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Phone)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.Editor("Title", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m =>m.Title)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                <div class="row">
+               
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                                @Html.TextAreaFor(model => model.Content, 10, 50, new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+@*<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+</script>*@
+

@@ -1,0 +1,73 @@
+﻿@model Cupcake.Plugin.ImportantNews.Models.ImportantNewsModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Plugin.ImportantNews.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div id="not">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">标题</label>
+                                    @Html.EditorFor(m => m.Title)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">新闻类型</label>
+                                    @if (Model.NewsType != null)
+                                    {  <div class="form-control"> @DataDictionaryHelper.GetSelectName(Model.NewsType)</div>}
+                                    else
+                                    { <div class="form-control"> </div> }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">发布时间</label>
+                                    <span class="form-control">    @(string.Format("{0:g}", Model.ReleaseTime))</span>
+                                    <span class="input-group-addon">
+                                        @Html.IconFonts("fa-calendar")
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                    <span class="form-control" style="height:auto"> @Html.Raw(Model.Content)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#edui1").prop('disabled', 'disabled')
+        $("#not input").prop('disabled', 'disabled')
+
+
+    });
+</script>

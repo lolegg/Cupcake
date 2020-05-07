@@ -1,0 +1,73 @@
+﻿@model Cupcake.Web.Models.MediaInfoListModel
+@using Cupcake.Web
+
+<style type="text/css">
+    img {
+        width: 110px;
+        height: 70px;
+    }
+
+    .backimg {
+        background: #000;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        opacity: 0.6;
+        filter: alpha(opacity=60);
+        z-index: 10000;
+    }
+
+    .icon {
+        background: url(/Content/img/suc_w.png) no-repeat;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        bottom: 30%;
+        left: 38%;
+        z-index: 10001;
+    }
+
+    .col-xs-offset-1 {
+        margin-bottom: 5px;
+        margin-top: 5px;
+        
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row" id="content">
+
+
+        @foreach (var item in Model.List)
+        {
+            <div class="col-xs-2">
+                <div class="row">
+                    <div class="col-xs-11 col-xs-offset-1" data-img="true" data-id="@item.Id" data-value="@item.FileName" data-path="@item.FilePath" style="height:90px;">
+                        <div class="row text-center"><img title="@(item.FileName+"."+item.ExtName)" src="@item.FilePath" /></div>
+                        <div class="row text-center">@((!string.IsNullOrEmpty(item.FileName) && item.FileName.Length > 7) ? item.FileName.Substring(0, 7) : item.FileName)</div>
+                        <div class="backimg" style="display:none">
+                            <span class="icon"></span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(function () {
+        var pager = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        MediaSelect.LoadPicPaged(pager);
+    });
+
+</script>

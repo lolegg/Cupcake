@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 问卷调查
+SystemName: Questionnaire
+Version: 1.0
+SupportedVersions: 2.0
+Author: 刘波
+DisplayOrder: 1
+FileName: Cupcake.Plugin.Questionnaire.dll
+Description: plugin example that show how to develop a plugin

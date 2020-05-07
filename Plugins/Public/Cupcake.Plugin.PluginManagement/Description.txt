@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 插件管理
+SystemName: PluginManagement
+Version: 1.0
+SupportedVersions: 2.0
+Author: Aaron
+DisplayOrder: 1
+FileName: Cupcake.Plugin.PluginManagement.dll
+Description: 插件管理模块

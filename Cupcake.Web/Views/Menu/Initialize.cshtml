@@ -1,0 +1,127 @@
+﻿@using Cupcake.Web.Models
+@model MenuTreeModel
+
+@helper ShowHref(string href)
+{
+    if (!string.IsNullOrEmpty(href))
+    {
+        @:data-href="@href"
+    }
+}
+@helper ShowCss(MenuTreeModel node)
+{
+    if (node.Children != null && node.Children.Count > 0)
+    {
+        @:class="menu-dropdown"
+    }
+}
+
+
+<ul class="nav sidebar-menu">
+    @foreach (var firstNode in Model.Children)
+    {
+        <li data-menuId="@firstNode.Id" @ShowHref(firstNode.Href)>
+            @*TODO: ie8前面小色块不显示*@
+            <span class="ie8_hover_border"></span>
+            <a href="javascript:void(0);" @ShowCss(firstNode)>
+                @{
+                        string[] numb = new string[20];
+                    if (firstNode.IconClass != null) { 
+                        numb = firstNode.IconClass.Split('-');
+                    }
+                    
+                }
+                <i class="menu-icon @numb[0] @firstNode.IconClass"></i>
+                <span class="menu-text"> @firstNode.Name </span>
+            </a>
+
+            @if (firstNode.Children != null && firstNode.Children.Count > 0)
+            {
+                <ul class="submenu">
+                    @foreach (var second in firstNode.Children)
+                    {
+                        <li data-menuid="@second.Id" @ShowHref(second.Href) data-parentname="@firstNode.Name">
+                            @*TODO: IE8菜单边线问题*@
+                            <div class="left_sidebar_border"></div>
+                            <a href="javascript:void(0);" @ShowCss(second)>
+                                @{
+                        string[] numb1 = new string[20];
+                        if (second.IconClass != null)
+                        {
+                            numb1 = second.IconClass.Split('-');
+                        }
+                                }
+                                <i class="menu-icon @numb1[0] @second.IconClass"></i>
+                                <span class="menu-text"> @(second.Name) </span>
+                                @if (second.Children != null && second.Children.Count > 0)
+                                {
+                                    <i class="menu-expand"></i>
+                                }
+                            </a>
+
+                            @*三级菜单*@
+                            @if (second.Children != null && second.Children.Count > 0)
+                            {
+                                <ul class="submenu">
+                                    @foreach (var three in second.Children)
+                                    {
+                                        <li data-menuid="@three.Id" @ShowHref(three.Href) data-parentname="@second.Name">
+                                            @*TODO: IE8菜单边线问题*@
+                                            <div class="left_sidebar_border"></div>
+                                            <a href="javascript:void(0);">
+                                                @{
+                                        if (three.IconClass != null)
+                                        {
+                                            numb1 = three.IconClass.Split('-');
+                                        }
+                                                }
+                                                <i class="menu-icon @numb1[0] @three.IconClass"></i>
+                                                <span class="menu-text"> @(three.Name) </span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>
+
+
+
+@*<script src="~/Scripts/jquery.cookie.js"></script>*@
+<script type="text/javascript">
+    $(function () {
+        $(".sidebar-menu").find("li").on("click", function () {
+            var href = $(this).attr("data-href");
+            if (href) {
+                $(".loading-container").removeClass("loading-inactive");
+                //~全局url处理
+                if (href.indexOf("~") != -1) {
+                    var url = window.location.protocol + "//" + window.location.host;
+                    href = url + href.replace("~", "");
+                    window.top.location.href = href;
+                    return;
+                }
+                //设置当前菜单Guid
+                var menuId = $(this).attr("data-menuId");
+                $.removeCookie('CurrentMenuId');
+                $.cookie('CurrentMenuId', menuId);
+
+                $('.page-body').load(href, function () {
+                    $(".loading-container").addClass("loading-inactive");
+                });
+
+                $(".sidebar-menu").find("li[class='active']").removeClass("active");
+                $(this).addClass("active");
+                //set breadcrumb
+                $(".breadcrumb").html("<li><i class='fa fa-home'></i><a href='/Home'>首页</a></li>");
+                $(".breadcrumb").append("<li><a href=\"#\">" + $(this).attr("data-parentname") + "</a></li>");
+                $(".breadcrumb").append("<li class=\"active\">" + $(this).find("span[class='menu-text']").text() + "</li>");
+            }
+        });
+    });
+</script>

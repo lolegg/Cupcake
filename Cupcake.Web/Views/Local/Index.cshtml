@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<!--Head-->
+<head>
+    <meta charset="utf-8" />
+    <title>登录</title>
+
+    <meta name="description" content="login page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <!--Basic Styles-->
+    @*<link href="~/Content/css/bootstrap-3.2.0.css" rel="stylesheet" />*@
+    <link href="~/Content/css/bootstrap-3.3.6.css" rel="stylesheet" />
+    <!--Fonts-->
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/css/typicons.css" rel="stylesheet" />
+
+    <!--Reloadsoft styles-->
+    <link href="~/Content/css/reload.css" rel="stylesheet" />
+    <link href="~/Content/css/animate.min.css" rel="stylesheet" />
+    <link id="skin-link" href="" rel="stylesheet" type="text/css" />
+
+    <!--Skin Script: Place this script in head to load scripts for skins and rtl support-->
+    <script src="~/Scripts/skins.js"></script>
+</head>
+<!--Head Ends-->
+<!--Body-->
+<body>
+   @using (Html.BeginForm())
+{
+    <div class="login-container animated fadeInDown">
+        <div class="loginbox bg-white">
+            <div class="loginbox-title">后台管理</div>
+            <div class="loginbox-textbox">
+                <input type="text" class="form-control" name="UserName" placeholder="UserName" />
+            </div>
+            <div class="loginbox-textbox">
+                <input type="password" class="form-control" name="Password" placeholder="Password" />
+            </div>
+            <div class="loginbox-forgot">
+                <a href="">忘记密码?</a>
+            </div>
+            <div class="loginbox-submit">
+                <input type="submit" class="btn btn-primary btn-block" value="登录">
+            </div>
+        </div>
+        <div class="logobox">
+            @Html.ValidationMessage("UserName")
+        </div>
+    </div>
+   }
+    <!--Basic Scripts-->
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+    <script src="~/Scripts/bootstrap-3.3.6.js"></script>
+
+    <!--Beyond Scripts-->
+    <script src="~/Scripts/reload.js"></script>
+</body>
+<!--Body Ends-->
+</html>

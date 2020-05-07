@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 系统消息
+SystemName: SystemMessage
+Version: 1.0
+SupportedVersions: 2.0
+Author: shihaiyan
+DisplayOrder: 1
+FileName: Cupcake.Plugin.SystemMessage.dll
+Description: plugin example that show how to develop a plugin

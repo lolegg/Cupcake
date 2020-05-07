@@ -1,0 +1,624 @@
+﻿
+<style>
+    #two {
+        border-style: solid;
+        border-color: #ccc;
+        height: 400px;
+        overflow-y:scroll;
+        width:100%;
+        padding:20px;
+    }
+    textarea {
+        width: 100%;
+        font-size: 16px;
+        border: 0;
+        outline: none;
+        resize: none;
+        float: left;
+        display: inline-block;
+    }
+    a {
+        cursor: pointer;
+    }
+
+    div {
+        margin: 10px 0;
+    }
+
+    /*分页*/
+
+    .pager {
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+        margin: 25px 0px;
+        text-align: center;
+        color: #2E6AB1;
+        width: 1450px;
+        overflow: hidden;
+    }
+
+        .pager a {
+            border: 1px solid #ccc;
+            background: hsl(0, 0%, 100%);
+            margin: 0px 5px;
+            padding: 5px 8px;
+            text-decoration: none;
+            color: #111213;
+            cursor: auto;
+            height: 21px;
+            line-height: 21px;
+            padding: 0 11px;
+            border-radius: 3px;
+            display: inline-block;
+            text-decoration: none;
+            font-size: 12px;
+            outline: none;
+        }
+
+            .pager a.hover, .pager a.active {
+                background-color: #f26e0b;
+                border-color: #ccc;
+                color: #FFF;
+            }
+
+            .pager a.disabled {
+                color: #111213;
+                cursor: auto;
+                height: 21px;
+                line-height: 21px;
+                padding: 0 11px;
+                border-radius: 3px;
+                display: inline-block;
+                text-decoration: none;
+                font-size: 12px;
+                outline: none;
+            }
+
+   
+    /*图片*/
+    .np-avatar {
+        width: 40px;
+        height: 40px;
+    }
+    .popClick {
+        cursor: pointer;
+    }
+
+    /*回复图片*/
+    .huifu {
+        width: 20px;
+        height: 20px;
+    }
+    .huifu1 {
+        width: 20px;
+        height: 20px;
+        display:none;
+    }
+
+</style>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jqueryPage.js"></script>
+
+
+<script>
+    var userid = "";
+    $(document).ready(function () {
+        @*$("#PageTotal").val(@ViewBag.PageTotal);
+        $("#PageSize").val(@ViewBag.PageSize);*@
+        PlShow(1);
+        userid = '@ViewBag.UserId';
+    });
+    //新增一级评论
+    function AddComments() {
+        var content = $("#top_textarea").val();
+        $.ajax({
+            type: "post",
+            url: "/Comments/PartialPlAddd",
+            data: "Content=" + content +"&title="+ '@ViewBag.Title',
+            dataType: "json",
+            success: function (data) {
+                PlShow(1);
+                $("#CommentsNum_noe").text(data.count);
+                if (data.isWhere > 0) {
+                    $("#top_textarea").val("");
+                }
+            }
+        });
+
+    }
+    //首次加载显示所有评论数量
+    function AllReplyNum() {
+        $.ajax({
+            type: "post",
+            url: "/Comments/AllReplyNum",
+            dataType: "json",
+            success: function (data) {
+                $("#CommentsNum_noe").text(data);
+            
+            }
+        });
+    }
+        //页卡
+        function sort(abc) {
+            var sort = $(abc).attr("alt");
+            $("span[tag='0']").removeClass("cures")
+            $(abc).addClass("cures")
+            if (sort == "PraiseNum") {
+                $("span[id='yk_heat']").addClass("time_c current")
+                $("span[id='yk_time']").removeClass("time_c current")
+                $("span[id='yk_time']").addClass("time_c")
+
+                //
+                $("#span_navigation").text("最新热评")
+            } 
+            if (sort == "PublicDate") {
+                $("span[id='yk_time']").addClass("time_c current")
+                $("span[id='yk_heat']").removeClass("time_c current")
+                $("span[id='yk_heat']").addClass("time_c")
+
+                //
+                $("#span_navigation").text("最新评论")
+            } 
+            PlShow(1, sort);
+        } 
+        //评论ajax
+        //function Fy() {
+        //}
+        function PlShow(pageindex, sort) {
+            debugger;
+            $.ajax({
+                type: "post",
+                url: "/Comments/PlListJson?PgaeIndex=" + pageindex + "&sort=" + sort + "&ChildId=" + '@ViewBag.Id',
+                dataType: "json",
+                success: function (data) {
+                    AllReplyNum();
+                    $("#plList").html("");
+                    var divplList = $("#plList");
+                    var apend = "";
+                    for (var q = 0; q < data.list.length; q++) {
+
+                        apend += "<div><img class='np-avatar popClick'/><span class='name_inter'><span style='color:red'>" + data.list[q].ListCommentsModel.Name + "</span>&nbsp&nbsp&nbsp" + getDateDiff(data.list[q].ListCommentsModel.PublicDate) + "</span></div>"
+                        apend += "<div > <div class='huifu_cont' style='float:left'>" + data.list[q].ListCommentsModel.Content + "</div>"
+
+                        apend += "<div class='anser_hf'><div style='float:right' ><a class='zan' id=" + data.list[q].ListCommentsModel.Id + " onclick='dz(this)' >" + IsnoDz(data.list[q].b, data.list[q].ListCommentsModel.Id != null ? data.list[q].ListCommentsModel.Id : null, data.list[q].b.length > 0 ? data.list[q].b[0].ChildId : null, null) + "</a>   (<span id=" + data.list[q].ListCommentsModel.Id + ">" + data.list[q].ListCommentsModel.PraiseNum + "</span>)</div>"
+                        apend += "<div style='float:right; position:relative;top:3px;left:1px'><a  id=" + data.list[q].ListCommentsModel.Id + " ChildId=" + data.list[q].ListCommentsModel.ChildId + " onclick='TwoPlShow(this)' tag='0' class='none'><span class='huifu_img_huifu'><img src='/content/image/huifu.png' class='huifu'/></span>回复</a>(<span tag=" + data.list[q].ListCommentsModel.Id + ">" + data.list[q].ListCommentsModel.ReplyNum + "</span>)</div>"
+                        apend += "<div id=" + data.list[q].ListCommentsModel.Id + "  style='float:left;width:100%'></div></div></div>"
+                    }
+                    divplList.append(apend);
+                    $("#jqueryPage").html("");
+                    $("#PageTotal").val(data.models.PageTotal)
+                    $("#PageIndex").val(data.models.PageIndex)
+                    $("#PageSize").val(data.models.PageSize)
+                    debugger
+                    $("#jqueryPage").pagination({
+                       
+                        count: parseInt($("#PageTotal").val()), //总数
+                        index: parseInt(pageindex),//当前页
+                        lrCount: 3,//当前页左右最多显示的数量
+                        lCount: 1,//最开始预留的数量
+                        rCount: 1,//最后预留的数量
+                        sizes: parseInt($("#PageSize").val()),
+                        callback: function (options) {
+                            $("#plList").html("");
+                            var pageindex = options.index;
+                            PlShow(pageindex, sort);
+                        }
+                    })
+                }
+            });
+        }
+    
+        //时间转换
+        function getDateDiff(dateTimeStamp) {
+            dateTimeStamp.replace(/Date\([\d+]+\)/, function (a) { eval('dateTimeStamp = new ' + a) });
+            var minute = 1000 * 60;
+            var hour = minute * 60;
+            var day = hour * 24;
+            var halfamonth = day * 15;
+            var month = day * 30;
+            var year=month * 12;
+            var now = new Date().getTime();
+            var diffValue = now - dateTimeStamp;
+            if (diffValue < 0) { return; }
+            var yearC = diffValue / year;
+            var monthC = diffValue / month;
+            var weekC = diffValue / (7 * day);
+            var dayC = diffValue / day;
+            var hourC = diffValue / hour;
+            var minC = diffValue / minute;
+            if (yearC>=3) {
+                result = "" + parseInt(yearC) + "年前";
+            }
+            else if (monthC >= 1) {
+                result = "" + parseInt(monthC) + "月前";
+            }
+            else if (weekC >= 1) {
+                result = "" + parseInt(weekC) + "周前";
+            }
+            else if (dayC >= 1) {
+                result = "" + parseInt(dayC) + "天前";
+            }
+            else if (hourC >= 1) {
+                result = "" + parseInt(hourC) + "小时前";
+            }
+            else if (minC >= 1) {
+                result = "" + parseInt(minC) + "分钟前";
+            } else
+                result = "刚刚";
+            return result;
+        }
+        //点赞
+        function dz(abc) {
+            var ChildId = $(abc).attr("id");
+            var Userid=  $("#UserId").val('@ViewBag.UserId');
+            $.ajax({
+                type: "post",
+                url: "/Comments/PraiseJson",
+                async: false,
+                data: "Userid=" + Userid + "&Childid=" + ChildId,
+                dataType: "json",
+                success: function (data) {
+                    if (data.result == 1) {
+                        // alert("点赞成功")
+                        $("span[id=" + ChildId + "]").html(data.num)
+                        $(abc).html(IsnoDz(null,null, null, 1))
+                    } else if (data.result == 2) {
+                        //alert("取消赞成功")
+                        $("span[id=" + ChildId + "]").html(data.num)
+                        $(abc).html(IsnoDz(null,null, null, 2))
+                    } else if (data.result == 3) {
+                        alert("请登录")
+                    }
+
+                }
+            });
+        }
+
+        //判断用户是否点赞
+        function IsnoDz(data, aid, bid, tag) {
+            
+            var uid = "";
+            if(data!=null){
+                for (var j = 0; j < data.length; j++) {
+                    if (data[j].UserId==userid) {
+                        uid = data[j].UserId;
+                    }
+                }
+            }
+            if (aid != null) {
+                if (aid == bid && uid == userid) {
+                    return "<img src='/Content/Image/ic_vote_checked.png'/>";
+                } else {
+                    return "<img src='/Content/Image/ic_vote_normal.png' />";
+                }
+            }
+       
+            if (tag == 1) {
+                return "<img src='/Content/Image/ic_vote_checked.png'/>";
+            }
+            if (tag==2) {
+                return "<img src='/Content/Image/ic_vote_normal.png' />";
+            }
+        }
+
+        //二级评论
+        function TwoPlShow(abc) {
+      
+            if ($(abc).text() == "回复") {
+                $("a[class='none']").attr("tag", 0);
+                $(abc).attr("tag", 1);
+                $("a[tag='0']").html("<span class='huifu_img_huifu'><img src='/content/image/huifu.png' class='huifu'/></span>回复")
+                //所属评论id
+                var ChildId = $(abc).attr("id")
+                //所属信息id
+                var ToTwoCommentsId = $(abc).attr("ChildId")
+                $("div[id='two']").remove()
+                var twodiv = "<div id='two' tag='" + ChildId + "'><textarea id='Content'></textarea><br/><div class='btn_tj'><button onclick='TwoPlAdd(this)' id=" + ChildId + " ToTwoCommentsId=" + ToTwoCommentsId + ">提交</button></div><div id='Twopllist'></div></div>"
+                var div = $("div[id=" + $(abc).attr('id') + "]");
+                div.append(twodiv);
+                $.ajax({
+                    type: "post",
+                    url: "/Comments/TwoPlShowJson",
+                    async: false,
+                    data: "Childid=" + ChildId,
+                    dataType: "json",
+                    success: function (data) {
+                        TwoPlDivCreate(data, ChildId);
+                    }
+                });
+
+                $(abc).html("<span class='huifu_img_huifu'><img src='/content/image/huifu.png' class='huifu'/></span>关闭回复");
+            } else  {
+                $(abc).html("<span class='huifu_img_huifu'><img src='/content/image/huifu.png' class='huifu'/></span>回复");
+
+                $("div[id='two']").remove();
+            }
+
+        }
+
+        //二级评论列表创建
+        function TwoPlDivCreate(data, ChildId) {
+            debugger
+            $("div[tag=" + ChildId + "] div[id='Twopllist']").html("");
+            var Twopldiv = $("div[tag=" + ChildId + "] div[id='Twopllist']");
+            var apend = "";
+            for (var q = 0; q < data.length; q++) {
+                apend += "<div><img class='np-avatar popClick'/><span class='name_inter'><span style='color:red'>" + data[q].ListCommentsModel.Name + "</span>&nbsp&nbsp&nbsp" + getDateDiff(data[q].ListCommentsModel.PublicDate) + "</span></div>";
+                apend += "<div><div style='float:left'>" + data[q].ListCommentsModel.Content + "</div>"
+                apend += "<div class='anser_hf'><div style='float:right '><a class='zan' id=" + data[q].ListCommentsModel.Id + " onclick='dz(this)' >" + IsnoDz(data[q].b, data[q].ListCommentsModel.Id != null ? data[q].ListCommentsModel.Id : null, data[q].b.length > 0 ? data[q].b[0].ChildId : null, null) + "</a> (<span id=" + data[q].ListCommentsModel.Id + ">" + data[q].ListCommentsModel.PraiseNum + "</span>)</div></div>"
+                apend += "</br>";
+            }
+            Twopldiv.append(apend);
+
+        }
+
+        //新增二级评论
+        function TwoPlAdd(abc) {
+            debugger
+            var Content = $("textarea[id='Content']").val();
+            var ChildId = $(abc).attr("id");
+            var ToTwoCommentsId = $(abc).attr("ToTwoCommentsId");
+            if (Content != "") {
+                $.ajax({
+                    type: "post",
+                    url: "/Comments/TwoPlAddJson",
+
+                    data: "ChildId=" + ChildId + "&ToTwoCommentsId=" + ToTwoCommentsId + "&Content=" + Content,
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.isWhere > 0) {
+                            $("div span[tag='" + ChildId + "']").html(data.ReplyNum);
+                            $("div[id='two']").remove()
+                            var twodiv = "<div id='two' tag='" + ChildId + "'><textarea id='Content'></textarea><br/> <div class='btn_tj'> <button onclick='TwoPlAdd(this)' id=" + ChildId + "  ToTwoCommentsId=" + ToTwoCommentsId + ">提交</button> </div> <div id='Twopllist'><div></div>"
+                            var div = $("div[id=" + $(abc).attr('id') + "]");
+                            div.append(twodiv);
+                            $.ajax({
+                                type: "post",
+                                url: "/Comments/TwoPlShowJson",
+
+                                data: "Childid=" + ChildId,
+                                dataType: "json",
+                                success: function (data) {
+                                    TwoPlDivCreate(data,ChildId)
+                                    
+                                }
+                            });
+                        }
+                    }
+                });
+            } else { alert("内容不能为空") }
+
+        }
+</script>
+<style>
+    .mar_auto{
+        margin:30px auto 0;
+        width:auto;
+    }
+    .np-order{
+        border-bottom:1px #ccc solid;
+        padding-bottom:12px;
+    }
+    .time_c,.hot_c {
+        padding-bottom: 12px;
+        font-size: 16px;
+        font-weight:700;
+        margin-right:20px;
+      
+        letter-spacing:3px;
+        text-decoration:none;
+        color:#6d6d6d;
+    }
+  
+    .current{
+        border-bottom:3px #ba1818 solid;
+    }
+    .time_hot{
+        text-align:right;
+        margin:10px 0 25px 0px;
+        height:30px;
+    }
+    .time_hot span{
+        border:solid 1px #ccc;
+        padding:3px 6px;
+        float:right;
+        font-size:14px;
+        cursor:pointer;
+    }
+    .span1{
+        border-radius:3px 0 0 3px;
+    }
+    .span2{
+        border-radius:0 3px 3px 0;
+    }
+    .time_hot span.cures {
+        border-color: #ce2020;
+        background: #ce2020;
+        color: #fff;
+    }
+    .np-avatar{
+        border-radius:50%;
+    }
+    .name_inter{
+        left:12px;
+        top:-24px;
+       position:relative;
+    }
+    .huifu_cont {
+        letter-spacing: 1px;
+        margin: 10px 0 15px;
+        padding-left: 20px;
+    }
+    .anser_hf {
+        border-bottom: solid 1px #ccc;
+        height: 50px;
+    }
+    .zan{
+        width:22px;
+        left:5px;
+        top:5px;
+        position:relative;
+        height:23px;
+        display:inline-block;
+    }
+    .zan img{
+
+        height:100%;
+        width:100%;
+    }
+    #Content{
+        border:solid 1px #ccc;
+        margin:10px 0px;
+        width:100%;
+        display:block;
+        height:100px;
+    }
+    .btn_tj{
+
+        text-align:right;
+    }
+    .btn_tj button{
+        font-weight:700;
+        border:none;
+        border-radius:5px;
+        color:#fff;
+        font-size:18px;
+        padding:8px 20px;
+        background:#f26e0b;
+    }
+    /*.pinglun {
+        width: 660px;
+        margin: 50px auto;
+    }*/
+
+    .hd_sl {
+        height: 30px;
+    }
+
+    .font20 {
+        font-size: 20px;
+    }
+
+    .fl {
+        float: left;
+    }
+
+    .fr {
+        float: right;
+    }
+
+    .top_reply {
+        font-size: 13px;
+        color: #c2c0c0;
+    }
+
+
+    .np-reply-box-active {
+        border: solid 1px #379BE9;
+    }
+
+    .np-reply-box-content {
+        border-bottom: solid 1px #DDD;
+        padding-left: 20px;
+        overflow: hidden;
+    }
+
+        .np-reply-box-content textarea {
+            width: 100%;
+            height: 60px;
+            margin-left: -20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 0;
+            outline: none;
+            resize: none;
+            float: left;
+            display: inline-block;
+        }
+
+    .np-reply-box-footer {
+        position: relative;
+        display: block;
+        height: 40px;
+    }
+
+    .submitBtn {
+        float: right;
+        position: relative;
+        /* width: 102px; */
+    }
+
+    .np-btn-submit {
+        width: 67px;
+        line-height: 28px;
+        height: 28px;
+        display: inline-block;
+        margin: 6px 10px 0 0;
+        text-decoration: none;
+        color: #fff;
+        background-color: #379BE9;
+        text-align: center;
+    }
+</style>
+<hr />
+<input id="UserId" type="hidden" />
+ @*评论框*@
+<div class="mar_auto">
+    <div class="pinglun">
+        <div class="hd_sl">
+            <span class="font20 fl">评论</span>
+            <span class="fr  top_reply ">条评论</span><span class="fr  top_reply " id="CommentsNum_noe"></span>
+        </div>
+
+        <div class="np-reply-box blueLight np-reply-box-active" id="np-reply-box" style="">
+
+            <div class="np-reply-box-content textarea">
+                <textarea tabindex="1" autocomplete="off" name="content" accesskey="u" id="top_textarea" style="height: 60px; padding: 10px;"></textarea>
+            </div>
+
+
+            <div class="commtSub np-reply-box-footer" style="position:relative;display:block;height:40px" id="p_login_btn">
+                <!-- 用户登录模块 -->
+                <div class="submitBtn">
+                    <a href="javascript:void(0)" class="np-btn np-btn-submit" id="top_post_btn" hidefocus="true" onclick="AddComments()">提交</a>
+                    <span class="np-tip-error" style="display:none"></span>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    @*评论显示列表*@
+
+    @*页卡*@
+    <div id="order" class="np-order np-btngroup">
+        <span data-sort="time" hidefocus="true" class="hot_c" id="yk_time">时间</span>
+        <span data-sort="quality" hidefocus="true" class="time_c current" id="yk_heat">热度</span>
+    </div>
+    <div class="time_hot">
+        <span class="span2 cures" onclick="sort(this)" alt="PraiseNum" tag="0">热度</span>
+        <span class="span1" onclick="sort(this)" alt="PublicDate" tag="0">时间</span>
+
+    </div>
+
+
+    <span style="font-weight: bold" id="span_navigation">最新热评</span>
+    <div id="plList">
+
+    </div>
+    <div>
+
+    </div>
+    <input id="PageTotal" type="hidden" />
+    <input id="PageSize" type="hidden" />
+    <div class="jqueryPage" id="jqueryPage">
+
+    </div>
+
+
+</div>

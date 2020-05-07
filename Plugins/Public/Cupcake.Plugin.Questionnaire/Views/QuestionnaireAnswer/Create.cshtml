@@ -1,0 +1,31 @@
+﻿@model Cupcake.Plugin.Questionnaire.Models.QuestionnaireAnswerModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Questionnaire
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @*@Html.HiddenFor(model => model.QuestionInfoId)
+                @Html.HiddenFor(model => model.QuestionType)*@
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

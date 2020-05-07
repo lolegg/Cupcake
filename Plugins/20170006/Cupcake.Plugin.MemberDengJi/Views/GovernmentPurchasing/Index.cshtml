@@ -1,0 +1,96 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.MemberDengJi.Domain.GovernmentPurchasing>
+@using Cupcake.Plugin.MemberDengJi.Helper
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "政府购买服务登记");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">购买部门</label>
+                                @Html.Editor("PurchasingDepartment", "String4Bootstrap")
+                            </div>
+                        </div>                     
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    购买部门
+                                </th>
+                                <th>
+                                    服务名称
+                                </th>
+                                <th>
+                                    购买日期
+                                </th>
+                                <th>
+                                    服务费用(元)
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @item.PurchasingDepartment
+                                </td>
+                                <td>
+                                    @item.ServiceName
+                                </td>
+                                <td>
+                                    @CommonHelper.ToYYYYMMDD(item.PurchasingTime)
+                                </td>
+                                <td>
+                                    @item.ServiceCharge
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="showViewModal1('查看','/GovernmentPurchasing/Details/@item.Id')"><i class="fa fa-info"></i> 查 看</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+</script>

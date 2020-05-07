@@ -1,0 +1,465 @@
+﻿@{
+    Layout = null;
+}
+@model Cupcake.Web.Models.MapModel
+@using Cupcake.Web
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            font-family: "微软雅黑";
+        }
+
+        #allmap {
+            height: 700px;
+            width: 80%;
+        }
+
+        #overlayInfo {
+            height: 700px;
+            width: 20%;
+        }
+
+        #control {
+            width: 100%;
+        }
+    </style>
+
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8d2c5e957e613f7557e437dc38ec9676"></script>
+    <!--加载鼠标绘制工具-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+
+
+    <!--加载检索信息窗口-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+    <link href="~/Content/css/reload.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap-3.3.6.js"></script>
+    <link href="~/Content/css/bootstrap-3.3.6.css" rel="stylesheet" />
+    <title>地图绘制</title>
+</head>
+<body>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.lng)
+                        @Html.HiddenFor(m => m.lat)
+                        @Html.HiddenFor(m => m.CenterParentId)
+                        <div class="row">
+                            <div class="col-md-2 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">父级</label>
+                                    @Html.DropDownListFor(m => m.ParentId, DropdownListHelper.GetParentMapOverlays(), new { @class = "form-control", onchange = "refreshPage();" })
+                                </div>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">子级</label>
+                                    @if (ViewBag.ParentId != null)
+                                    {
+                                        @Html.DropDownListFor(m => m.ChildrenId, DropdownListHelper.GetChildMapOverlays((Guid)ViewBag.ParentId), new { @class = "form-control", onchange = "refreshPage();" })
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="ChildrenId" name="ChildrenId" onchange="loadListView();">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-md-8 form-group">
+                                <input type="checkbox" value="1" name="all" />所有&nbsp;&nbsp;
+                                <input type="checkbox" value="1" name="all" />显示子级兄弟
+                                <button type="button" class="btn btn-default shiny" onclick="openEdit();">启用编辑</button>
+                                <button type="button" class="btn btn-default shiny" onclick="closeEdit();">关闭编辑</button>
+                                <button type="button" class="btn btn-default shiny" style="color:red" onclick="deleteMap();">删 除</button>
+                                <button type="button" class="btn btn-default shiny" onclick="drawLine();">画 线</button>                                
+                                <button type="button" class="btn btn-default shiny" onclick="saveToDB(true);">更新遮盖物坐标点</button>
+                            </div>
+                        </div>
+                        <div class="row" id="NewMap">
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="overlayName">覆盖物名称</label>
+                                    <input type="text" id="overlayName" value="@Model.Name" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">坐标点</label>
+                                    <input type="text" id="newCenterLng" value="@Model.Coordinate" class="form-control" />
+
+                                </div>
+                            </div>
+                            <div class="col-md-2 form-group">
+                                <label style="color:red"><input class="form-control" type="radio" name="color" value="red" checked="checked" />红色</label>
+                                <label style="color:blue"><input class="form-control" type="radio" name="color" value="blue" />蓝色</label>
+                                <label style="color:green"><input class="form-control" type="radio" name="color" value="green" />绿色</label>
+                                <label style="color:yellow"><input class="form-control" type="radio" name="color" value="yellow" />黄色</label>
+                                <label style="color:black"><input class="form-control" type="radio" name="color" value="black" />黑色</label>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <button type="button" class="btn btn-default shiny" onclick="getXY();">开启取坐标</button>
+                                <button type="button" class="btn btn-default shiny" onclick="stopGetXY();">关闭取坐标</button>
+                                <button type="button" class="btn btn-default shiny" onclick="saveToDB(false);">更新遮盖物信息</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group">
+                                <div style="margin-top:10px;">
+                                    <div id="allmap" style="overflow:hidden;zoom:1;position:relative;float:left;">
+                                        <div id="map" style="height:100%;-webkit-transition: all 0.5s ease-in-out;transition: all 0.5s ease-in-out;"></div>
+                                    </div>
+                                    <div id="overlayInfo" style="float:left; ">
+                                        <span>**中心点坐标信息：</span>
+                                        <ul id="centerInfo" style="margin-left: 5px; height: 100px; overflow-y: auto">
+
+                                            @*@if (Model.ChildlistCenter != null && Model.ChildlistCenter.Count() > 0)
+                                                {
+                                                    foreach (var item in Model.ChildlistCenter)
+                                                    {
+                                                        <li overname="@item.Name" overlng="@item.Longitude" overtype="@item.Type" overparentid="@item.ParentId" overlat="@item.Latitude">
+                                                            <span>@item.Name :</span>
+                                                            <br />
+                                                            <span>@item.Longitude , @item.Latitude</span>
+                                                            <br />
+                                                        </li>
+                                                    }
+
+
+                                                }*@
+
+                                        </ul>
+                                        <span>**边界坐标信息：</span>
+                                        <ul id="overlayuls" style="margin-left: 5px; height: 300px; overflow-y: auto;">
+                                            @if (Model.listMap != null && Model.listMap.Count() > 0)
+                                            {
+                                                foreach (var item in Model.listMap)
+                                                {
+                                            <li overname="@item.Name" overcolor="@item.Color" overlng="@item.Longitude" mapoverlayid="@item.MapOverlayId" overlat="@item.Latitude">
+                                                <span>@item.Name</span>
+                                                <br />
+                                                <span>@item.Longitude , @item.Latitude</span>
+                                                <br />
+                                            </li>
+                                                }
+
+
+                                            }
+                                        </ul>
+
+                                        <span>**子集边界坐标信息：</span>
+                                        <ul id="childOverlayuls" style="margin-left: 5px; height: 240px; overflow-y: auto">
+                                            @*@if (Model.ChildLisMap != null && Model.ChildLisMap.Count() > 0)
+                                                {
+                                                    foreach (var item in Model.ChildLisMap)
+                                                    {
+                                                        <li overname="@item.Name" overlng="@item.Longitude" overtype="@item.Type" overparentid="@item.MapCenterId" overlat="@item.Latitude">
+                                                            <span>@item.Name :</span>
+                                                            <br />
+                                                            <span>@item.Longitude , @item.Latitude</span>
+                                                            <br />
+                                                        </li>
+                                                    }
+                                                }*@
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function deleteMap() {
+            var deleteId, deleteText;
+            if ($("#ParentId").val() != "") {
+                if ($("#ChildrenId").val() != "") {
+                    deleteId = $("#ChildrenId").val();
+                    deleteText = $("#ChildrenId").find("option:selected").text();
+                }
+                else {
+                    deleteId = $("#ParentId").val();
+                    deleteText = $("#ParentId").find("option:selected").text();
+                }
+            }
+            else {
+                alert("你要选择遮盖物啊");
+            }
+            if (deleteId) {
+                if (confirm("想清楚，删除了无法恢复")) {
+                    $.post("/Map/Delete", { id: deleteId },
+                       function (data) {
+                           if (data == "1") {
+                               Notify('成功', 'bottom-right', '4000', 'success', 'fa-check', true);
+                               setTimeout("location.reload();", 2000);
+                           }
+                           else
+                           {
+                               Notify('该遮盖物下面有子级无法删除', 'bottom-right', '4000', 'error', 'fa-times', true);
+                           }
+                       }, "text");
+                }
+            }
+        }
+        function refreshPage() {
+            $(".widget-body").find("form:first").submit();
+        }
+        var all
+        // 百度地图API功能
+
+        var map = new BMap.Map('map', { enableMapClick: false });
+        map.centerAndZoom(new BMap.Point($("#lng").val(), $("#lat").val()), 13);
+        map.enableScrollWheelZoom(true);
+
+        var overlayType = "";
+        var overlays = [];
+        var overlayNames = [];
+        var centerPoionter = [];
+        var centerParentId = [];
+        var drawingManager = null;
+        setTimeout(function () {
+            var overlaycomplete = function (e) {
+                var polyline = e.overlay;
+                /*-----------------折线右键删除-------------------------*/
+                var polylineMenu = new BMap.ContextMenu();
+                polylineMenu.addItem(new BMap.MenuItem('删除折线', function () {
+                    map.removeOverlay(polyline);
+                }));
+                polyline.addContextMenu(polylineMenu);
+
+                overlays.push(e.overlay);
+                drawingManager.close();
+                overlayNames.push($("#overlayName").val() + "*" + overlayType);
+                centerPoionter.push($("#newCenterLng").val() + "," + $("#newCenterLat").val());
+                centerParentId.push($("#ParentId").val());
+            };
+
+            //实例化鼠标绘制工具
+            drawingManager = new BMapLib.DrawingManager(map, {
+                isOpen: false, //是否开启绘制模式
+                enableDrawingTool: false, //是否显示工具栏
+                drawingToolOptions: {
+                    anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+                    offset: new BMap.Size(5, 5), //偏离值
+                    drawingModes: [BMAP_DRAWING_POLYLINE]
+                }
+            });
+            //添加鼠标绘制工具监听事件，用于获取绘制结果
+            drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+        }, 200)
+
+        var styleOptions = {
+            strokeColor: "red",    //边线颜色。
+            fillColor: "red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+            strokeWeight: 3,       //边线的宽度，以像素为单位。
+            strokeOpacity: 0.8,	   //边线透明度，取值范围0 - 1。
+            fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+            strokeStyle: 'solid' //边线的样式，solid或dashed。
+        }
+
+        function clearAll() {
+            if (window.confirm('你确定要清除所有覆盖物吗？')) {
+                for (var i = 0; i < overlays.length; i++) {
+                    map.removeOverlay(overlays[i]);
+                }
+                overlays.length = 0;
+                return true;
+            } else {
+                return false;
+            }
+        }
+        function openEdit() {
+            for (var i = 0; i < overlays.length; i++) {
+                overlays[i].enableEditing();
+            }
+        }
+        function closeEdit() {
+            for (var i = 0; i < overlays.length; i++) {
+                overlays[i].disableEditing();
+            }
+        }
+        function show() {
+            var w = "";
+            for (var i = 0; i < overlays.length; i++) {
+                var as = overlays[i].getPath();
+                w += overlayNames[i] + ":<br>";
+                for (var i = 0; i < as.length; i++) {
+                    w += as[i].lng + "," + as[i].lat + "<br>";
+                }
+            }
+            $("#overlayInfo").html(w);
+        }
+        function saveToDB(isUpdatePoints) {
+            if (checkInfo()) {
+                var paras = "";
+                for (var i = 0; i < overlays.length; i++) {
+                    var as = overlays[i].getPath();
+                    var asarr = "";
+                    for (var j = 0; j < as.length; j++) {
+                        asarr += as[j].lng + "," + as[j].lat + "|";
+                    }
+                }
+                $.post("/Map/UpdateOverlays", { name: $("#overlayName").val(), parentId: "@ViewBag.ParentId", points: asarr, color: $("input:radio[name='color']:checked").val(), xy: $("#newCenterLng").val(), id: "@Model.Id", isUpdatePoints: isUpdatePoints },
+                       function (data) {
+                           Notify('成功', 'bottom-right', '4000', 'success', 'fa-check', true);
+                           setTimeout("location.reload();", 2000);
+                       }, "text");
+            }
+        }
+        function checkInfo() {
+            if ($("#overlayName").val() == "") {
+                alert("请输入名称");
+                return false;
+            }
+            return true;
+        }
+        function showXYInfo(e) {
+            $("#newCenterLng").val(e.point.lng + "," + e.point.lat);
+        }
+        function getXY() {
+            map.addEventListener("click", showXYInfo);
+        }
+        function stopGetXY() {
+            map.removeEventListener("click", showXYInfo);
+        }
+        function drawLine() {
+            if (checkInfo()) {
+                styleOptions.strokeColor = $("input:radio[name='color']:checked").val();
+                styleOptions.fillColor = $("input:radio[name='color']:checked").val();
+                drawingManager.polylineOptions = styleOptions;
+                drawingManager.open();
+                drawingManager.setDrawingMode(BMAP_DRAWING_POLYLINE);
+            }
+        }
+
+        var templatePolyline = "";
+        var Polyline = "";
+        var points = [];
+        var vpPoints = [];
+        var styleoptions = "";
+        var tempname = "";
+        var tempcenterpoints = [];
+        var tempParentId = [];
+        var i = 0;
+        var j = 0;
+        var k = 0;
+
+        $("#centerInfo li").each(function () {
+            tempcenterpoints.push($(this).attr("overlng") + "," + $(this).attr("overlat"));
+            tempParentId.push($(this).attr("overparentid"))
+        })
+        var temptype = "";
+
+        //显示画线
+        var tmpMapOverlayId = "";
+        var lastColor = "red";
+        $("#overlayuls li").each(function () {
+            var mapOverlayId = $(this).attr("mapOverlayId");
+            if (tmpMapOverlayId != mapOverlayId) {
+                tmpMapOverlayId = mapOverlayId;
+                if (tmpMapOverlayId != "") {
+                    addPolyline($(this).attr("overcolor"));
+                }
+            }
+            points.push(new BMap.Point($(this).attr("overlng"), $(this).attr("overlat")));
+            vpPoints.push(new BMap.Point($(this).attr("overlng"), $(this).attr("overlat")));
+            lastColor = $(this).attr("overcolor");
+        });
+        addPolyline(lastColor);
+        map.setViewport(vpPoints);
+
+        function addPolyline(color) {
+            styleOptions.fillColor = color;
+            styleOptions.strokeColor = color;
+            var Polyline = new BMap.Polyline(points, styleOptions);
+            overlays.push(Polyline);
+            map.addOverlay(Polyline);
+            points = [];
+        }
+
+        $("#childOverlayuls li").each(function () {
+            var temp = $(this).attr("overname") + $(this).attr("overtype");
+
+            if (templatePolyline != temp) {
+
+                if (i != 0) {
+
+                    var Polyline = new BMap.Polyline(points, styleoptions);
+                    map.addOverlay(Polyline);
+                    map.centerAndZoom(new BMap.Point($("#lng").val(), $("#lat").val()), 13);
+                    points = [];
+
+                    overlays.push(Polyline);
+                    overlayNames.push(tempname + "*" + temptype);
+
+                    centerPoionter.push(tempcenterpoints[i - 1]);
+                    centerParentId.push(tempParentId[i - 1]);
+
+
+                    j = j + 1;
+                }
+                temptype = $(this).attr("overtype");
+                tempname = $(this).attr("overname");
+                templatePolyline = temp;
+                if ($(this).attr("overtype") == "1") {
+                    styleoptions = streetStyleOptions;
+                }
+                points.push(new BMap.Point($(this).attr("overlng"), $(this).attr("overlat")));
+                i = i + 1;
+
+
+
+            } else {
+                j = j + 1;
+                points.push(new BMap.Point($(this).attr("overlng"), $(this).attr("overlat")));
+                if ($("#childOverlayuls li").length == j + 1) {
+                    if ($(this).attr("overtype") == "1") {
+                        styleoptions = streetStyleOptions;
+                    }
+                    var Polyline = new BMap.Polyline(points, styleoptions);
+                    map.addOverlay(Polyline);
+                    map.centerAndZoom(new BMap.Point($("#lng").val(), $("#lat").val()), 13);
+                    overlays.push(Polyline);
+                    overlayNames.push(tempname + "*" + temptype);
+
+                    centerPoionter.push(tempcenterpoints[i - 1]);
+                    centerParentId.push(tempParentId[i - 1]);
+                }
+            }
+
+            temptype = $(this).attr("overtype");
+            tempname = $(this).attr("overname");
+
+        })
+        function Notify(n, t, i, r, u, f) {
+            toastr.options.positionClass = "toast-" + t;
+            toastr.options.extendedTimeOut = 0;
+            toastr.options.timeOut = i;
+            toastr.options.closeButton = f;
+            toastr.options.iconClass = u + " toast-" + r;
+            toastr.custom(n)
+        }
+
+        $(document).ready(function () {
+            $("input[name='color'][value=@Model.Color]").attr("checked", true);
+        });
+</script>
+    <script src="~/Content/js/toastr/toastr.js"></script>
+</body>
+</html>

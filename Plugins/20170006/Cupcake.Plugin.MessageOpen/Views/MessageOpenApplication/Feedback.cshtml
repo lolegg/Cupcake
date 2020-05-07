@@ -1,0 +1,815 @@
+﻿@model Cupcake.Plugin.MessageOpen.Models.MessageOpenApplicationModel
+    @using Cupcake.Web
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.MessageOpen.Helper
+<style>
+    .input-1 {
+        BORDER-RIGHT: #004d91 1px solid;
+        BORDER-TOP: #004d91 1px solid;
+        FONT-SIZE: 12px;
+        BORDER-LEFT: #004d91 1px solid;
+        WIDTH: 143px;
+        COLOR: #004d91;
+        BORDER-BOTTOM: #004d91 1px solid;
+        FONT-FAMILY: "Verdana";
+        HEIGHT: 20px;
+        BACKGROUND-COLOR: #f7fbff;
+    }
+
+    .input-2 {
+        BORDER-RIGHT: 0px;
+        BORDER-TOP: 0px;
+        FONT-SIZE: 12px;
+        BORDER-LEFT: 0px;
+        COLOR: #ffffff;
+        BORDER-BOTTOM: 0px;
+        FONT-FAMILY: "Verdana";
+        HEIGHT: 14px;
+        BACKGROUND-COLOR: #87c02d;
+    }
+
+    .shadow-1 {
+        filter: DropShadow(Color=#1C79B3, OffX=1, OffY=1);
+    }
+
+    td {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #333333;
+        padding:5px;
+        border:solid 1px #ccc;
+        text-decoration: none;
+        line-height: 18px;
+    }
+
+    a {
+        font-size: 12px;
+        color: #383838;
+        text-decoration: none;
+        line-height: 18px;
+    }
+
+        a:hover {
+            font-size: 12px;
+            color: #25A7BE;
+            text-decoration: none;
+        }
+
+    .text_orange {
+        FONT-SIZE: 12px;
+        COLOR: #cc5b00;
+        FONT-FAMILY: "ËÎÌå";
+        TEXT-DECORATION: none;
+    }
+
+        .text_orange:hover {
+            FONT-SIZE: 12px;
+            COLOR: #000000;
+            FONT-FAMILY: "ËÎÌå";
+            TEXT-DECORATION: none;
+        }
+
+    .text_orange1 {
+        FONT-SIZE: 12px;
+        COLOR: #000000;
+        FONT-FAMILY: "ËÎÌå";
+        TEXT-DECORATION: none;
+    }
+
+        .text_orange1:hover {
+            FONT-SIZE: 12px;
+            COLOR: #cc5b00;
+            FONT-FAMILY: "ËÎÌå";
+            TEXT-DECORATION: none;
+        }
+
+    .img-border {
+        border: 6px solid #FFFFFF;
+    }
+
+    .number {
+        font-family: "Verdana";
+        font-size: 10px;
+        color: #383838;
+        text-decoration: none;
+    }
+
+    .number-big {
+        font-family: "Arial";
+        font-size: 20px;
+        color: #E71838;
+        text-decoration: none;
+        0;
+    }
+
+    .text-black {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #333333;
+        text-decoration: none;
+        line-height: 25px;
+    }
+
+        .text-black:hover {
+            color: #0057b8;
+            text-decoration: none;
+        }
+
+    .text-time {
+        font-family: "Verdana";
+        font-size: 11px;
+        color: #333333;
+        text-decoration: none;
+        line-height: 18px;
+    }
+
+        .text-time:hover {
+            color: #347800;
+            text-decoration: none;
+        }
+
+    .text-black-r {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #333333;
+        text-decoration: none;
+        line-height: 18px;
+    }
+
+        .text-black-r:hover {
+            color: #FE7800;
+            text-decoration: none;
+        }
+
+    .text-blue {
+        font-family: Verdana;
+        font-size: 12px;
+        color: #0052c4;
+        text-decoration: none;
+    }
+
+        .text-blue:hover {
+            color: #298EBE;
+            text-decoration: none;
+        }
+
+    .text_blue1 {
+        FONT-SIZE: 12px;
+        COLOR: #0057b8;
+        FONT-FAMILY: "ËÎÌå";
+        TEXT-DECORATION: none;
+    }
+
+        .text_blue1:hover {
+            COLOR: #de5900;
+            TEXT-DECORATION: none;
+        }
+
+    .text-yellow {
+        font-family: Verdana;
+        font-size: 12px;
+        color: #F57900;
+        text-decoration: none;
+        line-height: 18px;
+    }
+
+        .text-yellow:hover {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+    .text-white {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #0052c4;
+        text-decoration: none;
+    }
+
+        .text-white:hover {
+            font-size: 12px;
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+    .input-2 {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #016CAF;
+        height: 15px;
+        border: thin inset;
+        background-color: #FDFDFD;
+    }
+
+    .input-1 {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #0C5327;
+        height: 18px;
+        border: 1px #6AA848 solid;
+        background-color: #D6ED99;
+    }
+
+    .title-black {
+        font-family: "¿¬Ìå_GB2312";
+        font-size: 20;
+        color: #000000;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .title-blue {
+        font-size: 13px;
+        color: #0052C4;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .title-blue1 {
+        font-size: 14px;
+        color: #cc5b00;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .title-blue:hover {
+        font-size: 13px;
+        color: #0052C4;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .title-blue1:hover {
+        font-size: 14px;
+        color: #0052C4;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .title-white {
+        font-size: 14px;
+        color: #FFFFFF;
+        text-decoration: none;
+        font-weight: bold;
+        line-height: 25px;
+    }
+
+    .input-button {
+        font-family: "Verdana";
+        font-size: 12px;
+        color: #ffffff;
+        font-size:16px;
+        padding:5px 15px;
+        border:none;
+        background-color: #D20117;
+    }
+
+    .dash {
+        border-bottom-color: #e7e7e7;
+        border-bottom-style: dashed;
+        border-bottom-width: 1px;
+    }
+
+    .list-text.clsMouseOver {
+        background-image: url(../images/lm_listover.gif);
+        color: #42B800;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 13px;
+        font-weight: bold;
+        height: 32px;
+        width: 189px;
+        padding-top: 6px;
+        padding-left: 22px;
+        padding-right: 10px;
+    }
+
+    .list-text.clsLabel {
+        background-image: url(../images/lm_list.gif);
+        color: #006BA1;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 13px;
+        font-weight: bold;
+        height: 32px;
+        width: 189px;
+        padding-top: 6px;
+        padding-left: 20px;
+        padding-right: 10px;
+    }
+
+    .list-text.clsCurrentHasFocus {
+        background-image: url(../images/lm_listover.gif);
+        color: #006BA1;
+        text-decoration: none;
+        font-family: Verdana;
+        font-size: 13px;
+        font-weight: bold;
+        height: 32px;
+        width: 189px;
+        padding-top: 6px;
+        padding-left: 20px;
+        padding-right: 10px;
+    }
+
+    .list-text {
+        font-family: Verdana;
+        font-size: 13px;
+        color: #006BA1;
+        text-decoration: none;
+        font-weight: bold;
+        background-image: url(../images/lm_list.gif);
+        height: 32px;
+        width: 189px;
+        padding-top: 6px;
+        padding-left: 20px;
+        padding-right: 10px;
+    }
+
+    .back-x {
+        background-repeat: repeat-x;
+    }
+</style>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "查看");}
+                <div class="widget-body">
+                   
+                    <form name="formSubmit" method="post" onsubmit="return checkValue();" action="submit.asp">
+
+                        <table style="width:100%"  border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="6E8FD6">
+                            <tbody>
+                                <tr>
+
+                                    <td width="25" align="center" bgcolor="#ACD8FD" class="text-2">
+                                        <nobr>
+                                            <font color="E60020">
+                                                <strong>
+                                                    申<br>
+                                                    请<br>
+                                                    人<br>
+                                                    信<br>
+                                                    息
+                                                </strong>
+                                            </font>
+                                        </nobr>
+                                    </td>
+
+                                    <td valign="top" width="620">
+                                        <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#DFDFDF" class="text-1">
+                                            <tbody>
+                                                <tr>
+
+                                                    <td width="4%" rowspan="5" align="center" bgcolor="E4F2FD" class="text-1">
+                                                        <nobr>
+                                                            <b>
+                                                                公<br>
+                                                                民
+                                                            </b>
+                                                        </nobr><nobr></nobr>
+                                                    </td>
+
+                                                    <td width="18%" align="center" bgcolor="#F8F8F8">
+                                                        <font color="#E70000">＊</font>姓名
+                                                    </td>
+                                                    <td colspan="3" bgcolor="#FFFFFF">
+
+                                                        @Html.TextBoxFor(m => m.publicName, new { @readonly = "true", @class = "input-textfield", @name = "CI_name", maxlength = "40" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>证件名称</td>
+                                                    <td width="30%" bgcolor="#FFFFFF">
+
+                                                        @Html.TextBoxFor(m => m.publicCardName, new { @readonly = "true", @class = "input-textfield", @name = "CI_paperName", maxlength = "20" })
+                                                    </td>
+
+                                                    <td width="14%" align="center" bgcolor="#F8F8F8"><font color="#E70000">＊</font>证件号码</td>
+                                                    <td bgcolor="#FFFFFF" width="34%">
+
+                                                        @Html.TextBoxFor(m => m.publicCardNumber, new { @readonly = "true", @class = "input-textfield", @name = "CI_paperNum" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>通信地址</td>
+                                                    <td bgcolor="#FFFFFF" width="30%">
+                                                        @Html.TextBoxFor(m => m.publicAddress, new { @readonly = "true", @class = "input-textfield", @name = "CI_address" })
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="14%"><font color="#E70000">＊</font>邮政编码</td>
+                                                    <td bgcolor="#FFFFFF" width="34%">
+                                                        @Html.TextBoxFor(m => m.publicPostalCode, new { @readonly = "true", @class = "input-textfield", @name = "CI_postalcode", maxlength = "6" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>联系电话</td>
+                                                    <td bgcolor="#FFFFFF" width="30%">
+                                                        @Html.TextBoxFor(m => m.publicPhone, new { @readonly = "true", @class = "input-textfield", @name = "CI_contactPhone" })
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="14%">传 真 </td>
+                                                    <td bgcolor="#FFFFFF" width="34%">
+                                                        @Html.TextBoxFor(m => m.publicFax, new { @readonly = "true", @class = "input-textfield", @name = "CI_fax" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>电子邮箱</td>
+                                                    <td colspan="3" bgcolor="#FFFFFF">
+                                                        @Html.TextBoxFor(m => m.publicMail, new { @readonly = "true", @class = "input-textfield", @name = "CI_email" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td width="4%" rowspan="5" align="center" bgcolor="E4F2FD" class="text-1">
+                                                        <nobr>
+                                                            <b>
+                                                                法<br>
+                                                                人<br>
+                                                                /<br>
+                                                                其<br>
+                                                                他<br>
+                                                                组<br>
+                                                                织
+                                                            </b>
+                                                        </nobr><nobr></nobr>
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%">
+                                                        <font color="#E70000">＊</font>名 称
+                                                    </td>
+
+                                                    <td bgcolor="#FFFFFF" width="30%">
+                                                        @Html.TextBoxFor(m => m.OtherName, new { @readonly = "true", @class = "input-textfield", @name = "CO_name" })
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="14%">组织机构代码</td>
+                                                    <td bgcolor="#FFFFFF" width="34%">
+                                                        @Html.TextBoxFor(m => m.OtherCode, new { @readonly = "true", @class = "input-textfield", @name = "CO_code" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>通信地址</td>
+                                                    <td colspan="3" bgcolor="#FFFFFF">
+                                                        @Html.TextBoxFor(m => m.OtherAddress, new { @readonly = "true", @class = "input-textfield", @name = "CO_linkmanNameAddr" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%"><font color="#E70000">＊</font>法人代表</td>
+                                                    <td bgcolor="#FFFFFF" width="30%">
+                                                        @Html.TextBoxFor(m => m.OtherDeputy, new { @readonly = "true", @class = "input-textfield", @name = "CO_artificialPerson", maxlength = "20" })
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="14%"><font color="#E70000">＊</font>联系人姓名</td>
+                                                    <td bgcolor="#FFFFFF" width="34%">
+                                                        @Html.TextBoxFor(m => m.OtherContactName, new { @readonly = "true", @class = "input-textfield", @name = "CO_linkmanName", maxlength = "20" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" height="43" width="18%"><font color="#E70000">＊</font>联系人电话</td>
+                                                    <td bgcolor="#FFFFFF" height="43" width="30%">
+                                                        @Html.TextBoxFor(m => m.OtherContactPhone, new { @readonly = "true", @class = "input-textfield", @name = "CO_linkmanNamePhone", maxlength = "20" })
+                                                    </td>
+
+                                                    <td align="center" bgcolor="#F8F8F8" height="43" width="14%">传 真</td>
+                                                    <td bgcolor="#FFFFFF" height="43" width="34%">
+                                                        @Html.TextBoxFor(m => m.OtherFax, new { @readonly = "true", @class = "input-textfield", @name = "CO_fax", maxlength = "20" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="18%">联系人电子邮件</td>
+                                                    <td colspan="3" bgcolor="#FFFFFF">
+                                                        @Html.TextBoxFor(m => m.Othermail, new { @readonly = "true", @class = "input-textfield", @name = "CO_linkmanNameEmail", maxlength = "30" })
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td align="center" bgcolor="ACD8FD" class="text-2" width="25">
+                                        <nobr>
+                                            <font color="E60020">
+                                                <strong>
+                                                    所<br>
+                                                    需<br>
+                                                    信<br>
+                                                    息<br>
+                                                    情<br>
+                                                    况
+                                                </strong>
+                                            </font>
+                                        </nobr>
+                                    </td>
+
+                                    <td valign="top" width="620">
+                                        <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#DFDFDF" class="text-1">
+                                            <tbody>
+                                                <tr>
+
+                                                    <td width="10%" align="center" bgcolor="#F8F8F8"><font color="#E70000">＊</font>所需信息的内容描述</td>
+                                                    <td bgcolor="#FFFFFF" width="90%">
+                                                        <textarea id="Details" name="IOA_contentDepict" rows="8" wrap="VIRTUAL" class="input-textarea" cols="60" style="margin: 0px; width: 913px; height: 135px;"></textarea>
+
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#DFDFDF" class="text-1">
+                                            <tbody>
+                                                <tr bgcolor="F8F8F8">
+                                                    <td colspan="2" align="center"><b>选 填 部 分</b></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="21%" align="center" bgcolor="#F8F8F8">所需信息的索取号</td>
+                                                    <td bgcolor="#FFFFFF" width="79%">
+                                                        @*<input name="IOA_comeDownOnNum" type="text" class="input-textfield" maxlength="30">*@
+                                                        @Html.TextBoxFor(m => m.ClaimNumber, new { @readonly = "true", @class = "input-textfield", @name = "IOA_comeDownOnNum", maxlength = "30" })
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td align="center" bgcolor="#F8F8F8" width="21%">所需信息的用途</td>
+
+                                                    <td bgcolor="#FFFFFF" width="79%">
+                                                        @*<input name="IOA_purpose" type="text" class="input-textfield" maxlength="30">*@
+                                                        @Html.TextBoxFor(m => m.purpose, new { @readonly = "true", @class = "input-textfield", @name = "IOA_purpose", maxlength = "30" })
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#DFDFDF" class="text-1">
+                                            <tbody>
+                                                <tr align="center" bgcolor="#F8F8F8">
+
+                                                    <td width="32%">是否申请减免费用</td>
+
+                                                    <td width="38%">所需信息的指定提供方式（可多选）</td>
+
+                                                    <td width="30%">获取信息的方式（可多选）</td>
+                                                </tr>
+                                                <tr bgcolor="#FFFFFF">
+
+                                                    <td valign="top" bgcolor="#FFFFFF" width="32%">
+                                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="text-1">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td width="15">
+                                                                        <input type="radio" name="IOA_feeSign1" id="yesApplyCost" value="1" disabled="disabled">
+                                                                    </td>
+                                                                    <td>申请。请提供相关证明</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <input name="IOA_feeSign1" type="radio" id="noApplyCost" value="0" disabled="disabled">
+                                                                    </td>
+                                                                    <td>不</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+
+                                                    <td valign="top" bgcolor="#FFFFFF" width="38%">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="text-1">
+                                                            <tbody>
+                                                                @{string[] itme = Model.ApplyProviding.Split(',');
+                                                                bool isApplyProviding1 = false;
+                                                                bool isApplyProviding2 = false;
+                                                                bool isApplyProviding3 = false;
+                                                                bool isApplyProviding4 = false;
+
+                                                                }
+
+                                                                @for (int i = 0; i < itme.Length; i++)
+                                                                {
+                                                                    if (itme[i] == "1") { isApplyProviding1 = true; }
+                                                                    if (itme[i] == "2") { isApplyProviding2 = true; }
+                                                                    if (itme[i] == "3") { isApplyProviding3 = true; }
+                                                                    if (itme[i] == "4") { isApplyProviding4 = true; }
+                                                                }
+                                                                <tr>
+                                                                    <td width="15">
+                                                                        @if (isApplyProviding1 == true)
+                                                                        {<input type="checkbox" name="IOA_offerMode1" value="1" checked="checked" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_offerMode1" value="1" disabled="disabled">
+                                                                        }
+                                                                    </td>
+                                                                    <td>纸面</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyProviding2 == true)
+                                                                        {<input type="checkbox" name="IOA_offerMode2" value="2" checked="checked" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        { <input type="checkbox" name="IOA_offerMode2" value="2" disabled="disabled">}
+                                                                    </td>
+                                                                    <td>电子邮件</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyProviding3 == true)
+                                                                        {<input type="checkbox" name="IOA_offerMode3" value="3" checked="checked" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        { <input type="checkbox" name="IOA_offerMode3" value="3" disabled="disabled"> }
+
+                                                                    </td>
+                                                                    <td>光盘</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyProviding4 == true)
+                                                                        {<input type="checkbox" name="IOA_offerMode4" value="4" checked="checked" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        { <input type="checkbox" name="IOA_offerMode4" value="4" disabled="disabled"> }
+
+                                                                    </td>
+                                                                    <td>磁盘</td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+
+                                                    <td valign="top" bgcolor="#FFFFFF" width="30%">
+                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="text-1">
+                                                            <tbody>
+                                                                @{string[] itme1 = Model.Applyinformation.Split(',');
+                                                                bool isApplyinformation1 = false;
+                                                                bool isApplyinformation2 = false;
+                                                                bool isApplyinformation3 = false;
+                                                                bool isApplyinformation4 = false;
+                                                                bool isApplyinformation5 = false;
+                                                                }
+                                                                @for (int i = 0; i < itme1.Length; i++)
+                                                                {
+                                                                    if (itme1[i] == "1") { isApplyinformation1 = true; }
+                                                                    if (itme1[i] == "2") { isApplyinformation2 = true; }
+                                                                    if (itme1[i] == "3") { isApplyinformation3 = true; }
+                                                                    if (itme1[i] == "4") { isApplyinformation4 = true; }
+                                                                    if (itme1[i] == "5") { isApplyinformation4 = true; }
+                                                                }
+                                                                <tr>
+                                                                    <td width="15">
+                                                                        @if (isApplyinformation1 == true)
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode1" id="yjApplyProviding" checked="checked" value="1" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode1" id="yjApplyProviding" value="1" disabled="disabled">
+                                                                        }
+
+                                                                    </td>
+                                                                    <td>邮寄</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyinformation2 == true)
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode2" id="kdApplyProviding" checked="checked" value="2" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        {  <input type="checkbox" name="IOA_getInfoMode2" id="kdApplyProviding" value="2" disabled="disabled">}
+
+                                                                    </td>
+                                                                    <td>快递</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyinformation3 == true)
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode3" id="dzyjApplyProviding" checked="checked" value="3" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        { <input type="checkbox" name="IOA_getInfoMode3" id="dzyjApplyProviding" value="3" disabled="disabled">}
+
+                                                                    </td>
+                                                                    <td>电子邮件</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyinformation4 == true)
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode4" id="czApplyProviding" checked="checked" value="4" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        {<input type="checkbox" name="IOA_getInfoMode4" id="czApplyProviding" value="4" disabled="disabled"> }
+
+                                                                    </td>
+                                                                    <td>传真</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        @if (isApplyinformation5 == true)
+                                                                        {
+                                                                            <input type="checkbox" name="IOA_getInfoMode5" id="zxlqApplyProviding" checked="checked" value="5" disabled="disabled">
+                                                                        }
+                                                                        else
+                                                                        { <input type="checkbox" name="IOA_getInfoMode5" id="zxlqApplyProviding" value="5" disabled="disabled">}
+
+                                                                    </td>
+                                                                    <td>自行领取</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                <tr bgcolor="#F8F8F8">
+                                                    <td colspan="3">
+                                                        <input type="checkbox" name="IOA_ohterOfferMode" id="OtherWays" value="1" disabled="disabled">
+                                                        若本机关无法按照指定方式提供所需信息，也可接受其他方式
+                                                    </td>
+                                                </tr>
+                                             
+                                          </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                        <table style="width:100%"  border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <textarea placeholder="请输入反馈信息。。。" style="width:100%;padding:10px;resize:none;height:120px " id="Feedback"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" width="600" style="border:none">
+                                        @Html.HiddenFor(m=>m.Id)
+                                        <input  type="button" class="input-button" onclick="Update()" value="提 交">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+
+                   
+                    <div class="form-group" style="text-align:center;margin-top:20px;">
+                        <button type="button" class="btn btn-default shiny" onclick="groupLoad('MessageOpenApplication/Index')"> 返 回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function groupLoad(href) {
+            $('.page-body').load(href);
+        }
+        $(document).ready(function () {
+            //是否申请减免费用
+            if ('@Model.ApplyCost' == '1') {
+                $("#yesApplyCost").prop('checked', 'checked');
+            } else {
+                $("#noApplyCost").prop('checked', 'checked')
+            }
+            //是否接受其他方式
+            debugger
+            if('@Model.OtherWays'=='True'){
+                $("#OtherWays").prop('checked', 'checked');
+            } 
+            if ('@Model.Details' != "") {
+                $("#Details").val(@Model.Details)
+            }
+        });
+        function Update() {
+            var Id = $("#Id").val();
+            var Feedback = $("#Feedback").val();
+            if (Feedback != "" && Feedback!=null) {
+            $.ajax({
+                type: "post",
+                url: "/MessageOpenApplication/Feedback",
+                data: "Id=" + Id + "&Feedback=" + Feedback,
+                datatype: "json",
+                success: function (data) {
+                    alert("")
+                }
+            });
+            }
+        }
+ 
+    </script>

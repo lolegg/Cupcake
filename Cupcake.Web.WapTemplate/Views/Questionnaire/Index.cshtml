@@ -1,0 +1,22 @@
+﻿@model Cupcake.Web.WapTemplate.Models.QuestionSurveyListModel
+@{
+    ViewBag.Title = "问卷调查";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/Questionnaire.css" rel="stylesheet" />
+<div class="width_auto" style=" box-shadow: #666 0px 0px 10px;padding:30px 0px 20px 0px;margin:50px 100px 0 100px;">
+    <ul class="wenj_dcha">
+        @if (Model.List != null)
+        {
+            for (int i = 0; i < Model.List.Count; i++)
+            {
+                <a href="/Questionnaire/QuestionInfo?QuestionSurveyId=@Model.List[i].id">
+                    <li class="aa">
+                        @Model.List[i].Title
+                    </li>
+                </a>
+            }
+        }
+    </ul>
+</div>
+

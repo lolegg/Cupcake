@@ -1,0 +1,127 @@
+﻿@model Cupcake.Plugin.TaskModule.Models.TaskIssuedModel
+@using Cupcake.Plugin.TaskModule.Helper
+@*@{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.TaskOverview, new { @class = "input-group-addon" })
+                                <div class="form-control">@Model.TaskOverview</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Description, new { @class = "input-group-addon" })
+                                <div class="form-control">@Model.Description</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.IssuedDate, new { @class = "input-group-addon" })
+                                <div class="form-control">@Model.IssuedDate.ToString("yyyy/MM/dd")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Publisher, new { @class = "input-group-addon" })
+                                <div class="form-control">@Model.Publisher</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.CompleteDate, new { @class = "input-group-addon" })
+                                <div class="form-control">@Model.CompleteDate.ToString("yyyy/MM/dd")</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.TaskType, new { @class = "input-group-addon" })
+                                <div class="form-control">@DataDictionaryHelper.GetName(Guid.Parse(Model.TaskType))</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Department, new { @class = "input-group-addon" })
+                                <div class="form-control">@DataDictionaryHelper.GetOrganizationName(Model.Department)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @if (!string.IsNullOrEmpty(Model.EnclosureUrl))
+                                {
+                                    <div>
+                                        附件:
+                                        @{
+                                    string[] sArray = Model.EnclosureUrl.Split(new char[] { ',' });
+                                    string[] sArrayName = Model.EnclosureName.Split(new char[] { ',' });
+                                    string[] sThumbnail = Model.Thumbnail.Split(new char[] { ',' });
+                                        }
+                                        @for (int i = 0; i < sArray.Count(); i++)
+                                       {
+                                            <div style="margin-top:5px;"><img src="@sThumbnail[i]" style=" width:25px;height:25px;" /><a href="@sArray[i]" target="_blank" download="@sArrayName[i]" >@sArrayName[i] 下载</a></div>
+                                        }
+
+                                    </div>
+                                }
+                                @*@if (!string.IsNullOrEmpty(Model.EnclosureUrl))
+                                {
+                                      <h3 style="margin: 0px 0px 10px 0px; ">
+                                        相关图片
+                                    </h3>
+                                    <div>
+                                        @{
+                                    string[] sArray = Model.EnclosureUrl.Split(new char[] { ',' });
+                                        }
+                                        @for (int i = 0; i < sArray.Count(); i++)
+                                        {
+                                            <img src="@sArray[i]" width="100px" height="100px" />
+                                        }
+
+                                    </div>
+                                }*@
+                            </div>
+                               
+                        </div>
+                    </div>
+                </div>
+                
+               
+            }
+        </div>
+    </div>
+</div>

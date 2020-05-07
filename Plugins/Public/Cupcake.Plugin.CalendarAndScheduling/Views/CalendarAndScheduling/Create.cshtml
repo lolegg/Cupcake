@@ -1,0 +1,85 @@
+﻿@model Cupcake.Plugin.CalendarAndScheduling.Models.CalendarAndSchedulingModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.CalendarAndScheduling
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m=>m.month)
+                @Html.HiddenFor(m => m.dayNum)
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.Editor("Title", "String4Bootstrap")
+                            </div>
+                            </div>
+                        </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">重要程度</label>
+                                @Html.Editor("ImportantLevel", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("日历工作重要程度") })
+                                @Html.ValidationMessageFor(m => m.ImportantLevel)
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">日期</label>
+                               <span class="form-control">@PluginHelper.GetDateFormatMYD(Model.DateT)</span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">时间</label>
+                                @Html.Editor("DateT", "DateTime4Bootstrap")
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">工作内容</label>
+                                @Html.TextArea("Content", new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+            </div>
+        </div>
+    </div>
+                <script>
+                    $(document).ready(function () {
+                        $('.fa-save').parent().prop('style', 'display:')
+                        $("#DateT").val('@PluginHelper.GetDateFormatHHMM(Model.DateT)')
+
+
+                        $("#DateT").click(function () {
+                            WdatePicker({ dateFmt: 'H:mm', readOnly: true });
+                        });
+
+                    });
+                </script>

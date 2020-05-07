@@ -1,0 +1,166 @@
+﻿@model Cupcake.Web.WapTemplate.Models.QuestionnaireProblemModels
+@using Cupcake.Web.WapTemplate.Helper
+@{
+    ViewBag.Title = "问卷调查详情";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+<div class="width_auto dc_wenj">
+    <p class="title">@MvcHtmlString.Create(ViewBag.QuestionSurveyTitle)</p>
+    <p class="desc">@MvcHtmlString.Create(ViewBag.QuestionSurveyDesc)</p>
+
+    @{ var list = ViewBag.QuestionInfoList as List<Cupcake.Web.WapTemplate.Models.QuestionnaireProblemCondition>;}
+    @Html.Raw("<input type=\"hidden\"  id=\"hd_id\" value=\"" + list.Count + "\"/>")
+    @if (list.Count > 0)
+    {
+        @Html.Raw("<input type=\"hidden\"  id=\"QuestionSurveyId\" value=\"" + list[0].QuestionSurveyId + "\"/>")
+    }
+    @for (int i = 0; i < list.Count; i++)
+{
+    var _list = list[i].QuestionResultList;
+    <div class="name_xz">
+        <p class="question font16"> @(i + 1). @list[i].Title</p>
+        <div class="clearfix">
+            @Html.Raw("<input type=\"hidden\" id=\"idList_" + i + "\" value=\"" + list[i].Id + "\"/>")
+            @Html.Raw("<input type=\"hidden\" id=\"IsRequired_" + i + "\" value=\"" + DataDictionaryHelper.GetDictionaryName(list[i].IsRequired) + "\"/>")
+            @Html.Raw("<input type=\"hidden\" id=\"QuestionType_" + i + "\" value=\"" + list[i].QuestionType + "\">")
+            @Html.Raw("<input type=\"hidden\" id=\"QuestionClass" + i + "\" value=\"" + DataDictionaryHelper.GetDictionaryName(list[i].QuestionType) + "\">")
+            @for (int j = 0; j < _list.Count; j++)
+            {
+                if (DataDictionaryHelper.GetDictionaryName(list[i].QuestionType) == "单选")
+                {
+                    <div class="all_redios" style="">
+                        @Html.Raw("<input type=\"radio\" class=\"redios idList_" + i + "\" name=\"testradio_" + i + "\" value=\"" + _list[j].Id + "\"><em>" + _list[j].Title + "</em>")
+                        @Html.Raw("<input type=\"hidden\" id=\"Title_" + i + "_" + j + "\" value=\"" + _list[j].Title + "\">")
+                        @Html.Raw("<input type=\"hidden\" id=\"QuestionType_" + i + "\" value=\"" + list[i].QuestionType + "\">")
+                    </div>
+                }
+                else if (DataDictionaryHelper.GetDictionaryName(list[i].QuestionType) == "多选")
+                {
+                    <div style="margin: 10px 0; float: left">
+                        <div class="checkbox_list padd15">
+                            @Html.Raw("<input type=\"checkbox\" class=\"idList_" + i + "\" name=\"testcheckbox_" + i + "\" value=\"" + _list[j].Id + "\"><span style=\"margin-left:15px;font-size:16px\">" + _list[j].Title + "</span>")
+                            @Html.Raw("<input type=\"hidden\" id=\"Title_" + i + "_" + j + "\" value=\"" + _list[j].Title + "\">")
+                            @Html.Raw("<input type=\"hidden\" id=\"QuestionType_" + i + "\" value=\"" + list[i].QuestionType + "\">")
+                        </div>
+                    </div>
+                }
+            }
+            @if (DataDictionaryHelper.GetDictionaryName(list[i].QuestionType) == "内容" && _list.Count == 0)
+            {
+                <div class="padd15 shuru">
+                    @Html.Raw("<textarea  class=\"form-control\" id=\"txtName_" + i + "\" placeholder=\"请输入内容\"></textarea>")
+                    @Html.Raw("<input type=\"hidden\" id=\"QuestionType_" + i + "\" value=\"" + list[i].QuestionType + "\">")
+                </div>
+            }
+        </div>
+            </div>
+}
+    <div class="col-xs-12 padd15" style="margin-top:25px">
+        <button type="button" class="my_green pos_relas" onclick="commit()">提  交</button>
+        <button type="button" class="my_green pos_relas" onclick="location.href = '/Questionnaire/Index'">返  回</button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function commit() {
+        var array = [];
+        var num = $("#hd_id").val();
+        for (var i = 0; i < num; i++) {
+            var isRequired = $("#IsRequired_" + i).val();
+
+            var questionType = $("#QuestionType_" + i).val();
+            var QuestionClass = $("#QuestionClass" + i).val();
+
+            var info = $("#idList_" + i).val();
+            var _info = $(".idList_" + i);
+   
+            if (isRequired == "是") {
+                if (QuestionClass == "单选") {
+                    if ($("input[name=testradio_" + i + "]").is(':checked') == false) {
+                        alert("第" + (i + 1) + "题答案不能为空！");
+                        return;
+                    }
+                }
+                else if (QuestionClass == "多选") {
+                    if ($("input[name=testcheckbox_" + i + "]").is(':checked') == false) {
+                        alert("第" + (i + 1) + "题多选答案不能为空！");
+                        return;
+                    }
+                }
+                else if (QuestionClass == "内容") {
+                    if ($("#txtName_" + i).val() == "") {
+                        alert("第" + (i + 1) + "题内容不能为空！");
+                        return;
+                    }
+                }
+            } else {
+                if (QuestionClass == "单选") {
+                    if ($("input[name=testradio_" + i + "]").is(':checked') == false) {
+                        break;
+                    }
+                }
+                else if (QuestionClass == "多选") {
+                    if ($("input[name=testcheckbox_" + i + "]").is(':checked') == false) {
+                        break;
+                    }
+                }
+                else if (QuestionClass == "内容") {
+                    if ($("#txtName_" + i).val() == "") {
+                        break;
+                    }
+                }
+            }
+            var jsonObj = "[";
+            $(_info).each(function (j) {
+                if (this.type == "checkbox") {
+                    if (this.checked == true) {
+                        jsonObj += "{\"QuestionInfoId\":\"" + info + "\",\"QuestionResultId\":\"" + this.value + "\",\"Result\":\"" + $("#Title_" + i + "_" + j).val() + "\",\"QuestionType\":\"" + $("#QuestionType_" + i).val() + "\"},";
+                    }
+                } else if (this.type == "radio") {
+                    if (this.checked == true) {
+                        jsonObj += "{\"QuestionInfoId\":\"" + info + "\",\"QuestionResultId\":\"" + this.value + "\",\"Result\":\"" + $("#Title_" + i + "_" + j).val() + "\",\"QuestionType\":\"" + $("#QuestionType_" + i).val() + "\"}";
+                    }
+                }
+                if (QuestionClass == "多选" && j == _info.length - 1) {
+                    jsonObj = jsonObj.substr(0, jsonObj.length - 1);
+                }
+            });
+            if (_info.length == 0) {
+                if ($("#txtName_" + i).val() != "") {
+                    jsonObj += "{\"QuestionInfoId\":\"" + info + "\",\"Result\":\"" + $("#txtName_" + i).val() + "\",\"QuestionType\":\"" + $("#QuestionType_" + i).val() + "\"}";
+                }
+            }
+            jsonObj += "]";
+            array.push(jsonObj);
+        }
+        if (jsonObj != undefined) {
+            $.ajax({
+                type: "post", traditional: true,
+                url: "/Questionnaire/SaveResult",
+                data: { array: array, QuestionSurveyId: $("#QuestionSurveyId").val() },
+                success: function (data) {
+                    if (data.result == "success") {
+                        alert("提交成功！");
+                        location.href = "/Questionnaire/Index";
+                    }
+                    else if (data.result == "exists") {
+                        alert("您已答过题，不能重复提交！");
+                    }
+                    else if (data.result == "error") {
+                        alert("提交失败！");
+                    }
+                    else if (data.result == "false") {
+                        alert("请先登录！");
+                    }
+                }
+            });
+        }
+        else {
+            alert("请填写！");
+        }
+    }
+</script>
+<link href="~/Content/Questionnaire.css" rel="stylesheet" />

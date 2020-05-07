@@ -1,0 +1,81 @@
+﻿@model Cupcake.Plugin.Comments.Domain.CommentsInfo
+@using Cupcake.Web
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Comments.Helper
+
+<style>
+    .wrap {
+        background: #fff;
+        margin: auto;
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 20px;
+        border-radius: 2px 2px 2px 2px;
+        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    }
+</style>
+
+<div id="not">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+    @using (Ajax.BeginForm(new AjaxOptions { }))
+    {
+       @Html.AntiForgeryToken()
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="Title">所属信息类型</label>
+                        @Html.EditorFor(m => m.TypeChildId)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="Title">所属信息</label>
+                        @Html.EditorFor(m => m.MessageName)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="Title">评论人</label>
+                      @Html.EditorFor(m => m.Name)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="Title">评论时间</label>
+                        <div class="form-control">@CommonHelper.GetDateTimeFormat(Model.PublicDate) </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="Title">评论内容</label>
+
+                        <div class="wrap">
+                            @(new HtmlString(Model.Content))
+                        </div>
+                        </div>
+                </div>
+            </div>
+        </div> 
+              
+                }
+            </div>
+        </div>
+    </div>
+</div>

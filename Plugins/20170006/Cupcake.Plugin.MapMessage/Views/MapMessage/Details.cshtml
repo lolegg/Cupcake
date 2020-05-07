@@ -1,0 +1,115 @@
+﻿@model Cupcake.Plugin.MapMessage.Models.MapMessageModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<style>
+    .displaynone {
+        display: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">所属模块</label>
+                                @Html.Editor("SortModual", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("所属模块", Model.SortModual) })
+                                @Html.ValidationMessageFor(m => m.SortModual)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">类别</label>
+                                @Html.Editor("SortType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("信息地图类别", Model.SortType) })
+                                @Html.ValidationMessageFor(m => m.SortType)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">成立时间</label>
+                                @Html.EditorFor(m => m.EstablishDate)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EstablishDate)
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">登记机关</label>
+                                @Html.Editor("RegisterOrganization", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("登记机关", Model.RegisterOrganization) })
+                                @Html.ValidationMessageFor(m => m.RegisterOrganization)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">地址</label>
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" >经纬度</label>
+                                @Html.TextBoxFor(m => m.lng, new { @class = "form-control" ,style="width:80px;" })
+                                <span class="form-control" style="width:20px;">-</span>
+                                @Html.TextBoxFor(m => m.lat, new { @class = "form-control", style = "width:80px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('.fa-save').parent().prop('style', 'display:none')
+        $("input").attr("disabled", "disabled")
+        $("select").attr("disabled", "disabled")
+        $("#EstablishDate").val('@PluginHelper.GetDateFormatMYD(Model.EstablishDate)')
+
+
+
+    });
+
+
+</script>

@@ -1,0 +1,158 @@
+﻿@model Cupcake.Plugin.NetWork.Models.FormDownloadModel
+@using Cupcake.Web
+@using Cupcake.Plugin.NetWork.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<style type="text/css">
+    .displaynone {
+         display:none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.WorkType, new { @class = "input-group-addon" })
+                                @Html.Editor("WorkType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("组织类型") })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.WorkType)
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();" ><i class="fa fa-search"></i>资源上传</button>
+                                    @Html.HiddenFor(m => m.Imgurl)
+                                    @Html.HiddenFor(m => m.ImgName)
+                                    @Html.HiddenFor(m => m.ImgSLT)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="imglit">
+                       
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function uploadMedias() {
+        var settings = {
+            fileType: "媒体类型>Office文件",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+
+    function loadMedias(dt) {
+        var Imgurl = $("#Imgurl").val();
+        var ImgurlName = $("#ImgName").val();
+        var ImgSLT = $("#ImgSLT").val();
+        for (var i = 0; i < dt.length; i++) {
+            debugger;
+            if (Imgurl.length > 0 && ImgurlName.length > 0 && ImgSLT.length > 0) {
+                Imgurl += ",";
+                ImgurlName += ",";
+                ImgSLT += ",";
+            } else
+            {
+                if (i > 0) {
+                    Imgurl += ",";
+                    ImgurlName += ",";
+                    ImgSLT += ",";
+                }
+            }
+            Imgurl += dt[i].RelativePath;
+            ImgurlName += dt[i].Name;
+            ImgSLT += dt[i].thumbnailPath;
+            $("#imglit").append("<div><img id=\"SLT\" src=\"" + dt[i].thumbnailPath + "\" style=\'width:15px;\' />&nbsp;<a href=\"" + dt[i].RelativePath + "\"  target=\"_blank\"   download=\"" + dt[i].Name + "\">" + dt[i].Name + "下载</a>&nbsp;<a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/cha.png\' style=\'width:10px; height:10px;\' /></a></div>")
+        }
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgurlName);
+        $("#ImgSLT").val(ImgSLT);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+
+    function shanchu(dbc)
+    {
+        $("#Imgurl").val("");
+        $("#ImgName").val("");
+        $("#ImgSLT").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+        var ImgName = "";
+        var ImgSLT = "";
+        var i = 0;
+        $("#imglit > div").each(function ()
+        {
+            if (i > 0) {
+                Imgurl += ",";
+                ImgName += ",";
+                ImgSLT += ",";
+            }
+            var sss = $(this).children().attr("href");
+            var zzz = $(this).children().attr("download");
+            var xxx = $(this).children("#SLT").attr("src")
+            Imgurl += sss;
+            ImgName += zzz;
+            ImgSLT += xxx;
+            i++;
+
+        })
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgName);
+        $("#ImgSLT").val(ImgSLT);
+    }
+
+
+    
+
+</script>
+<style>
+    #Content {
+        height: 108px;
+        width: 459px;
+    }
+    #imglit {
+        margin-left: 4px;
+    }
+    #PublishDate {
+        height: 34px;
+    }
+
+    #WorkAbortDate {
+        height: 34px;
+    }
+</style>

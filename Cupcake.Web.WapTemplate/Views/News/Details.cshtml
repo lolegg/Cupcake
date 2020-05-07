@@ -1,0 +1,16 @@
+﻿@model Cupcake.Web.WapTemplate.Models.NewsModels
+@using Cupcake.Web.WapTemplate.Helper
+@using Cupcake.Web.WapTemplate.edmx;
+
+<div class="width_auto" style="background: #f5f5f5; ">
+    @{
+        if (Model != null)
+        {
+            <h1 class="biaoti font18" style="text-align:center ">@Model.Title</h1>
+            <h5 class="fb_time" style="text-align:center ">发布时间： @CommonHelper.ToYYYYMMDD(Model.publicTime)</h5>
+            <h3 class="active_tis font16">【新闻介绍】</h3>
+            <p class="duanl_myts font16">  @Html.Raw(Model.Content) </p>
+
+        }
+    }
+</div>

@@ -1,0 +1,44 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".txt" #>
+<#
+	string controllerName="ElderlyPerson";
+	string conditionClassName="ElderlyPersonCondition";
+	string modelClassName="ElderlyPersonInfo";
+#>
+using CommunityServiceInfo.Data;
+using CommunityServiceInfo.Infrastructure;
+using CommunityServiceInfo.Model;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace CommunityServiceInfo.Service
+{
+    public class <#= controllerName #>Service : BaseService<<#= modelClassName #>>
+    {
+        public IList<<#= modelClassName #>> GetListByCondition(<#= conditionClassName #> condition, ref Paging paging)
+        {
+            using (var repository = new Repository<<#= modelClassName #>>())
+            {
+                Expression<Func<<#= modelClassName #>, bool>> where = PredicateExtensions.True<<#= modelClassName #>>();
+
+                if (condition.BeginDate != null) where = where.And(u => u.CreateDate >= condition.BeginDate);
+                if (condition.EndDate != null) where = where.And(u => u.CreateDate <= condition.EndDate);
+
+                return repository.GetPaged(ref paging, where, m => m.CreateDate).ToList();
+            }
+        }
+
+        public bool IsExist(string name, Guid id)
+        {
+            return base.IsExist(m => m.Name == name.Trim() && m.Id != id);
+        }
+    }
+}

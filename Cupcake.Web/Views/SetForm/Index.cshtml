@@ -1,0 +1,95 @@
+﻿@model Cupcake.Web.Models.SysSetFormListModel
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Helper
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header with-footer">
+                <span class="widget-caption">表单设置</span>
+            </div>
+
+            <div class="widget-body">
+                <div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">功能名</label>
+                                    @Html.Editor("FuntionName", "String4Bootstrap")
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">状态</label>
+                                    @Html.DropDownListFor(m => m.Status, EnumExtensions.GetSelectList(typeof(PublishStatus), ""), new { @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group text-right">
+
+                                @Html.ButtonShiny("新增表单设置", "fa-plus", "showModal1('新增表单设置','/SetForm/Create')")
+                                @Html.ButtonShiny("查找", "fa-search", "submitPagebody();", ButtonCss.Default)
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    功能名
+                                </th>
+                                <th>
+                                    表名
+                                </th>
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.List)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.FuntionName
+                                    </td>
+                                    <td>
+                                        @item.TableName
+                                    </td>
+                                    <td>
+                                        @item.StatusStr
+                                    </td>
+                                    <td>
+                                        @if(item.Status == PublishStatus.Published)
+                                        {
+                                            @Html.LinkButton("撤回发布", "reloadConfirm('确认要撤回发布吗?','/SetForm/NoPublish/" + item.Id + "',function(){window.location.href = window.location.href})", "fa-cloud-upload")
+                                        }
+                                        else
+                                        {
+                                            @Html.LinkButton("发布", "reloadConfirm('确认要发布吗?','/SetForm/Publish/" + item.Id + "',function(){window.location.href = window.location.href})", "fa-cloud-upload")
+                                        }
+                                        
+                                        @Html.ButtonXS("删除", "fa-frown-o", "disable('/SetForm/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        

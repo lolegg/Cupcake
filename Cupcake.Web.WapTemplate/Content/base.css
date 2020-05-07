@@ -1,0 +1,248 @@
+﻿@charset "utf-8";
+/* CSS Document */
+*{
+	margin:0;
+	padding:0;
+	box-sizing: border-box;
+}
+body {
+ background:#f9f9f9;
+
+}
+body,input,button{outline: none;color:#575757; font-size: 12px; font-family: 'Microsoft Yahei' }
+
+ul,ol,li,dl,dd,dt{list-style: none;}
+a { text-decoration: none;color: #039 }
+legend { color: #444; }
+fieldset,img { border: 0; }
+label,button { cursor: pointer; }
+
+/*解决IE图片缩放失真*/
+img { -ms-interpolation-mode: bicubic; }
+/*清除浮动*/
+.clearfix:after { content: ''; display: block; height: 0; clear: both; }
+.clearfix { zoom: 1; }
+.clear { clear: both; }
+.mar_width{
+	margin: 0px auto;
+	width: 1200px;
+}
+/*连续英文、数字换行*/
+.wordwrap { word-break: break-all; word-wrap: break-word; }
+/*单行文字超出显示省略号*/
+.omg{overflow: hidden; text-overflow: ellipsis; white-space:nowrap;}
+
+html,body,ul,li,ol,dl,dd,dt,p,h1,h2,h3,h4,h5,h6,form,input,button,fieldset, legend,img { margin:0; padding:0; }
+.fl {float:left;}
+.fr {float:right;}
+.font14{
+	font-size: 14px;
+}
+.font16{
+	font-size: 16px;
+}
+.font18{
+	font-size: 18px;
+}
+.width_auto{
+	width:1100px;
+	margin:0px auto;
+ 
+}
+.header-top{
+	height:100px;
+	background: #d7000f;
+}
+.header h1{
+	margin-top: 16px;
+}
+.header h1 a{
+	display:block;
+	height:100%;
+}
+.header ul{
+	margin-left: 15px
+}
+.header ul li{
+	float:left;
+	width:100px;
+	text-align: center;
+	line-height: 100px;
+	background:  url(/Content/img/left_b.jpg) 0 center no-repeat;
+
+}
+
+.header ul li a{
+	color:#fff;
+	display:block;
+	height:100%;
+}
+.header ul li a:hover{
+	background:#c30010;
+}
+.footer_btm{
+	height:100px;
+	background:#333333;
+}
+.footer{
+	padding-top: 15px;
+}
+.footer p{
+	color:#fff;
+	text-align:center;
+	margin-top:15px;
+
+}
+.nav_shop{
+	width:15px;
+	background:#f2728b;
+}
+.tupian_list{}
+.tupian_list li{
+	
+}
+
+.btn-primary {
+    border-color: #3079ED;
+    color: #F3F7FC;
+    background-color: #4D90FE;
+    background: -webkit-linear-gradient(top, #4D90FE, #4787ED);
+    background: -moz-linear-gradient(top, #4D90FE, #4787ED);
+    background: linear-gradient(top, #4D90FE, #4787ED);
+}
+
+.left_date {
+	width: 300px;
+	background: #f1f9ff;
+	padding-bottom: 35px;
+	margin-bottom: 40px;
+}
+.photo_tou {
+    width: 240px;
+    height: 150px;
+    margin: 14px auto;
+}
+.photo_tou img {
+    width: 100%;
+    height: 100%;
+}
+.screen_name{
+	text-align: center;
+	margin-bottom: 12px;
+}
+.big_navlist p em {
+    display: inline-block;
+    width: 12px;
+    height: 15px;
+    background: url(/Content/img/xiangshang.png);
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.big_navlist p {
+    height: 45px;
+    background: #d0e8fb;
+    color: #333;
+    position: relative;
+    line-height: 45px;
+    cursor: pointer;
+    padding-left: 20px;
+}
+.small_nav li {
+    padding-left: 20px;
+    line-height: 40px;
+}
+.small_nav a {
+    color: #333;
+}
+.qiye_renz {
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.bianji_gg {
+    border: 1px solid #dcdcdc;
+}
+.my_attention {
+    width: 780px;
+    }
+.xiugai1 {
+    position: relative;
+}
+.rit_lines {
+    color: #aaaaaa;
+}
+.weizhi_xg {
+    margin-top: 10px;
+}
+.rit_lines {
+    border-bottom: dashed 1px #dbdbdb;
+    width: 663px;
+    margin-left: 10px;
+}
+
+.bianji_dw {
+    position: absolute;
+    width: 70px;
+    height: 25px;
+    border: solid 1px #dcdcdc;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 25px;
+    right: 0px;
+    top: -5px;
+    background: #fff;
+    cursor: pointer;
+}
+.mhud_pds {
+    padding: 35px 0px 70px 70px;
+    font-size: 15px;
+}
+.mhud_pds p {
+    line-height: 45px;
+    padding-left: 10px;
+    background: url(/Content/img/xingxing_03.jpg) no-repeat left center;
+}
+
+button {
+     border-color: #d7000f;
+        color: #F3F7FC;
+        background-color: #d7000f;
+        background: -webkit-linear-gradient(top, #d7000f, #d7000f);
+        background: -moz-linear-gradient(top, #d7000f, #d7000f);
+        background: linear-gradient(top, #d7000f, #d7000f);
+       width:50px;
+       height:30px;
+        margin-top: 0px;
+
+}
+
+  .pager {
+        height: 35px;
+        line-height: 35px;
+        font-size: 12px;
+        margin: 25px 0px;
+        text-align: center;
+        color: #2E6AB1;
+        overflow: hidden;
+    }
+
+        .pager a {
+            border: 1px solid #9AAFE5;
+            color: #2E6AB1;
+            margin: 0px 5px;
+            padding: 5px 8px;
+            text-decoration: none;
+        }
+
+            .pager a.hover, .pager a.active {
+                background-color: #2E6AB1;
+                border-color: #000080;
+                color: #FFF;
+            }
+
+            .pager a.disabled {
+                color: #C8CDD2;
+                cursor: auto;
+            }

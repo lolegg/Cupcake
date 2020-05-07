@@ -1,0 +1,134 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Activity.Domain.Activitys>
+@using Cupcake.Web
+@using Cupcake.Plugin.Activity.Helper
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "活动");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">活动名称</label>
+                                @Html.Editor("Title", "String4Bootstrap")
+                            </div>
+                        </div>                   
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            <button type="button" class="btn btn-default shiny" onclick="showEditModal1('添加', '/Activity/Create')"><i class="fa fa-edit"></i> 添加</button>
+                            <button type="button" class="btn btn-default shiny" onclick="loadListView();"><i class="fa fa-search"></i> 查 找</button>
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    活动名称
+                                </th>
+                                <th>
+                                    活动时间
+                                </th>
+                                <th>
+                                    活动地址
+                                </th>
+                                <th>
+                                    活动状态
+                                </th>
+                                <th>
+                                    活动类型
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @(@i += 1)
+                                </td>
+                                <td>
+                                    @item.Title
+                                </td>
+                                <td>
+                                    @CommonHelper.ToYYYYMMDD(item.BeginDate) 至 @CommonHelper.ToYYYYMMDD(item.EndDate)
+                                </td>
+                                <td>
+                                    @item.Address
+                                </td>
+                                <td>
+                                    @DataDictionaryHelper.GetDictionaryName(item.ActityState)
+                                </td>
+                                <td>
+                                    @DataDictionaryHelper.GetDictionaryName(item.ActityType)
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="showViewModal1('查看','/Activity/Details/@item.Id')"><i class="fa fa-info"></i> 查 看</button>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="showEditModal1('编辑','/Activity/Edit/@item.Id')"><i class="fa fa-edit"></i> 编 辑</button>
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否删除?','警告','/Activity/Delete/@item.Id')"><i class="glyphicon glyphicon-trash"></i> 删 除</button>
+                                    @if (DataDictionaryHelper.GetDictionaryName(item.ActityState) == "未开始" || DataDictionaryHelper.GetDictionaryName(item.ActityState) == "结束")
+                                    {
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否开始活动?','警告','/Activity/ActivitiesState?id=@item.Id&State=已开始')"><i class="fa fa-play"></i> 开始活动</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否结束活动?','警告','/Activity/ActivitiesState?id=@item.Id&State=结束')"><i class="fa fa-pause"></i>结束活动</button>
+                                    }
+                                    @if (item.IsTop == true)
+                                    {
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否取消置顶?','警告','/Activity/UpIsTop?id=@item.Id&IsTop=false')">取消置顶</button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否置顶?','警告','/Activity/UpIsTop?id=@item.Id&IsTop=true')"> 置顶</button>
+                                    }
+
+                                    <button type="button" class="btn btn-default btn-xs" onclick="groupLoad('/Comments/Index?id=@item.Id')"><i class="fa fa-clipboard"></i>留言管理</button>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="groupLoad('/Activity/RegistrationStatusIndex/@item.Id')"><i class="fa fa-hand-o-right"></i>报名情况</button>
+                                </td>
+                            </tr>
+                            }
+                        }
+</tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+
+    function groupLoad(href) {
+        $('.page-body').load(href);
+    }
+</script>

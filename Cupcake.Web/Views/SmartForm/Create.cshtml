@@ -1,0 +1,237 @@
+﻿@model Cupcake.Web.Models.UserModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<style>
+    .i-lg {
+        margin: 0 3px;
+        font-size: 15px;
+        vertical-align:middle;
+    }
+</style>
+<script>
+    var currentES;
+
+    $('#myTabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
+
+    var upHtml = "@Html.IconFonts("glyphicon-arrow-up i-lg", "up(this)")";
+    var downHtml = "@Html.IconFonts("glyphicon-arrow-down i-lg", "down(this)")";
+    var deleteHtml = "@Html.IconFonts("glyphicon-remove i-lg", "deleteRow(this)", "color:red;")"
+    var nameHtml = "@Html.ToJSFormat(Html.Editor("Name", "String4Bootstrap"))";
+    var inputTypeHtml = "@ViewBag.InputTypeHtml";
+    var dictionaryHtml = "@Html.ToJSFormat(Html.TextBox("Dictionary", "", new { onclick = "selectData(this)", @class = "form-control", @readonly = "readonly", @placeholder = "请选择", style = "display:none;cursor:pointer" }))";
+    var associatedObjectHtml = "@ViewBag.AssociatedObjectHtml";
+    var extendedInputTypeHtml = "@ViewBag.ExtendedInputTypeHtml";
+    var columnWidthHtml = "<select class='form-control' name='ColumWidth'>" +
+                               "<option value='3'>3</option>" +
+                               "<option value='6' selected='selected'>6</option>" +
+                               "<option value='9'>9</option>" +
+                               "<option value='12'>12</option>" +
+                          "</select>";
+
+    function up(es) {
+        if ($(es).parent().parent().prev().length == 0) {
+            Notify("已经是首行", 'bottom-right', '4000', 'info', 'fa-info', true);
+        }
+        else {
+            var previousTR = $(es).parent().parent().prev();
+            var currentTR = $(es).parent().parent();
+
+            var prevName = previousTR.find("input[name='Name']");
+            var currentName = currentTR.find("input[name='Name']");
+            swapValue(prevName, currentName);
+            var prevInputType = previousTR.find("select[name='InputType']");
+            var currentInputType = currentTR.find("select[name='InputType']");
+            swapValue(prevInputType, currentInputType);
+            var prevDictionary = previousTR.find("input[name='Dictionary']");
+            var currentDictionary = currentTR.find("input[name='Dictionary']");
+            swapValue(prevDictionary, currentDictionary);
+            swapDisplay(prevDictionary, currentDictionary);
+            var prevAssociatedObject = previousTR.find("select[name='AssociatedObject']");
+            var currentAssociatedObject = currentTR.find("select[name='AssociatedObject']");
+            swapValue(prevAssociatedObject, currentAssociatedObject);
+            swapDisplay(prevAssociatedObject, currentAssociatedObject);
+            var prevExtendedInputType = previousTR.find("select[name='ExtendedInputType']");
+            var currentExtendedInputType = currentTR.find("select[name='ExtendedInputType']");
+            swapValue(prevExtendedInputType, currentExtendedInputType);
+            swapDisplay(prevExtendedInputType, currentExtendedInputType);
+            var prevColumWidth = previousTR.find("select[name='ColumWidth']");
+            var currentColumWidth = currentTR.find("select[name='ColumWidth']");
+            swapValue(prevColumWidth, currentColumWidth);
+        }
+    }
+    function deleteRow(es) {
+
+    }
+    function down(es) {
+        if ($(es).parent().parent().next().length == 0) {
+            Notify("已经是尾行", 'bottom-right', '4000', 'info', 'fa-info', true);
+        }
+        else {
+            var nextTR = $(es).parent().parent().next();
+            var currentTR = $(es).parent().parent();
+
+            var nextName = nextTR.find("input[name='Name']");
+            var currentName = currentTR.find("input[name='Name']");
+            swapValue(nextName, currentName);
+            var nextInputType = nextTR.find("select[name='InputType']");
+            var currentInputType = currentTR.find("select[name='InputType']");
+            swapValue(nextInputType, currentInputType);
+            var nextDictionary = nextTR.find("input[name='Dictionary']");
+            var currentDictionary = currentTR.find("input[name='Dictionary']");
+            swapValue(nextDictionary, currentDictionary);
+            swapDisplay(nextDictionary, currentDictionary);
+            var nextAssociatedObject = nextTR.find("select[name='AssociatedObject']");
+            var currentAssociatedObject = currentTR.find("select[name='AssociatedObject']");
+            swapValue(nextAssociatedObject, currentAssociatedObject);
+            swapDisplay(nextAssociatedObject, currentAssociatedObject);
+            var nextExtendedInputType = nextTR.find("select[name='ExtendedInputType']");
+            var currentExtendedInputType = currentTR.find("select[name='ExtendedInputType']");
+            swapValue(nextExtendedInputType, currentExtendedInputType);
+            swapDisplay(nextExtendedInputType, currentExtendedInputType);
+            var nextColumWidth = nextTR.find("select[name='ColumWidth']");
+            var currentColumWidth = currentTR.find("select[name='ColumWidth']");
+            swapValue(nextColumWidth, currentColumWidth);
+        }
+    }
+    function swapValue(a, b) {
+        var tmp = a.val();
+        a.val(b.val());
+        b.val(tmp);
+    }
+    function swapDisplay(a, b) {
+        var tmp = a.css("display");
+        a.css("display", b.css("display"));
+        b.css("display", tmp);
+    }
+    function selectData(es) {
+        currentES = $(es);
+
+        var settings = {
+            maxNumber: 3,
+            multipleChoice: true,
+            controller: "DataDictionary"
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("选好了", " fa-check-square-o", "chooseComplete1(selectDatas);")'
+        }
+        showModal2("选择数据字典", '/SelectData/Index', settings, buttonInfos, "lg");
+    }
+    function chooseComplete1(selectDatas) {
+        $("#cupcakeModal2").parent().modal("hide");
+        //single select
+        for (var i = 0; i < selectDatas.length; i++) {
+            if (currentES.val() != "") {
+                currentES.val(currentES.val() + ", " + selectDatas[i].text);
+            }
+            else
+            {
+                currentES.val(selectDatas[i].text);
+            }
+        }
+    }
+    function addRow() {
+        var rowHtml = "<tr>" +
+                            "<td style='line-height:34px'>" + upHtml + downHtml + deleteHtml + "</td>" +
+                            "<td>" + nameHtml + "</td>" +
+                            "<td>" + inputTypeHtml + "</td>" +
+                            "<td>" + dictionaryHtml + "</td>" +
+                            "<td>" + associatedObjectHtml + "</td>" +
+                            "<td>" + extendedInputTypeHtml + "</td>" +
+                            "<td>" + columnWidthHtml + "</td>" +
+                        "</tr>";
+        $("#luruTBody").append(rowHtml);
+    }
+    $(document).ready(function () {
+        $("#luruTBody").on("change", "select[name='InputType']", function () {
+            var inputType = $(this).find("option:selected").text();
+            var tds = $(this).parent().siblings();
+            if ("下拉列表,单选按钮,多选按钮".indexOf(inputType) != -1) {
+                tds.find("input[name='Dictionary']").show();
+                tds.find("select[name='AssociatedObject']").hide();
+                tds.find("select[name='ExtendedInputType']").hide();
+            }
+            else if (inputType == "扩展控件") {
+                tds.find("select[name='ExtendedInputType']").show();
+                tds.find("select[name='AssociatedObject']").hide();
+                tds.find("input[name='Dictionary']").hide();
+            }
+            else if (inputType == "数据关联") {
+                tds.find("select[name='AssociatedObject']").show();
+                tds.find("input[name='Dictionary']").hide();
+                tds.find("select[name='ExtendedInputType']").hide();
+            }
+            else {
+                tds.find("input[name='Dictionary']").hide();
+                tds.find("select[name='AssociatedObject']").hide();
+                tds.find("select[name='ExtendedInputType']").hide();
+            }
+        });
+    });
+</script>
+<ul id="myTabs" class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#tabs-1">录入定义</a></li>
+    <li role="presentation"><a href="#tabs-2">存储设置</a></li>
+    <li role="presentation"><a href="#tabs-3">操作设置</a></li>
+</ul>
+
+<div id="tabs-1" class="tab-pane fade in active">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget" style="margin-top:1px;">
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="UserName">表单名称</label>
+                                @Html.Editor("UserName", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            @Html.ButtonShiny("添加一行", "fa-plus", "addRow();")
+                        </div>
+                    </div>
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        名称
+                                    </th>
+                                    <th>
+                                        数据域输入类型
+                                    </th>
+                                    <th>
+                                        数据字典
+                                    </th>
+                                    <th>
+                                        关联对象
+                                    </th>
+                                    <th>
+                                        扩展输入
+                                    </th>
+                                    <th>
+                                        栅格宽度
+                                    </th>                                    
+                                </tr>
+                            </thead>
+                            <tbody id="luruTBody">                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="tabs-2" class="tab-pane fade">
+    sf222
+</div>
+<div id="tabs-3" class="tab-pane fade">
+    3333
+</div>

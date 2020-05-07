@@ -1,0 +1,107 @@
+﻿using AutoMapper;
+using CommunityServiceInfo.Admin.Models;
+using CommunityServiceInfo.Model;
+using CommunityServiceInfo.Service;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+
+namespace CommunityServiceInfo.Admin.Controllers
+{
+    public class ElderlyPersonController : BaseController
+    {
+        //[ClientAuthorize(Roles = "")]
+        public ActionResult Index(ElderlyPersonCondition condition)
+        {
+            ElderlyPersonService service = new ElderlyPersonService();            
+            Paging paging = new Paging(condition);
+            var elderlypersoninfos = service.GetListByCondition(condition, ref paging);
+            ElderlyPersonInfoListModel model = new ElderlyPersonInfoListModel(elderlypersoninfos);            
+            model.Paging = paging;
+            return View(model);
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Details(Guid id)
+        {
+            ElderlyPersonService service = new ElderlyPersonService();
+            var elderlypersoninfo = service.Get(id);
+
+            var model = Mapper.Map<ElderlyPersonInfoModel>(elderlypersoninfo);
+            return View(model);
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Create(ElderlyPersonInfoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ElderlyPersonService service = new ElderlyPersonService();
+                if (service.IsExist(expression))
+                {
+                    return JavaScript("alert('身份证不能重复');");
+                }
+                else
+                {
+                    service.Add(model.ToElderlyPersonInfo());
+                    return JavaScript("window.parent.close();");
+                }
+            }
+            return JavaScript("ModelState.IsValid==false");
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Edit(Guid id)
+        {
+            ElderlyPersonService service = new ElderlyPersonService();
+            var elderlypersoninfo = service.Get(id);
+            var model = Mapper.Map<ElderlyPersonInfoModel>(elderlypersoninfo);
+            return View(model);
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Edit(ElderlyPersonInfoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ElderlyPersonService service = new ElderlyPersonService();
+                if (service.IsExist(expression))
+                {                    
+                    return JavaScript("alert('身份证不能重复');");
+                }
+                else
+                {
+                    service.Modify(model.ToElderlyPersonInfo());
+                    return JavaScript("window.parent.close();");
+                }
+            }
+            return JavaScript("ModelState.IsValid==false");
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Delete(Guid id)
+        {
+            ElderlyPersonService service = new ElderlyPersonService();
+            var elderlypersoninfo = service.Get(id);
+			int r = service.Remove(elderlypersoninfo);
+			if(r == 1)
+			{
+				return Json(new { result = "success" });
+			}
+            else
+			{
+				return Json(new { result = "error" });
+			}
+        }
+    }
+}

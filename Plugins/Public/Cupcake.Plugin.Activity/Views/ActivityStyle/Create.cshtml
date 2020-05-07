@@ -1,0 +1,173 @@
+﻿@model Cupcake.Plugin.Activity.Models.ActivityStyleModel
+@using Cupcake.Web
+@using Cupcake.Plugin.Activity.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                    @Html.EditorFor(m => m.Title)
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Title)
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="controls">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="DeliveryTime">发布时间</label>
+                                        @Html.Editor("DeliveryTime", "DateTime4Bootstrap")
+                                        <label class="input-group-addon" for="DeliveryTime">
+                                            <i class="fa fa-calendar"></i>
+                                        </label>
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.DeliveryTime)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Address, new { @class = "input-group-addon" })
+                                    @Html.EditorFor(m => m.Address)
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Address)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();" ><i class="fa fa-search"></i>资源上传</button>
+                                    @Html.HiddenFor(m => m.Imgurl)
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" id="imglit">
+
+                    </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(m => m.Content)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+
+<style>
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+
+        .img_pailie a {
+            position: absolute;
+            top: -14px;
+            right: -7px;
+        }
+    #DeliveryTime {
+        height: 34px;
+    }
+</style>
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+</script>
+
+<script>
+    $(document).ready(function () {
+           //$(",#BeginDate,#EndDate").addClass("Wdate");
+
+            
+        $("#DeliveryTime").click(function () {
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+            });
+
+        })
+        function uploadMedias() {
+            var settings = {
+                fileType: "媒体类型>图片",
+                fileExts: "*.zip",
+                fileLimit: 3,
+                fileSizeLimit: "5mb",
+                scopes: "public",//private
+                thumbnail: "w",
+                width: "32",
+                height: ""
+            };
+
+            var buttonInfos = {
+                button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+            }
+            showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+        }
+    function loadMedias(dt) {
+        var Imgurl = "";
+        for (var i = 0; i < dt.length; i++) {
+            if (i > 0) {
+                Imgurl += ",";
+            }
+            Imgurl += dt[i].RelativePath;
+            $("#imglit").append("<div class=\'img_pailie\'><img src=\"" + dt[i].RelativePath + "\" style=\"width:100px; height:100px;margin-left:10px;\"/><a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.Activity/Content/Img/cha.png\' style=\'width:20px; height:20px;\' /></a></div>")
+        }
+        $("#Imgurl").val(Imgurl);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+
+    function shanchu(dbc)
+    {
+        $("#Imgurl").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+        var i = 0;
+        $("#imglit > div").each(function ()
+        {
+            if (i > 0) {
+                Imgurl += ",";
+            }
+            var sss = $(this).children().attr("src");
+            Imgurl += sss;
+            i++;
+        })
+        $("#Imgurl").val(Imgurl);
+    }
+    </script>

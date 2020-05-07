@@ -1,0 +1,47 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>404页面</title>
+    <link href="/Content/css/reset.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <script src="/Content/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            $("body").attr("style", "overflow:hidden");
+            if (self != top) {
+                $(".headbg,.researMenu,.reyq,.resefooter").hide();
+            } else {
+                $(".headbg,.researMenu,.reyq,.resefooter").show();
+            }
+        }
+        var t = 3;//设定跳转的时间
+        setInterval("refer()", 1000); //启动1秒定时
+        function refer() {
+            if (t == 0) {
+                top.location.href = "/Home/Index"; //#设定跳转的链接地址
+            }
+            document.getElementById('info').innerHTML = "" + t + "秒后系统将自动跳到首页"; // 显示倒计时
+            t--; // 计数器递减
+        }
+    </script>
+</head>
+<body style="background:#f2f2f2;">
+    <!--头部菜单-->
+    <!--内容resewrbd-->
+    <div class="resebg">
+        <div class="resewrap page404">
+            <p id="info"></p>
+            <div class="pagebut">
+                <a class="reseLeft" onclick="top.location.href = '/Home/Index'" style="cursor:pointer">返回首页</a>
+                <a class="reseRight" style="cursor:pointer;display:none" onclick="history.go(-1)">返回上页</a>
+                <div style="clear:both"></div>
+            </div>
+        </div>
+    </div>
+    <!--友情链接-->
+    <!--尾部-->
+</body>
+</html>

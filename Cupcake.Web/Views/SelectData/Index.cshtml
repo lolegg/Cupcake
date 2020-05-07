@@ -1,0 +1,176 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-body">
+                <form action="/@ViewBag.Controller/SelectList" id="selectDataForm">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Name">名称</label>
+                                @Html.Editor("Name", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-8 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">创建时间从</label>
+                                @Html.Editor("BeginDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar", "WdatePicker({el:\"BeginDate\"})")
+                                </span>
+                                <label class="input-group-addon">到</label>
+                                @Html.Editor("EndDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar", "WdatePicker({el:\"EndDate\"})")
+                                </span>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("查找", "fa-search", "searchSelectList();")
+                        </div>
+                    </div>
+                </form>
+
+                <div class="flip-scroll">
+                    <table id="selectList" class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr></tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right" id="selectDataPager">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/js/datetime/moment.js"></script>
+<script>
+    var selectDatas = [];
+    function searchSelectList(pageIndex) {
+        var form = $("#selectDataForm");
+        var action = form.attr("action");
+        var data;
+        if (form.length > 0) {
+            var controls = form.find("input,select,textarea");
+            if (controls.length > 0) {
+                data = controls.serializeArray();
+            }
+        }
+        if (pageIndex) {
+            var pi = {};
+            pi["name"] = "pageIndex";
+            pi["value"] = pageIndex.toString();
+            data.push(pi);
+        }
+
+        $.post("/@ViewBag.Controller/SelectList", data,
+           function (data) {
+               debugger;
+               //show th
+               if ($("#selectList:first-child").find("tr").html() == "") {
+                   if ("@ViewBag.MultipleChoice" == "True") {
+                       $("#selectList:first-child").find("tr").append("<th>" +
+                                                                        "<div class='checkbox'>" +
+                                                                            "<label>" +
+                                                                                "<input type='checkbox' class='colored-success' onchange=\"checkboxAll('#selectList tbody', $(this))\" />" +
+                                                                                "<span class='text'></span>" +
+                                                                            "</label>" +
+                                                                        "</div>" +
+                                                                    "</th>");
+                   }
+                   else
+                   {
+                       $("#selectList:first-child").find("tr").append("<th></th>");
+                   }
+
+                   var headTexts = data.HeadText.split(",");
+                   for (var i = 0 ; i < headTexts.length; i++) {
+                       if (headTexts[i] != null && headTexts[i].length > 0) {
+                           $("#selectList:first-child").find("tr").append("<th>" + headTexts[i] + "</th>");
+                       }
+                   }
+               }
+               //show tr
+               $("#selectList").find("tbody").empty();
+               for (var i = 0; i < data.PageList.length; i++) {
+                   var row = data.PageList[i];
+                   var tds = "";
+                   var selectText = "", selectValue = "";
+                   //checkbox
+                   var chkhtml = "<td>" +
+                                    "<div class='checkbox'>" +
+                                        "<label>" +
+                                            "<input type='checkbox' class='colored-success' onchange=\"checkOne('{0}','{1}', $(this))\" />" +
+                                            "<span class='text'></span>" +
+                                        "</label>" +
+                                    "</div>" +
+                                "</td>";
+                   for (var pname in row) {
+                       if (data.SelectTextFiled == pname) {
+                           selectText = row[pname];
+                       }
+                       if (data.SelectValueFiled == pname) {
+                           selectValue = row[pname];
+                       }
+                       if (data.HeadFiled.indexOf(pname) != -1) {
+                           var tmpValue = "";
+                           if (row[pname] != null) {
+                               //format datetime
+                               if (row[pname].indexOf("/Date(") != -1) {
+                                   var tmpDate = moment(row[pname]);
+                                   tmpValue = tmpDate.format("YYYY/MM/DD HH:mm:ss");
+                               }
+                               else {
+                                   tmpValue = row[pname];
+                               }
+                           }
+                           tds += "<td>" + tmpValue + "</td>";
+                       }
+                   }
+                   $("#selectList").find("tbody").append("<tr>" + chkhtml.Format(selectText, selectValue) + tds + "</tr>");
+               }
+
+               //init pager
+               var pageInfo = {
+                   PageIndex: data.Paging.PageIndex,
+                   PageSize: data.Paging.PageSize,
+                   Total: data.Paging.Total
+               };
+               initPager("#selectDataPager", pageInfo, searchSelectList);
+           }, "json");
+    }
+
+    function checkOne(text, value, es) {
+        if ("@ViewBag.MultipleChoice" == "False") {
+            if (selectDatas.length > 0) {
+                Notify("只能选择一项", 'bottom-right', '4000', 'error', 'fa-times', true);
+                es.prop("checked", false);
+                return false;
+            }
+        }
+        if (es.prop("checked")) {
+            var selectedJson = { "text": text, "value": value };
+            selectDatas.push(selectedJson);
+        }
+        else
+        {
+            for (var i = 0; i < selectDatas.length; i++) {
+                if (selectDatas[i].text == text && selectDatas[i].value == value) {
+                    selectDatas.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    $(document).ready(function () {
+        searchSelectList();
+        $("#selectDataForm").find("#BeginDate,#EndDate").attr("readonly", "readonly");
+    });
+</script>
+

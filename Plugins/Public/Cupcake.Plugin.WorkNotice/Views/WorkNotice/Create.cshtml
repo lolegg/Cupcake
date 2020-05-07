@@ -1,0 +1,275 @@
+﻿@model Cupcake.Plugin.WorkNotice.Models.WorkNoticeModel
+@using Cupcake.Web
+@using Cupcake.Plugin.WorkNotice.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+
+<style type="text/css">
+    .displaynone {
+         display:none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(m => m.Content)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Publisher, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Publisher)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Publisher)
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="controls">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="PublishDate">发布时间</label>
+                                    @Html.Editor("PublishDate", "DateTime4Bootstrap")
+                                    <label class="input-group-addon" for="PublishDate">
+                                        <i class="fa fa-calendar"></i>
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.PublishDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="controls">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="WorkAbortDate">工作截至时间</label>
+                                    @Html.Editor("WorkAbortDate", "DateTime4Bootstrap")
+                                    <label class="input-group-addon" for="WorkAbortDate">
+                                        <i class="fa fa-calendar"></i>
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.WorkAbortDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Department, new { @class = "input-group-addon" })
+                                    <div style="background-color: #fbfbfb; border: 1px solid #d5d5d5;height:auto;">
+                                        <div>
+                                            @{
+                                                 var strOrganization = ViewBag.Organization;
+                                                 @Html.Raw(TreeHtml.GetTreeHtml(strOrganization, new Guid("00000000-0000-0000-0000-000000000000")))
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();" ><i class="fa fa-search"></i>资源上传</button>
+                                    @Html.HiddenFor(m => m.Imgurl)
+                                    @Html.HiddenFor(m => m.ImgName)
+                                    @Html.HiddenFor(m => m.ImgSLT)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="imglit">
+                       
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        //$("#PublishDate,#WorkAbortDate").addClass("Wdate");
+        $("#PublishDate,#WorkAbortDate").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+        });
+    })
+
+
+    function uploadMedias() {
+        var settings = {
+            fileType: "媒体类型>Office文件",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+
+    function loadMedias(dt) {
+        var Imgurl = $("#Imgurl").val();
+        var ImgurlName = $("#ImgName").val();
+        var ImgSLT = $("#ImgSLT").val();
+        for (var i = 0; i < dt.length; i++) {
+            debugger;
+            if (Imgurl.length > 0 && ImgurlName.length > 0 && ImgSLT.length > 0) {
+                Imgurl += ",";
+                ImgurlName += ",";
+                ImgSLT += ",";
+            } else
+            {
+                if (i > 0) {
+                    Imgurl += ",";
+                    ImgurlName += ",";
+                    ImgSLT += ",";
+                }
+            }
+            Imgurl += dt[i].RelativePath;
+            ImgurlName += dt[i].Name;
+            ImgSLT += dt[i].thumbnailPath;
+            $("#imglit").append("<div><img id=\"SLT\" src=\"" + dt[i].thumbnailPath + "\" style=\'width:15px;\' />&nbsp;<a href=\"" + dt[i].RelativePath + "\"  target=\"_blank\"   download=\"" + dt[i].Name + "\">" + dt[i].Name + "下载</a>&nbsp;<a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/cha.png\' style=\'width:10px; height:10px;\' /></a></div>")
+        }
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgurlName);
+        $("#ImgSLT").val(ImgSLT);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+
+    function shanchu(dbc)
+    {
+        $("#Imgurl").val("");
+        $("#ImgName").val("");
+        $("#ImgSLT").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+        var ImgName = "";
+        var ImgSLT = "";
+        var i = 0;
+        $("#imglit > div").each(function ()
+        {
+            if (i > 0) {
+                Imgurl += ",";
+                ImgName += ",";
+                ImgSLT += ",";
+            }
+            var sss = $(this).children().attr("href");
+            var zzz = $(this).children().attr("download");
+            var xxx = $(this).children("#SLT").attr("src")
+            Imgurl += sss;
+            ImgName += zzz;
+            ImgSLT += xxx;
+            i++;
+
+        })
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgName);
+        $("#ImgSLT").val(ImgSLT);
+    }
+
+
+    $("input[name='OrganizationList']").each(function () {
+        if ($(this).prop("id") != "00000000-0000-0000-0000-000000000000") {
+            $(this).parents("p:first").addClass("displaynone")
+        }
+    });
+    function btnCheck(obj) {
+        if ($(obj).prop("checked") == true) {
+            child($(obj).val(), true);
+        }
+        else {
+            child($(obj).val(), false);
+        }
+    }
+    function child(pid, isChecked) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                $(this).prop("checked", isChecked)
+                child($(this).val(), isChecked)
+            }
+        })
+    }
+    function btnShow(obj) {
+        if ($(obj).prop("alt") == "折叠") {
+            $(obj).prop("alt", "展开")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/jh.jpg")
+            showchild($(obj).prop("id"), 1);
+        }
+        else {
+            $(obj).prop("alt", "折叠")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/jiah.jpg")
+            showchild($(obj).prop("id"), 2);
+        }
+    }
+    function showchild(pid, isshow) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                if (isshow == "1") {
+                    $(this).parents("p:first").removeClass("displaynone")
+                }
+                else {
+                    $(this).parents("p:first").addClass("displaynone")
+                    $(this).prev().prop("alt", "折叠")
+                    $(this).prev().prop("src", "/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/jiah.jpg")
+                    showchild($(this).val(), isshow)
+                }
+            }
+        })
+    }
+
+</script>
+<style>
+    #Content {
+        height: 108px;
+        width: 459px;
+    }
+    #imglit {
+        margin-left: 4px;
+    }
+    #PublishDate {
+        height: 34px;
+    }
+
+    #WorkAbortDate {
+        height: 34px;
+    }
+</style>

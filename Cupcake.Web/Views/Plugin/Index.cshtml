@@ -1,0 +1,153 @@
+﻿@model IEnumerable<Cupcake.Core.Plugins.PluginDescriptor>
+@using Cupcake.Web.Helper
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header with-footer">
+                <span class="widget-caption">插件列表</span>
+                <div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        @Html.IconFonts("fa-expand")
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        @Html.IconFonts("fa-minus")
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserName">名称</label>
+                                    @Html.Editor("FriendlyName", "String4Bootstrap")
+                                </div>
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="UserType">类型</label>
+                                    @Html.Editor("LoadPluginsMode", "Enum4Bootstrap", new { selectList = EnumExtensions.GetSelectList(typeof(Cupcake.Core.Plugins.LoadPluginsMode), "", "0") })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @Html.ButtonShiny("查找", "fa-search", "submitPagebody();", ButtonCss.Danger)
+                                @Html.ButtonShiny("刷新插件", "fa-repeat", "dojob('/Plugin/ReloadList');", ButtonCss.Default)
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    系统名
+                                </th>
+                                <th>
+                                    中文名
+                                </th>
+                                @*<th>
+                                    LOGO
+                                </th>*@
+                                <th>
+                                    版本
+                                </th>
+                                <th>
+                                    作者
+                                </th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.SystemName
+                                    </td>
+                                    <td>
+                                        @item.FriendlyName
+                                    </td>
+                                    @*<td>
+                                        
+                                    </td>*@
+                                    <td>
+                                        @item.Version
+                                    </td>
+                                    <td>
+                                        @item.Author
+                                    </td>
+                                    <td>
+                                        @if (item.Installed)
+                                        {
+                                            @Html.ButtonXS("卸载", "fa-power-off", "dojob('/Plugin/UnInstall?systemName=" + item.SystemName + "')", ButtonCss.Danger)
+                                        }
+                                        else
+                                        {
+                                            @Html.ButtonXS("安装", "fa-gear", "dojob('/Plugin/Install?systemName=" + item.SystemName + "')", ButtonCss.Default)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row DTTTFooter">
+                    <div class="col-md-6 form-group">
+                        @Html.PagingInfo((Paging)ViewBag.Pager)
+                        @*@Html.Editor("PageSize", "PageSize4Bootstrap", new { selectList = EnumExtensions.GetPageSizeList() })*@
+                    </div>
+                    <div class="col-md-6 form-group text-right">
+                        @Html.Pager((Paging)ViewBag.Pager)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Content/js/datetime/moment.js"></script>
+
+<script>
+    function dojob(src) {
+        $.post(src, function (data) {
+            switch (data.Result) {
+                case 0:
+                    Notify(data.Message == "" ? '操作成功' : data.Message, 'bottom-right', '4000', 'success', 'fa-check', true);
+                    break;
+                case 1:
+                    Notify(data.Message == "" ? '信息' : data.Message, 'bottom-right', '4000', 'info', 'fa-info', true);
+                    break;
+                case 2:
+                    Notify(data.Message == "" ? '操作失败' : data.Message, 'bottom-right', '4000', 'error', 'fa-times', true);
+                    break;
+                case 3:
+                    Notify(data.Message == "" ? '警告' : data.Message, 'bottom-right', '4000', 'warning', 'fa-warning', true);
+                    break;
+            }
+            //setTimeout("history.go(0);", 5000);
+            history.go(0);
+        });
+    }
+    $(document).ready(function () {
+        var beginDate = $('#BeginDate').datepicker().on('changeDate', function (ev) {
+            beginDate.hide();
+        }).data('datepicker');
+
+        var endDate = $('#EndDate').datepicker().on('changeDate', function (ev) {
+            endDate.hide();
+        }).data('datepicker');
+    });
+
+</script>

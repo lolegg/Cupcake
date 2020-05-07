@@ -1,0 +1,64 @@
+﻿@model Cupcake.Plugin.NetWork.Models.FormDownloadModel
+@using Cupcake.Web
+@using Cupcake.Plugin.NetWork.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<style type="text/css">
+    .displaynone {
+         display:none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.WorkType, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @DataDictionaryHelper.GetDictionaryName(Model.WorkType)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row" id="imglit">
+                        @{
+                        if (Model.Imgurl != null && Model.ImgName != null && Model.ImgSLT != null)
+                        {
+                                string[] imge = Model.Imgurl.Split(',');
+                                string[] imgeName = Model.ImgName.Split(',');
+                                string[] imgSLT = Model.ImgSLT.Split(',');
+                                for (int i = 0; i < imge.Count(); i++)
+                               {
+                                   <div><img src="@imgSLT[i]" style='width:15px;' /><a href="@imge[i]" target="_blank" download="@imgeName[i]">@imgeName[i] 下载</a></div>
+                               }
+                        }
+                        }
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    #imglit {
+    margin-left:4px;
+    }
+</style>

@@ -1,0 +1,171 @@
+﻿@model Cupcake.Core.IPagedList<Media>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Helper
+
+<link href="~/Content/css/media-checked.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-4 form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="UserName">文件名</label>
+                        @Html.Editor("FileName", "String4Bootstrap")
+                        @Html.Hidden("selectedMediaIds", (string)ViewBag.SelectedMediaIds)
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    <div class="input-group">
+                        <label class="input-group-addon" for="UserType">类型</label>
+                        @Html.Editor("MediaType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("媒体类型") })
+                    </div>
+                </div>
+                <div class="col-md-4 form-group">
+                    @Html.ButtonShiny("上传", "fa-plus", "uploadMedias();")
+                    @Html.ButtonShiny("查找", "fa-search", "loadModalView1();")
+                </div>
+            </div>
+        }
+
+        <div class="grid">
+            @foreach (var item in Model)
+            {
+                var t = item.FilePath + "?r=" + DateTime.Now.ToString("mmssffff");
+                var imgsrc = item.ThumbnailPath == "" ? item.FilePath : item.ThumbnailPath;
+                <div class="grid-item" data-fileid="@item.Id" onclick="mediaClick($(this));">
+                    <img src="@imgsrc" style="width:138px;" title="@item.Width × @item.Height" />
+                    <p title="@item.FileName">@item.FileName</p>
+                </div>
+            }
+        </div>
+
+        <div class="text-right" id="pager">
+        </div>
+    </div>
+</div>
+
+<script src="~/Content/js/masonry/imagesloaded.pkgd.min.js"></script>
+<script src="~/Content/js/masonry/masonry.pkgd.min.js"></script>
+<script>
+    var selectedMedias = new Array();
+    function uploadMedias() {
+        var settings = {
+            fileType: "媒体类型>图片",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias();")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+    function mediaClick(es) {
+        var id = es.data("fileid");
+        if (es.attr("class").indexOf("media-checked") != -1) {
+            es.removeClass('media-checked');
+            if (selectedMedias.HasValue(id)) {
+                selectedMedias.RemoveValue(id);
+                $("#selectedMediaIds").val(JSON.stringify(selectedMedias));
+            }
+        }
+        else {
+            es.addClass('media-checked');
+            var src = es.children().eq(0).attr("src");
+            var fileName = es.children().eq(1).html();
+            if (!selectedMedias.HasValue(id)) {
+                var item = new Object();
+                item.name = fileName;
+                item.id = id;
+                item.path = src;
+                selectedMedias.push(item);
+                $("#selectedMediaIds").val(JSON.stringify(selectedMedias));
+            }
+        }
+    }
+    function loadMedias() {
+        $('#cupcakeModal2').parent().modal('hide');
+        loadModalView1();
+    }
+    function chooseComplete1(fn) {
+        $('#cupcakeModal1').parent().modal('hide');
+        fn(selectedMedias);
+    }
+    function chooseComplete2(fn) {
+        $('#cupcakeModal2').parent().modal('hide');
+        fn(selectedMedias);
+    }
+    Array.prototype.HasValue = function (id) {
+        var list = this;
+        if (list == null || list.length < 0) {
+            return false;
+        }
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+    Array.prototype.RemoveValue = function (id) {
+        var list = this;
+        if (list == null || list.length < 0) {
+            return new Array();
+        }
+
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].id == id) {
+                list.splice(i, 1);
+            }
+        }
+        return list;
+    }
+
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager("#pager", pageInfo, loadModalView1);
+
+        $('.grid').imagesLoaded(function () {
+            //setTimeout(
+            $('.grid').masonry({
+                itemSelector: '.grid-item',
+                columnWidth: 145
+            });
+            //, "2000");
+
+            //restore checked class
+            if ($("#selectedMediaIds").val()!="") {
+                var objects = JSON.parse($("#selectedMediaIds").val());
+                $('.grid-item').each(function () {
+                    for (var i = 0; i < objects.length; i++) {
+                        if (objects[i].id == $(this).data("fileid")) {
+                            $(this).addClass('media-checked');
+                        }
+                    }
+                });
+            }                       
+        });
+
+        //copy value from hidden to selectedMedias
+        if ($("#selectedMediaIds").val() != "") {
+            selectedMedias = JSON.parse($("#selectedMediaIds").val());
+        }
+    });
+</script>

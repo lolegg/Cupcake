@@ -1,0 +1,321 @@
+﻿@model Cupcake.Plugin.CalendarAndScheduling.Models.CalendarAndSchedulingListModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.CalendarAndScheduling
+
+<style>
+    .showlistdaytitle {
+        width: 100%;
+    }
+
+    .showlistdaytitle1 {
+        width: 100%;
+    }
+
+
+    .showlistdaytitle li {
+        width: 13%;
+        float: left;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        background: #0394b3;
+        margin-right: 0.5%;
+        margin-bottom: 0.5%;
+        overflow: hidden;
+        text-align: center;
+        font-weight: 800;
+    }
+
+
+    .showlistdaytitle1 li {
+        width: 13.44%;
+        float: left;
+        display: block;
+        height: 30px;
+        line-height: 30px;
+        background: linear-gradient(to bottom, #3ec0a1, #21749e);
+       
+        overflow: hidden;
+        text-align: center;
+        font-weight: 800;
+    }
+
+    .showlistday {
+        width: 100%;
+    }
+
+        .showlistday li {
+            width: 13%;
+            float: left;
+            display: block;
+            height: 80px;
+            background: #efeded;
+            margin-right: 0.5%;
+            margin-bottom: 0.5%;
+            overflow: auto;
+        }
+
+    .showlistday2 li {
+        width: 13%;
+        float: left;
+        display: block;
+        height: 80px;
+        background: #a0c4d6;
+        margin-right: 0.5%;
+        margin-bottom: 0.5%;
+        overflow: auto;
+    }
+
+    .showlistday .nouse {
+        background: #fbfbfb !important;
+    }
+
+    .showlistday2 .nouse {
+        background: #fbfbfb !important;
+    }
+
+    .showlistday .daytitle {
+        font-weight: 900;
+        color: grey;
+    }
+
+    .showlistday2 .daytitle {
+        font-weight: 900;
+        color: grey;
+    }
+
+    /*.showlistday .lilink:hover {
+        cursor: pointer;
+        background: #f5ecec;
+    }
+
+    .showlistday2 .lilink:hover {
+        cursor: pointer;
+        background: #f5ecec;
+    }*/
+
+    .showlistday a {
+        color: #3a4796;
+        cursor: pointer;
+    }
+
+    .showlistday2 a {
+        color: #3a4796;
+        cursor: pointer;
+    }
+
+    p {
+    line-height:15px;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "日历排班");}
+            <div class="widget-body" style="height:860px">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.Editor("Title", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">重要程度</label>
+                                @Html.Editor("ImportantLevel", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("日历工作重要程度") })
+                            </div>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">日期时间</label>
+                                @Html.Editor("DateT", "DateTime4Bootstrap")
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                            @Html.ButtonShiny("编辑", "fa-search", "ChangeToEdit(this);")
+
+                        </div>
+                    </div>
+
+
+
+                    <div id="Indexdiv" class="AlClass">
+                        <div class="cenrigbox8">
+                            <ul class="showlistdaytitle1" style=" padding-left:20px;">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li>@(Convert.ToDateTime(Model.DateT).Year)年 @(Convert.ToDateTime(Model.DateT).Month)月 </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            <ul class="showlistdaytitle" style=" padding-left:20px;">
+                                <li>星期日</li>
+                                <li>星期一</li>
+                                <li>星期二</li>
+                                <li>星期三</li>
+                                <li>星期四</li>
+                                <li>星期五</li>
+                                <li>星期六</li>
+                            </ul>
+                            <ul class="showlistday" style=" padding-left:20px;">
+                                @{
+                    DateTime day1 = new DateTime(Convert.ToDateTime(Model.DateT).Year, Convert.ToDateTime(Model.DateT).Month, 1);
+                    int week1 = (int)day1.DayOfWeek;
+                    int lastday = day1.AddMonths(1).AddDays(-1).Day;
+
+
+                    for (int i = 0; i < week1; i++)
+                    {
+                        <li class="nouse"></li>
+                    }
+                    for (int i2 = 1; i2 <= lastday; i2++)
+                    {
+                        <li class="lilink" style=" height:100px;">
+                            <p class="daytitle">@i2</p>
+                            @if (Model.List != null)
+                            {
+                                int i = 1;
+
+                                foreach (var item in Model.List)
+                                {
+                                    if (item.dayNum != i2)
+                                    {
+                                        continue;
+                                    }
+                                    int hour = Convert.ToDateTime(item.DateT).Hour;
+                                    int minites = Convert.ToDateTime(item.DateT).Minute;
+                                    <p>
+
+                                        <a title="@(item.Content)" onclick="showViewModal1('查看', '/CalendarAndScheduling/Details/@(item.Id)',null)">
+                                            @(hour + ":" + minites + " " + (item.Title.Length > 5 ? item.Title.Substring(0, 5) + "..." : item.Title))
+                                        </a>
+
+                                    </p>
+                                }
+                            }
+                        </li>
+                    }
+                                }
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+
+                    <div id="EditIndexdiv" class="AlClass" style="display:none;">
+                        <div class="cenrigbox8">
+                            <ul class="showlistdaytitle1" style=" padding-left:20px;">
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li>@(Convert.ToDateTime(Model.DateT).Year)年 @(Convert.ToDateTime(Model.DateT).Month)月 </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
+                            <ul class="showlistdaytitle" style=" padding-left:20px;">
+                                <li>星期日</li>
+                                <li>星期一</li>
+                                <li>星期二</li>
+                                <li>星期三</li>
+                                <li>星期四</li>
+                                <li>星期五</li>
+                                <li>星期六</li>
+                            </ul>
+                            <ul class="showlistday2" style=" padding-left:20px;">
+                                @{
+                    DateTime day11 = new DateTime(Convert.ToDateTime(Model.DateT).Year, Convert.ToDateTime(Model.DateT).Month, 1);
+                    int week11 = (int)day11.DayOfWeek;
+                    int lastday1 = day11.AddMonths(1).AddDays(-1).Day;
+
+
+                    for (int i = 0; i < week11; i++)
+                    {
+                        <li class="nouse"></li>
+                    }
+                    for (int i2 = 1; i2 <= lastday1; i2++)
+                    {
+                        var date = PluginHelper.GetDateFormatMYD(Model.DateT);
+                        <li class="lilink" style=" height:100px;">
+                            <p class="daytitle">@i2 <span style="float: right; font-size: 24px;"><a onclick="showEditModal1('新增', '/CalendarAndScheduling/Create?day=@i2&DateT=@date',null) ">+</a></span></p>
+
+                            @if (Model.List != null)
+                            {
+                                int i = 1;
+
+                                foreach (var item in Model.List)
+                                {
+                                    if (item.dayNum != i2)
+                                    {
+                                        continue;
+                                    }
+                                    int hour = Convert.ToDateTime(item.DateT).Hour;
+                                    int minites = Convert.ToDateTime(item.DateT).Minute;
+                                    <p>
+                                        <a title="@(item.Content)" onclick="showEditModal1('编辑', '/CalendarAndScheduling/Edit/@(item.Id)', null)">
+                                            @(hour + ":" + minites + " " + (item.Title.Length > 5 ? item.Title.Substring(0, 5) + "..." : item.Title))
+                                        </a>
+                                        <a onclick="deleteDialog('/CalendarAndScheduling/Delete/@(item.Id)')" style="color:red">
+                                            X
+                                        </a>
+                                    </p>
+                                }
+                            }
+                        </li>
+                    }
+                                }
+                            </ul>
+                        </div>
+
+
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.fa-save').parent().prop('style', 'display:')
+        $("#DateT").val('@PluginHelper.GetDateFormat(Model.DateT)')
+
+
+        $("#DateT").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM', readOnly: true });
+        });
+
+    });
+
+    function ChangeToEdit(obj) {
+        debugger;
+        if ($("#Indexdiv").css("display") == "none") {
+            $("#Indexdiv").attr("style", "display:")
+            $("#EditIndexdiv").attr("style", "display:none")
+            $(obj).text("编辑")
+        } else {
+            $("#EditIndexdiv").attr("style", "display:")
+            $("#Indexdiv").attr("style", "display:none")
+            $(obj).text("取消编辑")
+        }
+
+    }
+</script>

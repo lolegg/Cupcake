@@ -1,0 +1,56 @@
+﻿@model IEnumerable<RoleHasPermissionsModel>
+@using Cupcake.Web.Models
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header with-footer">
+                <span class="widget-caption">自定义权限</span>
+                <div class="widget-buttons">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="colored-success" onchange="checkboxAll('.widget-body', $(this))" />
+                            <span class="text"></span>
+                        </label>
+                        @Html.Hidden("RoleId", (string)ViewBag.RoleId)
+                        @Html.Hidden("MenuId", (string)ViewBag.MenuId)
+                    </div>
+                </div>
+            </div>
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+                            if (item.HasPermission)
+                            {
+                                <div class="col-md-6" style="padding:5px 0">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Id" name="selectedNodeIds" class="colored-success" checked="checked" />
+                                            <span class="text">@item.CustomPermissionsName</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6" style="padding:5px 0">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="@item.Id" name="selectedNodeIds" class="colored-success" />
+                                            <span class="text">@item.CustomPermissionsName</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

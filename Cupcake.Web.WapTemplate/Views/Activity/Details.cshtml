@@ -1,0 +1,383 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModels
+@using Cupcake.Web.WapTemplate.Helper
+@using Cupcake.Web.WapTemplate.edmx;
+@*@{
+    ViewBag.Title = "最新活动详情";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}*@
+@*<link href="~/Content/base.css" rel="stylesheet" />*@
+
+<style>
+    ul,ol, li{
+        list-style:none;
+    }
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+    .more_imgShow  li{
+        float:left;
+        width:200px;
+    }
+</style>
+<div class="width_auto" style="background: #f5f5f5; ">
+    @{
+        if (Model != null)
+        {
+            <h1 class="biaoti font18" style="text-align:center ">@Model.Title</h1>
+            <h5 class="fb_time" style="text-align:center ">发布时间： @CommonHelper.ToYYYYMMDD(Model.ReleaseDate)</h5>
+            <h3 class="active_tis font16">【活动介绍】</h3>
+            <p class="duanl_myts font16">  @Html.Raw(Model.Conent) </p>
+            <h3 class="active_tis font16">【活动地点】</h3>
+            <p class="duanl_myts font16">@Model.Address </p>
+            <h3 class="active_tis font16">【活动时间】</h3>
+            <p class="duanl_myts font16">
+                @CommonHelper.ToYYYYMMDD(Model.BeginDate) 至 @CommonHelper.ToYYYYMMDD(Model.EndDate)
+            </p>
+
+        }
+    }
+    @{          var Baomingmen = ViewBag.Baomingmen;
+            <h3 class="active_tis font16">已报名人数</h3>
+            <p class="duanl_myts font16">
+                @Baomingmen 人 <span>（仅限300名）</span>
+            </p>
+    }
+
+    @if (DataDictionaryHelper.GetDictionaryName(Model.ActityState) == "已开始" || DataDictionaryHelper.GetDictionaryName(Model.ActityState) == "结束")
+    {
+        <div style="color: #C8C8C8">
+            <a>活动报名已结束</a>
+        </div>
+    }
+    else
+    {
+        <div class="bm_goNow">
+            <a href="#">立即报名</a>
+        </div>
+    }
+
+
+</div>
+
+<div class="about_xiangguan">
+    <div class="width_auto">
+        <div class="left_bts">
+            <h2>相关活动推荐</h2>
+        </div>
+        <div id="wrap3">
+            <ul class="clearfix more_imgShow ygb_ch_img">
+                @{
+                    var List = ViewBag.ActivityByid as List<Activity_Activitys>;
+
+                    if (List != null)
+                    {
+                        foreach (var item in List)
+                        {
+                            <li style="padding:inherit;">
+                                <a href="/Activity/Details?Id=@item.Id">
+                                    @if (item.Imgurl != null)
+                                    {
+                                        string[] imge = item.Imgurl.Split(',');
+                                        <img src="@imge[0]" />
+                                    }
+                                    <p class="font14">@item.Title</p>
+                                </a>
+                                <span>@CommonHelper.ToYYYYMMDD(item.ReleaseDate)</span>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--浮层开始-->
+@using (Ajax.BeginForm(new AjaxOptions { }))
+{
+    <div class="sign_up">
+        <div class="baom_ks">
+            <em></em>
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.UserId)
+            <div class="clearfix user_name">
+                @Html.LabelFor(m => m.RegistrationName)
+                @Html.TextBoxFor(m => m.RegistrationName)
+            </div>
+            <p></p>
+            <div class="clearfix user_name">
+                @Html.LabelFor(m => m.RegistrationTel)
+                @Html.TextBoxFor(m => m.RegistrationTel)
+            </div>
+            <p></p>
+            <input type="button" onclick="Switch()" id="TiJiao" value="提交">
+        </div>
+    </div>
+}
+<!--浮层开始-->
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/marquee.js"></script>
+<script>
+
+        $('#wrap3').marquee({
+            auto: true,
+            interval: 3000,
+            speed: 1000,
+            showNum: 4,
+            stepLen: 1
+        });
+
+
+    $('.bm_goNow a').click(function () {
+        //var ajax = $.ajax({
+        //    type: "post",
+        //    url: "/CommunityPCLive/AjaxLogin",
+        //    dataType: "json",
+        //    success: function (Json) {
+        //        if (Json == 1) {
+        //            //window.location.href = "/Account/Login"
+        //            ToLogin();
+        //        }
+        //        else {
+        //            $(".sign_up").css("display", "block");
+        //            $(".no_scroll").css("overflow", "hidden");
+        //        }
+        //    }
+        //});
+        $(".sign_up").css("display", "block");
+    })
+    $('.sign_up').click(function ()
+    {
+        $(".sign_up").css("display", "none");
+
+    })
+
+
+    function Switch() {
+        var name = $("#RegistrationName").val();
+        var tel = $("#RegistrationTel").val();
+        var ActivityId = $("#Id").val();
+        var userid = $("#UserId").val();
+        if (tel.length == 11) {
+            var urls = "/Activity/ActivityRegister";
+        }
+        else {
+            alert("手机号格式错误！");
+        }
+        var ajax = $.ajax({
+            type: "post",
+            url: urls,
+            data: {
+                RegistrationName: name,
+                RegistrationTel: tel,
+                UserId: userid,
+                Id: ActivityId,
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data == 0)
+                {
+                    alert("报名成功！");
+                    window.location = "/Activity/Details?Id=" + ActivityId ;
+                } else if (data == 1)
+                {
+                    alert("报名失败！");
+                    window.location = "/Activity/Details?Id=" + ActivityId;
+                }
+                else
+                {
+                    alert("报名失败,你已经报过名了！");
+                    window.location = "/Activity/Details?Id=" + ActivityId;
+                }
+            }
+        });
+    }
+</script>
+
+
+<style>
+    .about_xiangguan {
+        height: 330px;
+        background: #efeded;
+        margin-bottom: 25px;
+    }
+
+        .about_xiangguan img {
+            height: 165px;
+        }
+
+    .left_bts h2 {
+        margin-top: 0px;
+        margin-bottom: 10px;
+    }
+    .ygb_ch_img img {
+        width: 100%;
+        height: 150px;
+    }
+
+    /*报名弹框样式*/
+    .sign_up {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        background: rgba(0, 0, 0, .3);
+        left: 0;
+        display: none;
+        top: 0;
+    }
+
+    .baom_ks {
+        background: #fff;
+        width: 403px;
+        height: 250px;
+        position: relative;
+        margin: 15% auto 0;
+        padding: 30px 0px 0px 40px;
+    }
+
+        .baom_ks p {
+            height: 30px;
+            padding-left: 70px;
+            margin-bottom: 2px;
+            color: #ee7d18;
+        }
+
+        .baom_ks > em {
+            display: block;
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            cursor: pointer;
+            background: url(/Images/tubiao.png);
+        }
+
+    .user_name span {
+        color: #000000;
+        display: inline-block;
+        width: 88px;
+        text-align: right;
+    }
+
+    .user_name input {
+        height: 34px;
+        border: solid 1px #f88620;
+        width: 205px;
+        padding-left: 15px;
+    }
+
+    .baom_ks > #TiJiao {
+        display: block;
+        text-align: center;
+        width: 200px;
+        border: none;
+        margin: 0px auto;
+        color: #fff;
+        border-radius: 5px;
+        padding: 10px 0;
+        font-size: 16px;
+        position: relative;
+        left: -11px;
+        background: #c53f20;
+    }
+    .bm_goNow {
+        text-align: center;
+        margin: 50px;
+    }
+        .bm_goNow a {
+            display: inline-block;
+            color: #fff;
+            background: #B71818;
+            padding: 10px 25px;
+            border-radius: 15px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+    .biaoti {
+        text-align: center;
+        margin: 10px;
+    }
+
+    .font18 {
+        font-size: 18px;
+    }
+    h5 {
+        display: block;
+        font-size: 0.83em;
+        -webkit-margin-before: 1.67em;
+        -webkit-margin-after: 1.67em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+    }
+    .width_auto {
+        width: 1100px;
+        margin: 0px auto;
+    }
+    .left_bts {
+        padding: 15px 0px 0px 15px;
+    }
+    .left_bts h2 {
+            margin-top: 0px;
+            margin-bottom: 10px;
+            display: inline-block;
+            font-size: 16px;
+            padding: 0 10px 10px;
+            border-bottom: solid 2px #f40;
+        }
+    .clearfix {
+        zoom: 1;
+    }
+
+    ul, ol, li {
+        list-style: none;
+    }
+
+    ul, ol {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    ul{
+        display: block;
+        -webkit-margin-before: 1em;
+        -webkit-margin-after: 1em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        -webkit-padding-start: 40px;
+    }
+    .more_imgShow li p {
+        margin-top: 10px;
+    }
+    .more_imgShow li a {
+        color: #428bca;
+        text-decoration: none;
+    } .font14 {
+        height: 40px;
+        color: #080808;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        margin-bottom: 10px;
+    }
+    .more_imgShow li span {
+        color: #858585;
+        font-size: 10px;
+        padding: 0 0 15px 0;
+        display: inline-block;
+    }
+</style>
+
+
+

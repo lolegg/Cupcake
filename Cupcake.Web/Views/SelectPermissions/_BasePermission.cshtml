@@ -1,0 +1,121 @@
+﻿@model IEnumerable<RoleHasPermissionsModel>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+
+<style type="text/css">
+    .thumbnail {
+        margin-bottom: 5px;
+        background-color: #D3EFF7;
+        border: 1px solid #B4B6BE;
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .thumbnail .spanSelect {
+        position: absolute;
+        z-index: 100;
+        bottom: -1px;
+        right: 1px;
+    }
+
+
+    .public {
+        background-color: #F9F5D0;
+        border: 1px solid #D4D5BE;
+    }
+
+
+</style>
+
+<div class="panel-body" style="height: 400px; padding-bottom: 5px; overflow-y: auto; padding-top: 0px;">
+
+
+    <div class="row" style="border-bottom: solid 1px #ddd; margin-bottom: 5px; ">
+        <div style="padding: 2px; border-radius: 0px; margin-bottom:0px;" class="text-right alert alert-success">
+            
+                黄色为系统共用权限，蓝色为菜单私有权限，√ 表示选择了权限
+                <button type="button" style="" id="btnSave" class="btn btn-success btn-sm">
+                    <span title="保存"><i class="glyphicon glyphicon-folder-close"></i>保存</span>
+                </button>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-3">
+                <div class="thumbnail">
+                    <span title="@item.CustomPermissionsName"><i class="glyphicon glyphicon-lock"></i>@item.CustomPermissionsName</span>
+                    <span class="spanSelect" id="@item.Id" style="display:@(!item.HasPermission?"none":"")">
+                        <img src="~/Content/img/itemselect.gif" />
+                    </span>
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+</div>
+
+@*模板页面需要调用的方法,没有相关的操作可不实现*@
+@*<script type="text/javascript">
+    $(function () {
+        var pager = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        $.BaseSimpleTree("LoadPaged", pager);
+    });
+
+    function Search() {
+        var params = "&name=" + $("#Name").val();
+        $.BaseSimpleTree("LoadData", params);
+    }
+</script>*@
+
+
+@*部分视图如果有额外处理，需自己实现*@
+<script  type="text/javascript">
+    
+    $(function () {
+        $(".thumbnail").bind("click", function () {
+            $(this).find(".spanSelect").toggle();
+        });
+
+        $("#btnSave").bind("click", function () {
+            var arr = new Array();
+            var list = $(".spanSelect:visible");
+            $.each(list, function (index, data) {
+                arr.push($(data).attr("id"));
+            });
+
+            if ($.BaseSimpleTree.selNode && $.BaseSimpleTree.selNode.id) {
+                var roleid = GetRequest()["roleid"];
+                var menuid = $.BaseSimpleTree.selNode.id;
+                
+
+                
+                $.ajax({
+                    type: 'post',
+                    url: '/BasePermission/SaveMenuPermission',
+                    data: 'menuid=' + menuid + '&roleid=' + roleid + '&permission=' + arr.join(",") + '',
+                    success: function (data) {
+                        alert("保存成功");
+                    },
+                    error: function (ex) {
+                        //alert(ex.responseText);
+                    }
+                });
+
+            }
+        });
+    });
+
+
+
+</script>

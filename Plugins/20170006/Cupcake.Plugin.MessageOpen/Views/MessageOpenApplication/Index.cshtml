@@ -1,0 +1,119 @@
+﻿    @model Cupcake.Core.IPagedList<Cupcake.Plugin.MessageOpen.Domain.MessageOpenApplicationInfo>
+    @using Cupcake.Web
+    @using Cupcake.Web.Models
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.MessageOpen.Helper
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "申请信息");}
+                <div class="widget-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @*@Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/MessageOpenApplication/Create')")*@
+                                @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        联系人姓名
+                                    </th>
+                                    <th>
+                                        联系人电话
+                                    </th>
+                                    <th>
+                                        联系人电子邮箱
+                                    </th>
+
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i++)
+                                        </td>
+                                       @{
+                                    if (item.publicName!=null)
+                                    {
+                                         <td>
+                                            @item.publicName
+                                        </td>
+                                        <td>
+                                            @item.publicPhone
+                                        </td>
+                                        <td>
+                                            @item.publicMail
+                                        </td>
+                                    }
+                                    else { 
+                                          <td>
+                                            @item.OtherContactName
+                                        </td>
+                                        <td>
+                                            @item.OtherContactPhone
+                                        </td>
+                                        <td>
+                                            @item.Othermail
+                                        </td>
+                                    }      
+                                       }
+                                        <td>
+                                            <button type="button" class="btn btn-default btn-xs" onclick="groupLoad('/MessageOpenApplication/Details?id=@item.Id')"><i class="fa fa-clipboard"></i>查看</button>
+                                            @if (item.Feedback == null || item.Feedback=="")
+                                            {
+                                              <button type="button" class="btn btn-default btn-xs" onclick="groupLoad('/MessageOpenApplication/Feedback?id=@item.Id')"><i class="fa fa-clipboard"></i>反馈</button>
+                                            }
+                                            @if (item.IsPublic == false)
+                                            {
+                                                 <button type="button" class="btn btn-danger btn-xs" onclick="dialog('公开?','提醒','/MessageOpenApplication/IsPublic/@item.Id')"><i class="fa fa-frown-o"></i> 公 开</button>
+                                                }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-danger btn-xs" onclick="dialog('不公开?','提醒','/MessageOpenApplication/IsPublic/@item.Id')"><i class="fa fa-frown-o"></i>不 公 开</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function groupLoad(href) {
+            $('.page-body').load(href);
+        }
+        $(document).ready(function () {
+            initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+    </script>

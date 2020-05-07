@@ -1,0 +1,128 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Questionnaire.Domain.QuestionnaireProblem>
+    @using Cupcake.Web
+    @using Cupcake.Web.Models
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.Questionnaire.Helper
+
+    @{
+        var Title = ViewBag.QuestionTitle;
+    }
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header with-footer">
+                    <span class="widget-caption">@Title--问题列表</span>
+                    <div class="widget-buttons">
+                        <a href="#" data-toggle="maximize">
+                            @Html.IconFonts("fa-expand")
+                        </a>
+                        <a href="#" data-toggle="collapse">
+                            @Html.IconFonts("fa-minus")
+                        </a>
+                    </div>
+                </div>
+
+                <div class="widget-body">
+
+                    @{
+                        Guid id = @ViewBag.QuestionSurveyId;
+                    }
+                    @using (Ajax.BeginForm(new AjaxOptions() { }))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">问题名称</label>
+                                        @Html.Editor("Title", "String4Bootstrap")
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/QuestionnaireProblem/Create?QuestionSurveyId=" + id + "')")
+                                @Html.ButtonShiny("查找", "fa-search", "loadListView()")
+                                @Html.ButtonShiny("返回问卷调查", "fa-mail-reply", "groupLoad('/Questionnaire/Index')")
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th width="3%">
+                                        序号
+                                    </th>
+                                    <th >
+                                        问题名称
+                                    </th>
+                                    <th class="hidden-xs" width="10%">
+                                        答案类型
+                                    </th>
+                                    <th class="hidden-xs" width="8%">
+                                        是否必填
+                                    </th>
+                                    <th width="30%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i++)
+                                        </td>
+                                        <td class="lineauto">
+                                            @item.Title
+                                        </td>
+                                        <td class="hidden-xs">
+                                            @DataDictionaryHelper.GetDictionaryName(item.QuestionType)
+                                        </td>
+                                        <td class="hidden-xs">
+                                            @DataDictionaryHelper.GetDictionaryName(item.IsRequired)
+                                        </td>
+                                        <td>
+                                            @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/QuestionnaireProblem/Edit?QuestionSurveyId=" + id + "&&Id=" + item.Id + "')")
+                                            @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/QuestionnaireProblem/Delete/" + item.Id + "')", ButtonCss.Danger)
+
+                                            @if (DataDictionaryHelper.GetDictionaryName(item.QuestionType) != "内容")
+                                            {
+                                                @Html.ButtonXS("管理答案", "fa-file-text-o", "groupLoad('/QuestionnaireAnswer/Index?QuestionInfoId=" + item.Id + "&&QuestionType=" + item.QuestionType + "&&QuestionSurveyId=" + id + "')")
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            initFormDate();
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+        function groupLoad(href) {
+            $('.page-body').load(href);
+        }
+    </script>
+

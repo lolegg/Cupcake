@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="renderer" content="webkit">
+    <meta name="author" content="Jophy" />
+    <meta name="description" content="Index" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="~/Content/img/favicon.png" type="image/x-icon">
+    <!--Basic Styles-->
+    <link href="~/Content/css/bootstrap-3.3.6.css" rel="stylesheet" />
+    <!--Fonts-->
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/css/typicons.css" rel="stylesheet" />
+    <link href="~/Content/js/pagination/pagination.css" rel="stylesheet" />
+    <!--Reloadsoft styles-->
+    <link href="~/Content/css/reload.css" rel="stylesheet" />
+    <link href="~/Content/css/animate.min.css" rel="stylesheet" />
+    @*<link href="~/Content/js/layer-v2.1/layer/skin/layer.css" rel="stylesheet" />*@
+    <link href="~/Content/css/dataTables.bootstrap.css" rel="stylesheet" />
+    <link id="skin-link" href="" rel="stylesheet" type="text/css" />
+    <script src="~/Content/js/My97DatePicker/WdatePicker.js"></script>
+    <script src="~/Scripts/jquery-1.12.0.js"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.js"></script>
+    <script src="~/Scripts/skins.js"></script>
+    <script src="~/Scripts/bootstrap-3.3.6.js"></script>
+    <script src="~/Scripts/respond.min.js"></script>
+    <script src="~/Scripts/selectivizr.js"></script>
+    <script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZMtqRARPIk09nUpWnNKSmMPBVpwTvsci"></script>
+
+</head>
+<body>
+    <input type="hidden" id="reloadparas" />
+    <input type="hidden" id="uploadFiles" />
+    <input type="hidden" id="selectedMedias" />
+    <input type="hidden" id="selectedDatas" />
+
+    <div class="modal fade" style="overflow-y:scroll">
+        <div class="modal-dialog" id="cupcakeModal1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade">
+        <div class="modal-dialog" id="cupcakeModal2">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="head-menu">
+        <img src="~/Content/img/logo_top.png" />
+    </div>-->
+    <!-- Loading Container -->
+        <div class="loading-container">
+        <div class="loading-progress">
+            <div class="rotator">
+                <div class="rotator">
+                    <div class="rotator colored">
+                        <div class="rotator">
+                            <div class="rotator colored">
+                                <div class="rotator colored"></div>
+                                <div class="rotator"></div>
+                            </div>
+                            <div class="rotator colored"></div>
+                        </div>
+                        <div class="rotator"></div>
+                    </div>
+                    <div class="rotator"></div>
+                </div>
+                <div class="rotator"></div>
+            </div>
+            <div class="rotator"></div>
+        </div>
+    </div>
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="sidebar-collapse" id="sidebar-collapse">
+                <i class="collapse-icon fa fa-bars"></i>
+            </div>
+            <div class="navbar-container">
+                <!-- Navbar Barnd -->
+                <div class="navbar-header pull-left">
+                    <a href="#" class="navbar-brand">
+                        <small>
+                            <img src="~/Content/img/logo-inverted.png" alt="" style="height:50px;" />
+                        </small>
+                    </a>
+                </div>
+                <!--<div class="sidebar-collapse" id="sidebar-collapse">
+                    <i class="collapse-icon fa fa-bars"></i>
+                </div>--->
+                <!-- Account Area and Settings --->
+                <div class="navbar-header pull-right">
+                    <div class="navbar-account">
+                        <ul class="account-area">
+                            <li>
+                                <a class="login-area dropdown-toggle" data-toggle="dropdown">
+                                    <div class="avatar" title="头像">                                        
+                                        <img src="Content/img/avatars/zxx.jpg" />
+                                    </div>
+                                    <section>
+                                        <span class="profile" style="color:#fff; line-height:25px;">@HttpContext.Current.User.Identity.Name</span>
+                                    </section>
+                                </a>
+                                <!--Login Area Dropdown-->
+                                <ul class="pull-right dropdown-menu dropdown-arrow dropdown-login-area">
+                                    <li class="username"><a>@HttpContext.Current.User.Identity.Name</a></li>
+                                    <li class="email"><a>zxx@163.com</a></li> 
+  
+                                    <!--Theme Selector Area-->
+                                    <li class="theme-area">
+                                        <ul class="colorpicker" id="skin-changer">
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#02B3E2;" rel="~/Content/css/skins/blue.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#47ACE0;" rel="~/Content/css/skins/azure.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#4BAFFF;" rel="~/Content/css/skins/teal.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#53a93f;" rel="~/Content/css/skins/green.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#FF8F32;" rel="~/Content/css/skins/orange.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#cc324b;" rel="~/Content/css/skins/pink.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#AC193D;" rel="~/Content/css/skins/darkred.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#8C0095;" rel="~/Content/css/skins/purple.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#0072C6;" rel="~/Content/css/skins/darkblue.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#585858;" rel="~/Content/css/skins/gray.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#474544;" rel="~/Content/css/skins/black.min.css"></a></li>
+                                            <li><a class="colorpick-btn" href="#" style="background-color:#001940;" rel="~/Content/css/skins/deepblue.min.css"></a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown-footer">
+                                        <a href="/Local/Logout">
+                                            注销
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container container-fluid">
+        <div class="page-container">
+                <div class="page-sidebar" id="sidebar">
+                    <!--兼容ie8的侧边栏-->
+                    <div class="sidebar_ie8">
+                    </div>
+                    <!--菜单左边-->
+                <div class="sidebar-header-wrapper">
+                    
+                </div>
+                         @{
+                    Html.RenderAction("Initialize", "Menu");
+                }
+            </div>
+                <div class="page-content">
+                    <!--菜单右边-->
+                <div class="page-breadcrumbs">
+                    <!--Header Buttons-->
+                    <div class="header-buttons">
+                        <a class="sidebar-toggler" href="#">
+                            <i class="fa fa-arrows-h"></i>
+                        </a>
+                        <a class="refresh" id="refresh-toggler" href="#">
+                            <i class="glyphicon glyphicon-refresh"></i>
+                        </a>
+                        <a class="fullscreen" id="fullscreen-toggler" href="#">
+                            <i class="glyphicon glyphicon-fullscreen"></i>
+                        </a>
+                    </div>
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="/Home">首页</a>
+                            </li>
+                            
+                        </ul>
+                    @*@StackExchange.Profiling.MiniProfiler.RenderIncludes()*@
+                    </div>
+                    <!-- Page Header -->
+                    <!--<div class="page-header position-relative">
+                        <div class="header-title">
+                            <h1></h1>
+                </div>
+
+
+                    </div> -->
+                    <div class="page-body" style="padding-bottom:5px;position:relative">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/reload.js"></script>
+    @*<script src="~/Content/js/layer-v2.1/layer/layer.js"></script>*@
+    <script src="~/Content/js/datetime/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/bootbox/bootbox.js"></script>
+    <script src="~/Content/js/toastr/toastr.js"></script>
+
+    @*<script src="~/Content/js/zTree_v3/js/jquery.ztree.exedit.js"></script>*@
+    <script src="~/Content/js/pagination/jquery.pagination.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <script src="~/Scripts/jquery.cookie.js"></script>
+
+
+    @*<script src="~/Scripts/reloadutility.js"></script>*@
+    <script>
+    $(document).ready(function () {
+
+        // 通过该方法来为每次弹出的模态框设置最新的zIndex值，从而使最新的modal显示在最前面
+        //$(document).on('show.bs.modal', '.modal', function (event) {
+        //    var zIndex = 1040 + (10 * $('.modal:visible').length);
+        //    $(this).css('z-index', zIndex);
+            // setTimeout(function() {
+            //     $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            // }, 0);
+        //});
+    });
+
+    </script>
+</body>
+</html>
+

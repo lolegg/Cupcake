@@ -1,0 +1,111 @@
+﻿@model Cupcake.Plugin.Announcement.Models.AnnouncementModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Announcement.Helper
+<style>
+    .wrap {
+        background: #fff;
+        margin: auto;
+        display: block;
+        width: auto;
+        height: auto;
+        padding: 20px;
+        border-radius: 2px 2px 2px 2px;
+        -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+    }
+</style>
+
+<div id="not">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">标题</label>
+                                    @Html.EditorFor(m => m.Title)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">发布人</label>
+                                    @Html.EditorFor(m => m.Name)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">所属组织</label>
+                                    @if (Model.Department != null)
+                                    {  <div class="form-control"> @DataDictionaryHelper.GetOrganizationName(Model.Department)</div>}
+                                    else
+                                    { <div class="form-control"> </div> }
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">内容</label>
+                                    @*@Html.TextAreaFor(m => m.Content)*@
+                                    <div class="wrap">
+                                        @(new HtmlString(Model.Content))
+                                    </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                     <div class="row" id="imglit">
+                        @{
+                    if (Model.Imgurl != null && Model.ImgName != null && Model.ImgSLT != null)
+                        {
+                                string[] imge = Model.Imgurl.Split(',');
+                                string[] imgeName = Model.ImgName.Split(',');
+                                string[] imgSLT = Model.ImgSLT.Split(',');
+                                for (int i = 0; i < imge.Count(); i++)
+                               {
+                                   <div><img src="@imgSLT[i]" style='width:15px;' /><a href="@imge[i]" target="_blank" download="@imgeName[i]">@imgeName[i] 下载</a></div>
+                               }
+                        }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@*<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+</script>*@
+
+<script>
+    $(document).ready(function () {
+        $("#edui1").prop('disabled', 'disabled')
+        $("#not input").prop('disabled', 'disabled')
+    });
+</script>
+<style>
+    #imglit {
+        margin-left: 4px;
+    }
+</style>

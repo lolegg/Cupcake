@@ -1,0 +1,152 @@
+﻿@model Cupcake.Plugin.NetWork.Models.WorkGuideModel
+@using Cupcake.Web
+@using Cupcake.Plugin.NetWork.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.Title
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.WorkType, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @DataDictionaryHelper.GetDictionaryName(Model.WorkType)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ScopeOfApplication, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.ScopeOfApplication
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.CommitmentTimeLimit, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.CommitmentTimeLimit
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.LegalTimeLimit, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.LegalTimeLimit
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon">办理地点<br />及时间</label>
+                                <div class="form-control">
+                                    @Html.Raw(Model.HandlePlaceTime)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ApplicationConditions, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Html.Raw(Model.ApplicationConditions)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ApplicationMaterials, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Html.Raw(Model.ApplicationMaterials)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.SetBasis, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Html.Raw(Model.SetBasis)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ManagementProcess, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Html.Raw(Model.ManagementProcess)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon">其&emsp;&emsp;它</label>
+                                <div class="form-control">
+                                    @Html.Raw(Model.Other)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .form-control {
+        height: auto !important;
+    }
+</style>
+

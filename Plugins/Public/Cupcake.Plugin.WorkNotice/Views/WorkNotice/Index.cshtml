@@ -1,0 +1,109 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.WorkNotice.Domain.WorkNotices>
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.WorkNotice.Helper
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "工作提醒");}
+                <div class="widget-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">提醒名称</label>
+                                    @Html.Editor("Title", "String4Bootstrap")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                <button type="button" class="btn btn-default shiny" onclick="showEditModal1('添加', '/WorkNotice/Create')"><i class="fa fa-edit"></i> 添加</button>
+                                <button type="button" class="btn btn-default shiny" onclick="loadListView();"><i class="fa fa-search"></i> 查 找</button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        提醒名称
+                                    </th>
+                                    <th>
+                                        发布人
+                                    </th>
+                                    <th>
+                                        发布时间
+                                    </th>
+                                    <th>
+                                        工作截至日期
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(@i += 1)
+                                            </td>
+                                            <td>
+                                                @item.Title
+                                            </td>
+                                            <td>
+                                                @item.Publisher
+                                            </td>
+                                            <td>
+                                                @CommonHelper.ToYYYYMMDD(item.PublishDate)
+                                            </td>
+                                            <td>
+                                                @CommonHelper.ToYYYYMMDD(item.WorkAbortDate)
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-default btn-xs" onclick="showViewModal1('查看','/WorkNotice/Details/@item.Id')"><i class="fa fa-info"></i> 查 看</button>
+                                                <button type="button" class="btn btn-default btn-xs" onclick="showEditModal1('编辑','/WorkNotice/Edit/@item.Id')"><i class="fa fa-edit"></i> 编 辑</button>
+                                                <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否删除?','警告','/Activity/Delete/@item.Id')"><i class="glyphicon glyphicon-trash"></i> 删 除</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+
+    function groupLoad(href) {
+        $('.page-body').load(href);
+    }
+    </script>

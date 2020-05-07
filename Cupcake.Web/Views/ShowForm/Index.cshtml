@@ -1,0 +1,213 @@
+﻿@model Cupcake.Web.Models.CreateTableModel
+@using Cupcake.Web.Helper
+@using Cupcake.Core.Domain
+@{
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm())
+                    {
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header with-footer">
+                <span class="widget-caption">@ViewBag.funtionname</span>
+                <input type="hidden" id="hiddentablename" value="@ViewBag.tablename">
+            </div>
+            <div class="widget-body">
+                <div id="qpar">
+
+                </div>
+                <div class="flip-scroll">
+                    <table id="tbcolumn" class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                               
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<script type="text/javascript">
+
+
+    $(document).ready(function () {
+        
+        var vtablename = $("#hiddentablename").val();
+
+        var url = "@(Url.Action("GetIndexData", "ShowForm"))";
+        var vdata = "tablename=" + vtablename;
+
+        $.post(url, vdata, function (response) {
+            if (response.result == "fail")
+            {
+                alert("获取数据失败,"+ response.msg);
+            }
+            else
+            {
+                //查询条件
+                var resquery = eval(response.querycriteria);
+
+                if (resquery.length > 0) {
+                    var vqpar = "";
+
+                    var vflag = 0;
+
+                    for (var i = 0; i < resquery.length; i++) {
+
+                        if (vflag == 0) {
+                            vqpar += "<div class='row'>";
+                            vqpar += "<div class='col-md-6 form-group'><div class='input-group'><label class='input-group-addon'>" + resquery[i].ItemName + "</label>";
+                            vqpar += "<input class='form-control' id=" + resquery[i].ColumnName + " name='querypar' placeholder='请输入' type='text'/>"
+                            vqpar += "</div></div>";
+
+                            vflag++;
+                        }
+                        else {
+                            vqpar += "<div class='col-md-6 form-group'><div class='input-group'><label class='input-group-addon'>" + resquery[i].ItemName + "</label>";
+                            vqpar += "<input class='form-control' id=" + resquery[i].ColumnName + " name='querypar' placeholder='请输入' type='text'/>"
+                            vqpar += "</div></div>";
+                            vqpar += "</div>";
+
+                            $("#qpar").append(vqpar);
+
+                            vflag = 0;
+                        }
+                    }
+
+                    var vbtn = "<div class='row'>";
+                    vbtn += "<div class='col-md-3 form-group'></div><div class='col-md-3 form-group'></div><div class='col-md-3 form-group'></div>";
+                    vbtn += "<div class='col-md-3 form-group'>";
+                    vbtn += "<button type='button' class='btn btn-default shiny' onclick=\"showModal('添加','/ShowForm/Create?tablename=" + vtablename + "')\"><i class='fa fa-plus'></i>添 加</button>";
+                    vbtn += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-danger shiny' onclick='submitQuery();'><i class='fa fa-search'></i> 查 找</button>";
+                    vbtn += "</div></div>";
+
+                    $("#qpar").append(vbtn);
+                }
+
+                //列名
+                var rescol = eval(response.columns);
+
+                if (rescol.length > 0) {
+
+                    var vtr = "<tr>";
+                    for (var i = 0; i < rescol.length; i++) {
+                        
+                        vtr += "<th>" + rescol[i].ItemName + "</th>";
+                    }
+                    vtr += "<th>操作</th>";
+                    vtr += "</tr>";
+
+                    $("#tbcolumn thead").append(vtr);
+                }
+
+                //数据
+                if (response.datas != "")
+                {
+                    //var resdata = eval(response.datas);
+                    var resdata = response.datas.split("&");
+
+                    if (resdata.length > 0) {
+
+                        for (var i = 0; i < resdata.length; i++) {
+
+                            var arrdata = resdata[i].split(",");
+
+                            var vtr = "<tr>";
+
+                            for (var k = 1; k < arrdata.length; k++) {
+                                vtr += "<td>" + arrdata[k] + "</td>";
+                            }
+                            vtr += "<td><button type='button' class='btn btn-default btn-xs' onclick=\"showModal('编辑','/ShowForm/Edit?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-edit'></i> 编 辑</button><button type='button' class='btn btn-danger btn-xs' onclick=\"disable('/ShowForm/Delete?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-frown-o'></i> 删 除</button></td>";
+                            vtr += "</tr>";
+                            $("#tbcolumn tbody").append(vtr);
+                        }
+                    }
+                }
+                
+            }
+        });
+
+    }); //end load
+
+    function submitQuery()
+    {
+        var data = "";
+        var vtablename = $("#hiddentablename").val();
+
+        $("#qpar").find("input,select,checkbox,radio,textarea").each(function () {
+            if ($(this).val().length > 0)
+            {
+                data += $(this).attr("id") + ":" + $(this).val() + ",";
+            }
+            
+        });
+
+        if (data.length > 0) {
+            data = data.substring(0, data.length - 1);
+        }
+
+        var vdata = "tablename=" + $("#hiddentablename").val() + "&data=" + data;
+        var url = "@(Url.Action("QueryCommit", "ShowForm"))";
+
+        $.post(url, vdata, function (response) {
+            if (response.result == "success") {
+
+                //数据
+                if (response.datas != "") {
+                    $("#tbcolumn tbody").empty();
+                    var resdata;
+                    
+                    if (response.datas != null && response.datas.indexOf("&") > 0) {
+                        
+                        resdata = response.datas.split("&");
+                        
+                        if (resdata.length > 0) {
+
+                            for (var i = 0; i < resdata.length; i++) {
+
+                                var arrdata = resdata[i].split(",");
+
+                                var vtr = "<tr>";
+
+                                for (var k = 1; k < arrdata.length; k++) {
+                                    vtr += "<td>" + arrdata[k] + "</td>";
+                                }
+                                vtr += "<td><button type='button' class='btn btn-default btn-xs' onclick=\"showModal('编辑','/ShowForm/Edit?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-edit'></i> 编 辑</button><button type='button' class='btn btn-danger btn-xs' onclick=\"disable('/ShowForm/Delete?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-frown-o'></i> 删 除</button></td>";
+                                vtr += "</tr>";
+                                $("#tbcolumn tbody").append(vtr);
+                            }
+                        }
+                    }
+                    else {
+                        
+                        var arrdata = response.datas.split(",");
+                        
+                        var vtr = "<tr>";
+
+                        for (var k = 1; k < arrdata.length; k++) {
+                            vtr += "<td>" + arrdata[k] + "</td>";
+                        }
+                        vtr += "<td><button type='button' class='btn btn-default btn-xs' onclick=\"showModal('编辑','/ShowForm/Edit?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-edit'></i> 编 辑</button><button type='button' class='btn btn-danger btn-xs' onclick=\"disable('/ShowForm/Delete?tablename=" + vtablename + "&id=" + arrdata[0] + "')\"><i class='fa fa-frown-o'></i> 删 除</button></td>";
+                        vtr += "</tr>";
+
+                        $("#tbcolumn tbody").append(vtr);
+                    }
+                }
+                else {
+                    $("#tbcolumn tbody").empty();
+                }
+
+            }
+            else {
+                alert("查询失败," + response.msg);
+            }
+        });
+    }
+
+
+</script>

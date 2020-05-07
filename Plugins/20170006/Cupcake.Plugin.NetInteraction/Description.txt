@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 网上互动
+SystemName: NetInteraction
+Version: 1.0
+SupportedVersions: 2.0
+Author: 施海燕
+DisplayOrder: 1
+FileName: Cupcake.Plugin.NetInteraction.dll
+Description: plugin example that show how to develop a plugin

@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        #allmap {
+            height: 700px;
+            width: 100%;
+        }
+    </style>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8d2c5e957e613f7557e437dc38ec9676"></script>
+    <!--加载鼠标绘制工具-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+    <title></title>
+</head>
+<body>
+    <div id="allmap">
+    </div>
+</body>
+</html>
+复制代码
+复制代码
+<script type="text/javascript">
+    // 百度地图初始化
+    var map = new BMap.Map("allmap");
+    map.centerAndZoom("上海市", 12);
+    map.enableScrollWheelZoom();
+    map.enableContinuousZoom();
+
+    var bmap = {
+        drawingManager: '',
+        styleOptions: {
+            strokeColor: "red",      //边线颜色。
+            fillColor: "red",        //填充颜色。当参数为空时，圆形将没有填充效果。
+            strokeWeight: 3,        //边线的宽度，以像素为单位。
+            strokeOpacity: 0.8,     //边线透明度，取值范围0 - 1。
+            fillOpacity: 0.3,       //填充的透明度，取值范围0 - 1。
+            strokeStyle: 'solid'    //边线的样式，solid或dashed。
+        },
+
+        /*------实例化-----*/
+        init: function () {
+            var styleOptions = this.styleOptions;
+            map.enableScrollWheelZoom();
+
+            setTimeout(function () {
+                //实例化鼠标绘制工具
+                this.drawingManager = new BMapLib.DrawingManager(map, {
+                    isOpen: false, //是否开启绘制模式
+                    enableDrawingTool: true, //是否显示工具栏
+                    drawingToolOptions: {
+                        anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
+                        offset: new BMap.Size(5, 5), //偏离值
+                        scale: 0.8, //工具栏缩放比例
+                        drawingModes: [
+                         //工具栏上可以选择出现的绘制模式
+                         BMAP_DRAWING_MARKER,
+                         BMAP_DRAWING_POLYGON,
+                         BMAP_DRAWING_POLYLINE
+                         //BMAP_DRAWING_RECTANGLE
+                         //BMAP_DRAWING_CIRCLE
+                        ]
+                    },
+                    polylineOptions: styleOptions, //线的样式
+                    polygonOptions: styleOptions, //多边形的样式
+                });
+                //添加鼠标绘制工具监听事件，用于获取绘制结果
+                this.drawingManager.addEventListener('overlaycomplete', bmap.overlaycomplete);
+            },500)
+          
+        },
+        overlaycomplete: function (e) {
+            switch (e.drawingMode) {
+                case "marker":
+                    {
+                        var marker = e.overlay;
+                        /*-----------------标注右键删除-------------------------*/
+                        var markerMenu = new BMap.ContextMenu();
+                        markerMenu.addItem(new BMap.MenuItem('删除标注 ', function () {
+                            map.removeOverlay(marker);
+                        }))
+                        marker.addContextMenu(markerMenu);
+                        /*-----------------标注点击弹窗-------------------------*/
+                        marker.addEventListener("click", function (e) {
+                            var sContent =
+                            "<form method='post' action=''>" +
+                                "<table>" +
+                                    "<tr>" +
+                                        "<td><b>名称：</b>" +
+                                            "<input type='text' name='Name' style='margin-top:10px;width:200px'/>" +
+                                        "</td>" +
+                                    "</tr>" +
+                                    "<tr>" +
+                                        "<td><b>坐标：</b>" +
+                                            "<input type='text' name='lng' value='" + e.point.lng + "' style='width:80px;'/>" +
+                                            "<span>-</span>" +
+                                            "<input type='text' name='lat' value='" + e.point.lat + "' style='width:80px;'/>" +
+                                        "</td>" +
+                                    "</tr>" +
+                                    "<tr >" +
+                                        "<td><b>备注：</b>" +
+                                            "<textarea  rows=6  name='Remark' style='width:198px;vertical-align:top;'></textarea>" +
+                                        "</td>" +
+                                    "</tr>" +
+                                    "<tr>" +
+                                        "<td style='text-align:right;'>" +
+                                            "<input type='button' value='保存' style='width: 40px;line-height: 40px;'/>" +
+                                        "</td>" +
+                                    "</tr>" +
+                                "</talbe>" +
+                            "</form>";
+                            var opts = {
+                                enableMessage: false
+                            };
+                            var infoWindow = new BMap.InfoWindow(sContent, opts);
+                            this.openInfoWindow(infoWindow);
+                        });
+                    }
+                    break;
+                case "polyline":
+                    {
+                        var polyline = e.overlay;
+                        /*-----------------折线右键删除-------------------------*/
+                        var polylineMenu = new BMap.ContextMenu();
+                        polylineMenu.addItem(new BMap.MenuItem('删除折线', function () {
+                            map.removeOverlay(polyline);
+                        }));
+                        polyline.addContextMenu(polylineMenu);
+                    }
+                    break;
+                case "polygon":
+                    {
+                        var polygon = e.overlay;
+                        /*-----------------多边形右键删除-------------------------*/
+                        var polygonMenu = new BMap.ContextMenu();
+                        polygonMenu.addItem(new BMap.MenuItem('删除多边形', function () {
+                            map.removeOverlay(polygon);
+                        }));
+                        polygon.addContextMenu(polygonMenu);
+                    }
+                    break;
+            }
+        }
+    }
+    bmap.init();
+</script>

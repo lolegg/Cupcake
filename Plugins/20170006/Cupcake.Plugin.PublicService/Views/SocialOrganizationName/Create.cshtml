@@ -1,0 +1,70 @@
+﻿@model Cupcake.Plugin.PublicService.Models.SocialOrganizationNameModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                   @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.Name)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Address, new { @class = "input-group-addon" })
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", onblur = "GetLD()" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                    </div>
+                   </div>
+                    <div class="row">
+                     <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" >经纬度</label>
+                                @Html.TextBoxFor(m => m.lng, new { @class = "form-control" ,style="width:80px;" })
+                                <span class="form-control" style="width:20px;">-</span>
+                                @Html.TextBoxFor(m => m.lat, new { @class = "form-control", style = "width:80px;" })
+                            </div>
+                        </div>
+                    </div>
+                   </div>
+                }
+            </div>
+        </div>
+    </div>
+<script>
+
+    function GetLD() {
+
+        var address = $("#Address").val();
+        if (address != null && address != "undefined" && address != "") {
+            // 创建地址解析器实例
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(address, function (point) {
+                if (point) {
+                    $("#lng").val(point.lng);
+                    $("#lat").val(point.lat);
+                } else {
+                    alert("您选择地址没有解析到结果!");
+                }
+            }, "上海市");
+        }
+    }
+
+</script>

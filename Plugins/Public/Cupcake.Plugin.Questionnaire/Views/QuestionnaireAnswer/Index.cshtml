@@ -1,0 +1,98 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Questionnaire.Domain.QuestionnaireAnswer>
+    @using Cupcake.Web
+    @using Cupcake.Web.Models
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.Questionnaire.Helper
+
+@{
+    var Title = ViewBag.ProblemTitle;
+   
+}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                <div class="widget-header with-footer">
+                    <span class="widget-caption">@Title--答案列表</span>
+                    <div class="widget-buttons">
+                        <a href="#" data-toggle="maximize">
+                            @Html.IconFonts("fa-expand")
+                        </a>
+                        <a href="#" data-toggle="collapse">
+                            @Html.IconFonts("fa-minus")
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    @{
+                        Guid id = ViewBag.QuestionInfoId;
+                        Guid QuestionType = ViewBag.QuestionType;
+                        Guid QuestionSurveyId = ViewBag.QuestionSurveyId;
+                    }
+                    <div>
+                        @using (Ajax.BeginForm(new AjaxOptions() { }))
+                        {
+                            @Html.AntiForgeryToken()
+                             <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/QuestionnaireAnswer/Create?QuestionInfoId=" + id + "&&QuestionType=" + QuestionType + "')")
+                          @Html.ButtonShiny("返回问题列表", "fa-mail-reply", "groupLoad('/QuestionnaireProblem/Index?QuestionSurveyId=" + QuestionSurveyId + "')")
+                                @Html.ButtonShiny("返回问卷调查", "fa-reply-all", "groupLoad('/Questionnaire/Index')")
+                            </div>
+                        </div>
+                        
+                        }
+                    </div>
+                    <div class="flip-scroll">
+                        <table class="table table-striped table-bordered table-hover tablefixed table-fixed">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th >
+                                        答案名称
+                                    </th>
+                                    @*<th class="hidden-xs" width="30%">
+                                        发布时间
+                                    </th>*@
+                                    <th width="20%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i++)
+                                        </td>
+                                        <td class="lineauto">
+                                            @item.Title
+                                        </td>
+                                        @*<td class="hidden-xs">
+                                            @CommonHelper.ToYYYYMMDD(item.CreateDate)
+                                        </td>*@
+                                        <td>
+                                            @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/QuestionnaireAnswer/Edit?QuestionInfoId=" + id + "&&Id=" + item.Id + "')")
+                                            @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/QuestionnaireAnswer/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                         
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                  
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function groupLoad(href) {
+        $('.page-body').load(href);
+    }
+</script>

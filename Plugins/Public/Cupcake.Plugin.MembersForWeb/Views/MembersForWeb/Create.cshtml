@@ -1,0 +1,190 @@
+﻿@model Cupcake.Plugin.MembersForWeb.Models.MembersModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.MembersForWeb
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">用户名</label>
+                                @Html.Editor("UserName", "String4Bootstrap")
+                                @Html.ValidationMessageFor(m => m.UserName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">昵称</label>
+                                @Html.Editor("UserRealName", "String4Bootstrap")
+                                @Html.ValidationMessageFor(m => m.UserRealName)
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">密码</label>
+                             
+                           @Html.PasswordFor(model => model.Password, new { @class="form-control"})
+                                @Html.ValidationMessageFor(m => m.Password)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">确认密码</label>
+                                @Html.PasswordFor(model => model.Password2, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Password2)
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">邮箱</label>
+                                @Html.Editor("UserRealName", "String4Bootstrap")
+                                @Html.ValidationMessageFor(m => m.UserRealName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">电话</label>
+                                @Html.Editor("Tel", "String4Bootstrap")
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">用户类型</label>
+                                @Html.Editor("UserType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("用户类型") })
+                                @Html.ValidationMessageFor(m => m.UserType)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">用户状态</label>
+                                @Html.Editor("Status", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("用户状态") })
+                                @Html.ValidationMessageFor(m => m.UserType)
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();"><i class="fa fa-search"></i>资源上传</button>
+                                @Html.HiddenFor(m => m.ImageUrl)
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row clearfix" id="imglit">
+
+                    </div>
+
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+  
+     
+    })
+
+    function uploadMedias() {
+        var settings = {
+            fileType: "媒体类型>图片",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+    function loadMedias(dt) {
+        var Imgurl = "";
+        for (var i = 0; i < dt.length; i++) {
+            if (i > 0) {
+                break;
+            }
+            Imgurl += dt[i].RelativePath;
+            $("#imglit").append("<div class=\'img_pailie\'><img src=\"" + dt[i].RelativePath + "\" style=\"width:100px; height:100px;margin-left:10px;\"/><a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.Activity/Content/Img/cha.png\' style=\'width:20px; height:20px;\' /></a></div>")
+        }
+        $("#Imgurl").val(Imgurl);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+    function shanchu(dbc) {
+        $("#Imgurl").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+     
+      
+        $("#Imgurl").val(Imgurl);
+    }
+</script>

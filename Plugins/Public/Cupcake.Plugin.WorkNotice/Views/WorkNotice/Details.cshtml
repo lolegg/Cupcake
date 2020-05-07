@@ -1,0 +1,136 @@
+﻿@model Cupcake.Plugin.WorkNotice.Models.WorkNoticeModel
+@using Cupcake.Web
+@using Cupcake.Plugin.WorkNotice.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+
+<style type="text/css">
+    .displaynone {
+         display:none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(m => m.Content)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Publisher, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Publisher)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.PublishDate, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @CommonHelper.ToYYYYMMDD(Model.PublishDate)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.WorkAbortDate, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @CommonHelper.ToYYYYMMDD(Model.WorkAbortDate)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Department, new { @class = "input-group-addon" })
+                                    <div style="background-color: #fbfbfb; border: 1px solid #d5d5d5;height:auto;">
+                                        <div style=" margin-bottom: 16px;">
+                                           @{
+                                            if (Model.Department != null)
+                                            {
+                                                string[] Department = Model.Department.Split(',');
+                                                foreach (var it in Department)
+                                                {
+                                                    if (it != "")
+                                                    {
+                                                        @Html.Raw(TreeHtml.GetName(it))
+
+                                                    }
+                                                }
+                                            }
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="imglit">
+                        @{
+                        if (Model.Imgurl != null && Model.ImgName != null && Model.ImgSLT != null)
+                        {
+                                string[] imge = Model.Imgurl.Split(',');
+                                string[] imgeName = Model.ImgName.Split(',');
+                                string[] imgSLT = Model.ImgSLT.Split(',');
+                                for (int i = 0; i < imge.Count(); i++)
+                               {
+                                   <div><img src="@imgSLT[i]" style='width:15px;' /><a href="@imge[i]" target="_blank" download="@imgeName[i]">@imgeName[i] 下载</a></div>
+                               }
+                        }
+                        }
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    #Content {
+        height: 108px;
+        width: 459px;
+    }
+    #imglit {
+    margin-left:4px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $(":input").attr("readonly", true)
+    })
+</script>

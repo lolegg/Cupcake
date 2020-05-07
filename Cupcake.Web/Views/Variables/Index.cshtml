@@ -1,0 +1,85 @@
+﻿@model Cupcake.Core.IPagedList<Variables>
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "系统变量");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Name">变量名</label>
+                                @Html.Editor("Name", "String4Bootstrap")
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/Variables/Create')")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    变量名
+                                </th>
+                                <th>
+                                    值
+                                </th>
+                                <th>
+                                    创建时间
+                                </th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    <td>
+                                        @item.Value
+                                    </td>
+                                    <td>
+                                        @item.CreateDate
+                                    </td>
+                                    <td>
+                                        @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑变量','/Variables/Edit/" + item.Id + "')")
+                                        @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/Variables/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+</script>

@@ -1,0 +1,297 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Core", "Cupcake.Core\Cupcake.Core.csproj", "{F1D019A6-527A-4A4A-89AB-BE17A03A1223}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Data", "Cupcake.Data\Cupcake.Data.csproj", "{18092ACD-2AEC-47F4-AAE1-9A464FCEDA9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Services", "Cupcake.Services\Cupcake.Services.csproj", "{49AC0621-E67A-4ECF-BC4F-55D3708EA955}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Web.Framework", "Cupcake.Web.Framework\Cupcake.Web.Framework.csproj", "{A72C1AE2-D3CD-4251-86B6-057E0A1FEDDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Web", "Cupcake.Web\Cupcake.Web.csproj", "{8F95772D-53FD-4B50-AFF1-7C78A92B42A4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{04635611-F40A-4379-BE67-BCF72F1E60BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Public", "Public", "{4CFAF2E0-CFC8-45FC-9478-F2966968856E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.PluginManagement", "Plugins\Public\Cupcake.Plugin.PluginManagement\Cupcake.Plugin.PluginManagement.csproj", "{18E1802C-3A68-421A-B8DD-610C2FDC12AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.Activity", "Plugins\Public\Cupcake.Plugin.Activity\Cupcake.Plugin.Activity.csproj", "{7E6A8B88-6893-44AE-B39C-947D3AA1F464}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.Announcement", "Plugins\Public\Cupcake.Plugin.Announcement\Cupcake.Plugin.Announcement.csproj", "{F7FA5300-8229-45F2-A316-12B1744BAECD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.CalendarAndScheduling", "Plugins\Public\Cupcake.Plugin.CalendarAndScheduling\Cupcake.Plugin.CalendarAndScheduling.csproj", "{347ACA72-8CFF-405E-BBFF-6F08E50A46EB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.News", "Plugins\Public\Cupcake.Plugin.News\Cupcake.Plugin.News.csproj", "{D5F46126-D18A-423A-88E2-C4E02AECA884}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.Questionnaire", "Plugins\Public\Cupcake.Plugin.Questionnaire\Cupcake.Plugin.Questionnaire.csproj", "{0F801AA9-7292-4397-9A09-3D29C335DC86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.WorkNotice", "Plugins\Public\Cupcake.Plugin.WorkNotice\Cupcake.Plugin.WorkNotice.csproj", "{45585655-44E3-4260-9C08-3930385F1BE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.SystemMessage", "Plugins\Public\Cupcake.Plugin.SystemMessage\Cupcake.Plugin.SystemMessage.csproj", "{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.TaskModule", "Plugins\Public\Cupcake.Plugin.TaskModule\Cupcake.Plugin.TaskModule.csproj", "{A19394C1-E736-4FAD-8D75-36E9C72CD758}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.MapPoint", "Plugins\Public\Cupcake.Plugin.MapPoint\Cupcake.Plugin.MapPoint.csproj", "{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.MembersForWeb", "Plugins\Public\Cupcake.Plugin.MembersForWeb\Cupcake.Plugin.MembersForWeb.csproj", "{8601A1AF-C83A-4F30-B223-5615357FFADF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.Comments", "Plugins\Public\Cupcake.Plugin.Comments\Cupcake.Plugin.Comments.csproj", "{AAC79513-7EF6-4FBB-9DBE-1085C958DE43}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "20170006", "20170006", "{24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.ImportantNews", "Plugins\20170006\Cupcake.Plugin.ImportantNews\Cupcake.Plugin.ImportantNews.csproj", "{05DDA7A3-4958-4DF8-B2DE-60593EC236EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.MapMessage", "Plugins\20170006\Cupcake.Plugin.MapMessage\Cupcake.Plugin.MapMessage.csproj", "{AF0F1595-AD94-4C43-A7B7-CF452F590B11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.MessageOpen", "Plugins\20170006\Cupcake.Plugin.MessageOpen\Cupcake.Plugin.MessageOpen.csproj", "{899E568B-65E3-4685-913C-D7DD9F0C8221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.NetInteraction", "Plugins\20170006\Cupcake.Plugin.NetInteraction\Cupcake.Plugin.NetInteraction.csproj", "{9382A943-6FCC-4B1A-9F14-5BD0739D1563}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.PublicService", "Plugins\20170006\Cupcake.Plugin.PublicService\Cupcake.Plugin.PublicService.csproj", "{8F134991-9354-4575-AD83-C8714E59D2BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.NetWork", "Plugins\20170006\Cupcake.Plugin.NetWork\Cupcake.Plugin.NetWork.csproj", "{18359A88-FF4B-45B8-8401-69BA005ACE22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.MemberDengJi", "Plugins\20170006\Cupcake.Plugin.MemberDengJi\Cupcake.Plugin.MemberDengJi.csproj", "{0EC892FC-59D9-429C-95C3-48ACE683FB9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cupcake.Plugin.Template", "Plugins\Public\Cupcake.Plugin.Template\Cupcake.Plugin.Template.csproj", "{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 26
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://192.168.0.134:8080/tfs/2017
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Cupcake.Core\\Cupcake.Core.csproj
+		SccProjectName1 = Cupcake.Core
+		SccLocalPath1 = Cupcake.Core
+		SccProjectUniqueName2 = Cupcake.Data\\Cupcake.Data.csproj
+		SccProjectName2 = Cupcake.Data
+		SccLocalPath2 = Cupcake.Data
+		SccProjectUniqueName3 = Cupcake.Services\\Cupcake.Services.csproj
+		SccProjectName3 = Cupcake.Services
+		SccLocalPath3 = Cupcake.Services
+		SccProjectUniqueName4 = Cupcake.Web.Framework\\Cupcake.Web.Framework.csproj
+		SccProjectName4 = Cupcake.Web.Framework
+		SccLocalPath4 = Cupcake.Web.Framework
+		SccProjectUniqueName5 = Cupcake.Web\\Cupcake.Web.csproj
+		SccProjectName5 = Cupcake.Web
+		SccLocalPath5 = Cupcake.Web
+		SccProjectUniqueName6 = Plugins\\Public\\Cupcake.Plugin.Activity\\Cupcake.Plugin.Activity.csproj
+		SccProjectTopLevelParentUniqueName6 = Cupcake.sln
+		SccProjectName6 = Plugins/Public/Cupcake.Plugin.Activity
+		SccLocalPath6 = Plugins\\Public\\Cupcake.Plugin.Activity
+		SccProjectUniqueName7 = Plugins\\Public\\Cupcake.Plugin.Announcement\\Cupcake.Plugin.Announcement.csproj
+		SccProjectTopLevelParentUniqueName7 = Cupcake.sln
+		SccProjectName7 = Plugins/Public/Cupcake.Plugin.Announcement
+		SccLocalPath7 = Plugins\\Public\\Cupcake.Plugin.Announcement
+		SccProjectUniqueName8 = Plugins\\Public\\Cupcake.Plugin.CalendarAndScheduling\\Cupcake.Plugin.CalendarAndScheduling.csproj
+		SccProjectTopLevelParentUniqueName8 = Cupcake.sln
+		SccProjectName8 = Plugins/Public/Cupcake.Plugin.CalendarAndScheduling
+		SccLocalPath8 = Plugins\\Public\\Cupcake.Plugin.CalendarAndScheduling
+		SccProjectUniqueName9 = Plugins\\Public\\Cupcake.Plugin.MapPoint\\Cupcake.Plugin.MapPoint.csproj
+		SccProjectTopLevelParentUniqueName9 = Cupcake.sln
+		SccProjectName9 = Plugins/Public/Cupcake.Plugin.MapPoint
+		SccLocalPath9 = Plugins\\Public\\Cupcake.Plugin.MapPoint
+		SccProjectUniqueName10 = Plugins\\Public\\Cupcake.Plugin.News\\Cupcake.Plugin.News.csproj
+		SccProjectTopLevelParentUniqueName10 = Cupcake.sln
+		SccProjectName10 = Plugins/Public/Cupcake.Plugin.News
+		SccLocalPath10 = Plugins\\Public\\Cupcake.Plugin.News
+		SccProjectUniqueName11 = Plugins\\Public\\Cupcake.Plugin.PluginManagement\\Cupcake.Plugin.PluginManagement.csproj
+		SccProjectTopLevelParentUniqueName11 = Cupcake.sln
+		SccProjectName11 = Plugins/Public/Cupcake.Plugin.PluginManagement
+		SccLocalPath11 = Plugins\\Public\\Cupcake.Plugin.PluginManagement
+		SccProjectUniqueName12 = Plugins\\Public\\Cupcake.Plugin.Questionnaire\\Cupcake.Plugin.Questionnaire.csproj
+		SccProjectTopLevelParentUniqueName12 = Cupcake.sln
+		SccProjectName12 = Plugins/Public/Cupcake.Plugin.Questionnaire
+		SccLocalPath12 = Plugins\\Public\\Cupcake.Plugin.Questionnaire
+		SccProjectUniqueName13 = Plugins\\Public\\Cupcake.Plugin.SystemMessage\\Cupcake.Plugin.SystemMessage.csproj
+		SccProjectTopLevelParentUniqueName13 = Cupcake.sln
+		SccProjectName13 = Plugins/Public/Cupcake.Plugin.SystemMessage
+		SccLocalPath13 = Plugins\\Public\\Cupcake.Plugin.SystemMessage
+		SccProjectUniqueName14 = Plugins\\Public\\Cupcake.Plugin.TaskModule\\Cupcake.Plugin.TaskModule.csproj
+		SccProjectTopLevelParentUniqueName14 = Cupcake.sln
+		SccProjectName14 = Plugins/Public/Cupcake.Plugin.TaskModule
+		SccLocalPath14 = Plugins\\Public\\Cupcake.Plugin.TaskModule
+		SccProjectUniqueName15 = Plugins\\Public\\Cupcake.Plugin.WorkNotice\\Cupcake.Plugin.WorkNotice.csproj
+		SccProjectTopLevelParentUniqueName15 = Cupcake.sln
+		SccProjectName15 = Plugins/Public/Cupcake.Plugin.WorkNotice
+		SccLocalPath15 = Plugins\\Public\\Cupcake.Plugin.WorkNotice
+		SccProjectUniqueName16 = Plugins\\Public\\Cupcake.Plugin.MembersForWeb\\Cupcake.Plugin.MembersForWeb.csproj
+		SccProjectTopLevelParentUniqueName16 = Cupcake.sln
+		SccProjectName16 = Plugins/Public/Cupcake.Plugin.MembersForWeb
+		SccLocalPath16 = Plugins\\Public\\Cupcake.Plugin.MembersForWeb
+		SccProjectUniqueName17 = Plugins\\Public\\Cupcake.Plugin.Comments\\Cupcake.Plugin.Comments.csproj
+		SccProjectTopLevelParentUniqueName17 = Cupcake.sln
+		SccProjectName17 = Plugins/Public/Cupcake.Plugin.Comments
+		SccLocalPath17 = Plugins\\Public\\Cupcake.Plugin.Comments
+		SccProjectUniqueName18 = Plugins\\20170006\\Cupcake.Plugin.ImportantNews\\Cupcake.Plugin.ImportantNews.csproj
+		SccProjectTopLevelParentUniqueName18 = Cupcake.sln
+		SccProjectName18 = Plugins/20170006/Cupcake.Plugin.ImportantNews
+		SccLocalPath18 = Plugins\\20170006\\Cupcake.Plugin.ImportantNews
+		SccProjectUniqueName19 = Plugins\\20170006\\Cupcake.Plugin.MapMessage\\Cupcake.Plugin.MapMessage.csproj
+		SccProjectTopLevelParentUniqueName19 = Cupcake.sln
+		SccProjectName19 = Plugins/20170006/Cupcake.Plugin.MapMessage
+		SccLocalPath19 = Plugins\\20170006\\Cupcake.Plugin.MapMessage
+		SccProjectUniqueName20 = Plugins\\20170006\\Cupcake.Plugin.MessageOpen\\Cupcake.Plugin.MessageOpen.csproj
+		SccProjectTopLevelParentUniqueName20 = Cupcake.sln
+		SccProjectName20 = Plugins/20170006/Cupcake.Plugin.MessageOpen
+		SccLocalPath20 = Plugins\\20170006\\Cupcake.Plugin.MessageOpen
+		SccProjectUniqueName21 = Plugins\\20170006\\Cupcake.Plugin.NetInteraction\\Cupcake.Plugin.NetInteraction.csproj
+		SccProjectTopLevelParentUniqueName21 = Cupcake.sln
+		SccProjectName21 = Plugins/20170006/Cupcake.Plugin.NetInteraction
+		SccLocalPath21 = Plugins\\20170006\\Cupcake.Plugin.NetInteraction
+		SccProjectUniqueName22 = Plugins\\20170006\\Cupcake.Plugin.PublicService\\Cupcake.Plugin.PublicService.csproj
+		SccProjectTopLevelParentUniqueName22 = Cupcake.sln
+		SccProjectName22 = Plugins/20170006/Cupcake.Plugin.PublicService
+		SccLocalPath22 = Plugins\\20170006\\Cupcake.Plugin.PublicService
+		SccProjectUniqueName23 = Plugins\\20170006\\Cupcake.Plugin.NetWork\\Cupcake.Plugin.NetWork.csproj
+		SccProjectTopLevelParentUniqueName23 = Cupcake.sln
+		SccProjectName23 = Plugins/20170006/Cupcake.Plugin.NetWork
+		SccLocalPath23 = Plugins\\20170006\\Cupcake.Plugin.NetWork
+		SccProjectUniqueName24 = Plugins\\20170006\\Cupcake.Plugin.MemberDengJi\\Cupcake.Plugin.MemberDengJi.csproj
+		SccProjectTopLevelParentUniqueName24 = Cupcake.sln
+		SccProjectName24 = Plugins/20170006/Cupcake.Plugin.MemberDengJi
+		SccLocalPath24 = Plugins\\20170006\\Cupcake.Plugin.MemberDengJi
+		SccProjectUniqueName25 = Plugins\\Public\\Cupcake.Plugin.Template\\Cupcake.Plugin.Template.csproj
+		SccProjectTopLevelParentUniqueName25 = Cupcake.sln
+		SccProjectName25 = Plugins/Public/Cupcake.Plugin.Template
+		SccLocalPath25 = Plugins\\Public\\Cupcake.Plugin.Template
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1D019A6-527A-4A4A-89AB-BE17A03A1223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D019A6-527A-4A4A-89AB-BE17A03A1223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D019A6-527A-4A4A-89AB-BE17A03A1223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D019A6-527A-4A4A-89AB-BE17A03A1223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18092ACD-2AEC-47F4-AAE1-9A464FCEDA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18092ACD-2AEC-47F4-AAE1-9A464FCEDA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18092ACD-2AEC-47F4-AAE1-9A464FCEDA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18092ACD-2AEC-47F4-AAE1-9A464FCEDA9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49AC0621-E67A-4ECF-BC4F-55D3708EA955}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49AC0621-E67A-4ECF-BC4F-55D3708EA955}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49AC0621-E67A-4ECF-BC4F-55D3708EA955}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49AC0621-E67A-4ECF-BC4F-55D3708EA955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A72C1AE2-D3CD-4251-86B6-057E0A1FEDDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A72C1AE2-D3CD-4251-86B6-057E0A1FEDDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A72C1AE2-D3CD-4251-86B6-057E0A1FEDDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A72C1AE2-D3CD-4251-86B6-057E0A1FEDDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F95772D-53FD-4B50-AFF1-7C78A92B42A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F95772D-53FD-4B50-AFF1-7C78A92B42A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F95772D-53FD-4B50-AFF1-7C78A92B42A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F95772D-53FD-4B50-AFF1-7C78A92B42A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18E1802C-3A68-421A-B8DD-610C2FDC12AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18E1802C-3A68-421A-B8DD-610C2FDC12AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18E1802C-3A68-421A-B8DD-610C2FDC12AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18E1802C-3A68-421A-B8DD-610C2FDC12AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E6A8B88-6893-44AE-B39C-947D3AA1F464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E6A8B88-6893-44AE-B39C-947D3AA1F464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E6A8B88-6893-44AE-B39C-947D3AA1F464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E6A8B88-6893-44AE-B39C-947D3AA1F464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7FA5300-8229-45F2-A316-12B1744BAECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7FA5300-8229-45F2-A316-12B1744BAECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7FA5300-8229-45F2-A316-12B1744BAECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7FA5300-8229-45F2-A316-12B1744BAECD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{347ACA72-8CFF-405E-BBFF-6F08E50A46EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{347ACA72-8CFF-405E-BBFF-6F08E50A46EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{347ACA72-8CFF-405E-BBFF-6F08E50A46EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{347ACA72-8CFF-405E-BBFF-6F08E50A46EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5F46126-D18A-423A-88E2-C4E02AECA884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5F46126-D18A-423A-88E2-C4E02AECA884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5F46126-D18A-423A-88E2-C4E02AECA884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5F46126-D18A-423A-88E2-C4E02AECA884}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F801AA9-7292-4397-9A09-3D29C335DC86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F801AA9-7292-4397-9A09-3D29C335DC86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F801AA9-7292-4397-9A09-3D29C335DC86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F801AA9-7292-4397-9A09-3D29C335DC86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45585655-44E3-4260-9C08-3930385F1BE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45585655-44E3-4260-9C08-3930385F1BE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45585655-44E3-4260-9C08-3930385F1BE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45585655-44E3-4260-9C08-3930385F1BE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A19394C1-E736-4FAD-8D75-36E9C72CD758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A19394C1-E736-4FAD-8D75-36E9C72CD758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A19394C1-E736-4FAD-8D75-36E9C72CD758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A19394C1-E736-4FAD-8D75-36E9C72CD758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8601A1AF-C83A-4F30-B223-5615357FFADF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8601A1AF-C83A-4F30-B223-5615357FFADF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8601A1AF-C83A-4F30-B223-5615357FFADF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8601A1AF-C83A-4F30-B223-5615357FFADF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC79513-7EF6-4FBB-9DBE-1085C958DE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC79513-7EF6-4FBB-9DBE-1085C958DE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC79513-7EF6-4FBB-9DBE-1085C958DE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC79513-7EF6-4FBB-9DBE-1085C958DE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05DDA7A3-4958-4DF8-B2DE-60593EC236EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05DDA7A3-4958-4DF8-B2DE-60593EC236EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05DDA7A3-4958-4DF8-B2DE-60593EC236EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05DDA7A3-4958-4DF8-B2DE-60593EC236EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF0F1595-AD94-4C43-A7B7-CF452F590B11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF0F1595-AD94-4C43-A7B7-CF452F590B11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF0F1595-AD94-4C43-A7B7-CF452F590B11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF0F1595-AD94-4C43-A7B7-CF452F590B11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{899E568B-65E3-4685-913C-D7DD9F0C8221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{899E568B-65E3-4685-913C-D7DD9F0C8221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{899E568B-65E3-4685-913C-D7DD9F0C8221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{899E568B-65E3-4685-913C-D7DD9F0C8221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9382A943-6FCC-4B1A-9F14-5BD0739D1563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9382A943-6FCC-4B1A-9F14-5BD0739D1563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9382A943-6FCC-4B1A-9F14-5BD0739D1563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9382A943-6FCC-4B1A-9F14-5BD0739D1563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F134991-9354-4575-AD83-C8714E59D2BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F134991-9354-4575-AD83-C8714E59D2BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F134991-9354-4575-AD83-C8714E59D2BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F134991-9354-4575-AD83-C8714E59D2BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18359A88-FF4B-45B8-8401-69BA005ACE22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18359A88-FF4B-45B8-8401-69BA005ACE22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18359A88-FF4B-45B8-8401-69BA005ACE22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18359A88-FF4B-45B8-8401-69BA005ACE22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC892FC-59D9-429C-95C3-48ACE683FB9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC892FC-59D9-429C-95C3-48ACE683FB9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC892FC-59D9-429C-95C3-48ACE683FB9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC892FC-59D9-429C-95C3-48ACE683FB9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4CFAF2E0-CFC8-45FC-9478-F2966968856E} = {04635611-F40A-4379-BE67-BCF72F1E60BF}
+		{18E1802C-3A68-421A-B8DD-610C2FDC12AF} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{7E6A8B88-6893-44AE-B39C-947D3AA1F464} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{F7FA5300-8229-45F2-A316-12B1744BAECD} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{347ACA72-8CFF-405E-BBFF-6F08E50A46EB} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{D5F46126-D18A-423A-88E2-C4E02AECA884} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{0F801AA9-7292-4397-9A09-3D29C335DC86} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{45585655-44E3-4260-9C08-3930385F1BE0} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{55BE4051-5C2E-4ED3-ABFC-E22D60C795B6} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{A19394C1-E736-4FAD-8D75-36E9C72CD758} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{E592E5C9-0B1A-4744-AB6C-848B47B6BFDB} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{8601A1AF-C83A-4F30-B223-5615357FFADF} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{AAC79513-7EF6-4FBB-9DBE-1085C958DE43} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+		{24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF} = {04635611-F40A-4379-BE67-BCF72F1E60BF}
+		{05DDA7A3-4958-4DF8-B2DE-60593EC236EA} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{AF0F1595-AD94-4C43-A7B7-CF452F590B11} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{899E568B-65E3-4685-913C-D7DD9F0C8221} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{9382A943-6FCC-4B1A-9F14-5BD0739D1563} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{8F134991-9354-4575-AD83-C8714E59D2BF} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{18359A88-FF4B-45B8-8401-69BA005ACE22} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{0EC892FC-59D9-429C-95C3-48ACE683FB9E} = {24A456CF-0E3E-49B9-9A5A-F1CC3F1A7AEF}
+		{69A8F4E1-F8A3-4B7A-AABF-A36DEA8B9E8C} = {4CFAF2E0-CFC8-45FC-9478-F2966968856E}
+	EndGlobalSection
+EndGlobal

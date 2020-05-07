@@ -1,0 +1,113 @@
+﻿@model Cupcake.Web.Models.ShowFormModel
+@using Cupcake.Web.Helper
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        @Html.HiddenFor(m => m.TableName)
+        <div id="maindiv" class="col-sm-12">
+            
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var url = "@(Url.Action("GetCreateData", "ShowForm"))";
+        var data = "tablename=" + $("#TableName").val();
+
+        $.post(url, data, function (response) {
+            if (response.result == "fail") {
+                alert("初始化失败," + response.msg);
+            }
+            else {
+                
+                var resdata = eval(response.columns);
+
+                if (resdata.length > 0) {
+
+                    var flag = 0;
+                    var vdiv = "";
+                    //alert(response.columns);
+                    for (var i = 0; i < resdata.length; i++) {
+                        var vindex = resdata[i].Index;
+                        var vcolumnname = resdata[i].ColumnName;
+                        var vitemname = resdata[i].ItemName;
+                        var vinputtype = resdata[i].InputType;
+                        
+                        if (flag == 0) {
+
+                            vdiv = "<div class='row'>";
+                            if (resdata[i].InputType != "textarea") {
+                                vdiv += "<div class='row'><div class='col-xs-6'><div class='form-group'><div class='input-group'><label class='input-group-addon'>" + vitemname + "</label><input class='form-control' id=" + vcolumnname + " placeholder='请输入' type='" + vinputtype + "'></div></div></div>";
+                            }
+                            else {
+                                vdiv += "<div class='row'><div class='col-xs-12'><div class='form-group'><div class='input-group'><label class='input-group-addon'>" + vitemname + "</label><input class='form-control' id=" + vcolumnname + " placeholder='请输入' type='" + vinputtype + "'></div></div></div>";
+                                vdiv += "</div>";
+
+                                //alert(vdiv);
+                                $("#maindiv").append(vdiv);
+                                vdiv = "";
+                                flag = 0;
+                            }
+                            flag++;
+
+                        }
+                        else {
+                            if (resdata[i].InputType != "textarea") {
+                                vdiv += "<div class='row'><div class='col-xs-6'><div class='form-group'><div class='input-group'><label class='input-group-addon'>" + vitemname + "</label><input class='form-control' id=" + vcolumnname + " placeholder='请输入' type='" + vinputtype + "'></div></div></div>";
+                            }
+                            else {
+                                vdiv += "</div>";
+                                vdiv += "<div class='row'>";
+                                vdiv += "<div class='row'><div class='col-xs-12'><div class='form-group'><div class='input-group'><label class='input-group-addon'>" + vitemname + "</label><input class='form-control' id=" + vcolumnname + " placeholder='请输入' type='" + vinputtype + "'></div></div></div>";
+                            }
+                            vdiv += "</div>";
+
+                            //alert(vdiv);
+                            $("#maindiv").append(vdiv);
+                            vdiv = "";
+                            flag = 0;
+
+                        }
+                    }
+
+                    if (vdiv != "")
+                    {
+                        vdiv += "<div class='row'><div class='col-xs-6'><div class='form-group'><div class='input-group'></div></div></div></div></div>";
+                        $("#maindiv").append(vdiv);
+                        vdiv = "";                        
+                    }
+                }
+            }
+        });
+    });
+
+    function submitModalForm()
+    {
+        var url = "@(Url.Action("CreateCommit", "ShowForm"))";
+        var data = "";
+        $("#maindiv").find("input,select,checkbox,radio,textarea").each(function () {
+            data += $(this).attr("id") + ":" +$(this).val() + ",";
+        });
+
+        if(data.length > 0)
+        {
+            data = data.substring(0, data.length-1);
+        }
+
+        var vdata = "tablename=" + $("#TableName").val() + "&data=" + data;
+        
+        $.post(url, vdata, function (response) {
+            if (response.result == "success") {
+                
+                Notify('操作成功！', 'bottom-right', '4000', 'success', 'fa-check', true);
+                $('#reloadModal').modal("hide");
+                submitPagebody();
+            }
+            else {
+                alert("新增失败," + response.msg);
+            }
+        });
+    }
+</script>

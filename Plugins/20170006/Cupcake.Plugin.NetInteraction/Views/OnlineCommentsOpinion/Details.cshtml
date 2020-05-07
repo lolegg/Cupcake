@@ -1,0 +1,58 @@
+﻿@model Cupcake.Plugin.NetInteraction.Models.OnlineCommentsOpinionModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetInteraction
+@using Cupcake.Plugin.NetInteraction.Helper
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+              <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            
+
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">姓名</label>
+                                @Html.TextBoxFor(m => m.UserName, new { @readonly = "true", @class = "form-control" })
+                   
+                            </div>
+
+                        </div>
+                    </div>
+                    
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            
+
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                      
+                                @Html.TextAreaFor(model => model.Content, 10, 50, new { @class = "form-control" })
+                            </div>
+
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                
+                
+               
+                
+            }
+        </div>
+    </div>
+</div>
+
+
+

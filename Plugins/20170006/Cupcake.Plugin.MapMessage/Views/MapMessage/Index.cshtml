@@ -1,0 +1,139 @@
+﻿    @model Cupcake.Core.IPagedList<Cupcake.Plugin.MapMessage.Domain.MapMessageInfo>
+    @using Cupcake.Web
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Web.Helper
+
+    <div class="row">
+            <div class="col-md-12">
+                <div class="widget">
+                    @{Html.RenderPartial("_WidgetHeader", "地图信息");}
+                    <div class="widget-body">
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="Title">标题</label>
+                                        @Html.Editor("Name", "String4Bootstrap")
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <div class="input-group">
+                                       
+                                            <label class="input-group-addon" for="NewsType">所属模块</label>
+                                            @Html.Editor("SortModual", "Enum4Bootstrap", new { selectList = Cupcake.Web.Helper.DataDictionaryHelper.GetSelectList("所属模块") })
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 form-group text-right">
+                                    @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/MapMessage/Create')")
+                                    @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                                </div>
+                            </div>
+                        }
+
+                        <div class="flip-scroll">
+                            <table class="table table-bordered table-striped table-condensed flip-content">
+                                <thead class="flip-content bordered-palegreen">
+                                    <tr>
+                                        <th>
+                                            序号
+                                        </th>
+                                       
+                                        <th>
+                                            所属模块
+                                        </th>
+                                        <th>
+                                            社会组织名称
+                                        </th>
+                                        <th>
+                                            类别
+                                        </th>
+                                        <th>
+                                            成立时间
+                                        </th>
+                                        <th>
+                                            登记机关
+                                        </th>
+                                        <th>
+                                            地址
+                                        </th>
+                                        <th>
+                                            操作
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int i = 1;}
+                            
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @(i++)
+                                            </td>
+                                            <td>
+
+                                                @DataDictionaryHelper.GetName(item.SortModual)
+                                               </td>
+                                            <td>
+                                                @item.Name
+                                            </td>
+                                            <td>
+
+                                                @DataDictionaryHelper.GetName(item.SortType)
+                                            </td>
+                                           
+                                            <td>
+                                                @Convert.ToDateTime(item.EstablishDate).ToString("yyyy-MM-dd")
+                                            </td>
+                                            <td>
+                                                @DataDictionaryHelper.GetName(item.RegisterOrganization)
+                                            </td>
+                                            <td>
+                                                @item.Address
+                                            </td>
+                                            <td>
+                                                @Html.ButtonXS("查看", "fa-info", "showViewModal1('查看','/MapMessage/Details/" + item.Id + "')")
+                                                @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/MapMessage/Edit/" + item.Id + "')")
+                                          
+                                               
+                                                <button type="button" class="btn btn-danger btn-xs" onclick="deleteDialog('/MapMessage/Delete/@item.Id',loadTreeView)"><i class="glyphicon glyphicon-trash"></i> 删 除</button>
+                                            
+                                               </td>
+                                        </tr>
+                                    }
+                                        
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="DTTTFooter text-right">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+               // initFormDate();
+
+                var pageInfo = {
+                    PageIndex: '@Model.Paging.PageIndex',
+                    PageSize: '@Model.Paging.PageSize',
+                    Total: '@Model.Paging.Total'
+                };
+                initPager(".DTTTFooter", pageInfo, loadListView);
+
+
+             
+
+            });
+            //置顶对话框
+          
+        </script>

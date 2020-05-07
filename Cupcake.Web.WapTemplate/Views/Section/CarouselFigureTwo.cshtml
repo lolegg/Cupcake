@@ -1,0 +1,244 @@
+﻿@model Cupcake.Web.WapTemplate.Models.CarouselFigureModel
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<!-- banner轮播-->
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .con {
+        /*width: 980px;
+        height: 387px;*/
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .con ul {
+            position: relative;
+        }
+
+            .con ul li {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: none;
+            }
+
+        /*.con ol {
+            position: absolute;
+            right: 50px;
+            bottom: 15px;
+        }
+
+            .con ol li {
+                float: left;
+                width: 12px;
+                height: 12px;
+                border-radius: 6px;
+                line-height: 20px;
+                text-align: center;
+                border: 1px solid #ccc;
+                margin: 0 0 0 10px;
+                cursor: pointer;
+                color: #fff;
+                position: relative;
+            }
+
+                .con ol li .bg {
+                    height: 12px;
+                    width: 12px;
+                    border-radius: 6px;
+                    background-color: #000;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+
+                .con ol li .text {
+                    height: 20px;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 30px;
+                }
+
+                .con ol li.current .bg {
+                    background: #fff !important;
+                }*/
+
+        .con .leftBtn, .con .rightBtn {
+            width: 41px;
+            height: 69px;
+            position: absolute;
+            top: 43%;
+            margin: -35px 0 0 0;
+            cursor: pointer;
+        }
+
+    .leftBtn {
+        left: 0;
+    }
+
+    .rightBtn {
+        right: 0;
+    }
+
+        .leftBtn .bg, .rightBtn .bg {
+            width: 41px;
+            height: 69px;
+            position: absolute;
+            background-color: #000;
+            opacity: 0.6;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+            filter: alpha(opacity=60);
+            left: 0;
+            top: 0;
+        }
+
+        .leftBtn .btn, .rightBtn .btn {
+            width: 41px;
+            height: 69px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+    .leftBtn .btn {
+        background: url(../../Content/img/left.gif) no-repeat center center;
+    }
+
+    .rightBtn .btn {
+        background: url(../../Content/img/right.gif) no-repeat center center;
+    }
+
+    .banner_1 span {
+        display: block;
+        height: 50px;
+        width: 100%;
+        color: #fff;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        background: #000;
+        filter: alpha(opacity=60);
+        opacity: 0.6;
+        font-size: 16px;
+        line-height: 50px;
+        text-align: center;
+    }
+</style>
+<div class="con">
+    <ul class="banner_1">        
+        @{
+            if (Model != null && Model.carouselFigureDetailModels != null && Model.carouselFigureDetailModels.Count>0)
+            {
+                 if (Model.PictureCount <= 0 || Model.PictureCount >= Model.carouselFigureDetailModels.Count)
+                {
+                    for (int i = 0; i < Model.PictureCount; i++)
+                    {
+                        <li @(i == 0 ? "style=display:block;" : "")>
+                            <a href="@Model.carouselFigureDetailModels[i].PictureJumpPath">
+                                <img src="@Model.carouselFigureDetailModels[i].PictureUrl" />
+                                <span>@Model.carouselFigureDetailModels[i].Title</span>
+                            </a>
+                        </li>
+                    }
+                }
+                 else
+                 {
+                     for (int i = 0; i < Model.PictureCount; i++)
+                     {
+                        <li @(i == 0 ? "style=display:block;" : "")>
+                            <a href="@Model.carouselFigureDetailModels[i].PictureJumpPath">
+                                <img src="@Model.carouselFigureDetailModels[i].PictureUrl" />
+                                <span>@Model.carouselFigureDetailModels[i].Title</span>
+                            </a>
+                        </li>
+                     }
+                 }
+            }
+
+}
+    </ul>
+
+    <div class="leftBtn">
+        <div class="bg"></div>
+        <div class="btn"></div>
+    </div>
+    <div class="rightBtn">
+        <div class="bg"></div>
+        <div class="btn"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $(".con").css("height", '@Model.PictureHeight' + "px");
+        $(".con").css("width", '@Model.PictureWidth' + "px");
+        $(".con ul li a img").css("height", '@Model.PictureHeight' + "px");
+        $(".con ul li a img").css("width", '@Model.PictureWidth' + "px");
+        var num = 0;
+        var timer;
+        var Olist = $(".banner_1 li").length;
+
+        // 按钮显示和隐藏
+        $('.con').hover(function (e) {
+            $('.con .leftBtn,.con .rightBtn').show();
+        }, function () {
+            $('.con .leftBtn,.con .rightBtn').hide();
+        });
+        var fnBtn = function () {	//封装下一张的函数
+            $('.con ul li').eq(num).fadeOut(800);
+            num++;
+            if (num > Olist - 1) {		//右按钮极值
+                num = 0;
+            }
+            $('.con ul li').eq(num).fadeIn(800);
+            //$('.con ol li').eq(num).addClass('current').siblings().removeClass('current');
+        }
+        $('.rightBtn').click(fnBtn);
+
+        timer = setInterval(fnBtn, '@Model.PictureScrollSeconds');
+        var btnLeft = function () {
+
+            $('.con ul li').eq(num).fadeOut(800);
+            num--;
+            if (num < 0) {		//左按钮极值
+                num = Olist - 1;
+            }
+            $('.con ul li').eq(num).fadeIn(800);
+            //$('.con ol li').eq(num).addClass('current').siblings().removeClass('current');
+        }
+
+        $('.leftBtn').click(btnLeft);
+
+        //当鼠标放在banner上，停止定时器
+        $('.con').hover(function () {
+
+            clearInterval(timer);
+        }, function () {
+            clearInterval(timer);
+
+            timer = setInterval(fnBtn, '@Model.PictureScrollSeconds');
+
+        });
+
+        //$('.con ol li').click(function (event) {
+
+        //    var i = $(this).index();
+
+        //    $(this).addClass('current');
+        //    $(this).siblings().removeClass('current');
+
+        //    $('.banner_1 li').eq(i).fadeIn();
+        //    $('.banner_1 li').eq(i).siblings().fadeOut();
+
+        //    num = i;
+
+        //});
+
+    })
+</script>

@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 新闻
+SystemName: News
+Version: 1.0
+SupportedVersions: 2.0
+Author: Aaron
+DisplayOrder: 1
+FileName: Cupcake.Plugin.News.dll
+Description: 新闻模块

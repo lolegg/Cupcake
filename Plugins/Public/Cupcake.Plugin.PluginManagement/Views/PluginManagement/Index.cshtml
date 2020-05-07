@@ -1,0 +1,121 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.PluginManagement.Models.PluginsModel>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "插件管理");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="SystemName">系统名</label>
+                                @Html.Editor("SystemName", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="PluginType">状态</label>
+                                @Html.Editor("PluginType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("插件状态") })
+                            </div>
+                        </div>  
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">注册时间从</label>
+                                @Html.Editor("BeginDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                                <label class="input-group-addon">到</label>
+                                @Html.Editor("EndDate", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                            </div>
+                        </div>                          
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("注册插件", "fa-plus", "showEditModal1('注册插件','/PluginManagement/Create')")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    系统名
+                                </th>
+                                <th>
+                                    名称
+                                </th>
+                                <th>
+                                    作者
+                                </th>
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    创建时间
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @item.SystemName
+                                </td>
+                                <td>
+                                    @item.FriendlyName
+                                </td>
+                                <td>
+                                    @item.Author
+                                </td>
+                                <td>
+                                    @item.PluginTypeName
+                                </td>
+                                <td>
+                                    @item.CreateDate
+                                </td>
+                                <td>
+                                    @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/PluginManagement/Edit/" + item.Id + "')")
+                                    @Html.ButtonXS("查看描述文件", "fa-users", "showEditModal1('分配角色','/User/AssignRoles/" + item.Id + "')")
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+</script>

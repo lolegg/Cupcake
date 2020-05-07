@@ -1,0 +1,129 @@
+﻿@model Cupcake.Web.Models.MenuListModel
+@using Cupcake.Web.Helper
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="widget">
+            <div class="widget-header  with-footer">
+                <span class="widget-caption">菜单列表</span>
+                <div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div>
+                    @using (Ajax.BeginForm(new AjaxOptions() { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">名称</label>
+                                        @Html.Editor("MenuName", "String4Bootstrap")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">所属栏目</span>
+                                        @*@Html.DropDownListFor(m => m.ParentMenu, DropDownListHelper.ParentList("请选择", Model.ParentMenu), new { @class = "form-control" })*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group" style="float:right">
+                                    <button type="button" class="btn btn-default shiny" onclick="loadContent();"><i class="fa fa-search"></i> 查 找</button>
+                                    <button type="button" class="btn btn-default shiny" onclick="showModal('添加菜单', '/Menu/Create')"><i class="fa fa-plus"></i> 添 加</button>
+                                    @Html.Editor("PageSize", "PageSize4Bootstrap", new { selectList = EnumExtensions.GetPageSizeList() })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    栏目标题
+                                </th>
+                                <th>
+                                    上级栏目
+                                </th>
+                                <th>
+                                    链接地址
+                                </th>
+                                <th>
+                                    排序编号
+                                </th>
+                                <th>
+                                    状态
+                                </th>
+                                <th>
+                                    更新时间
+                                </th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.List)
+                            {
+                            <tr>
+                                <td>
+                                    <a href="/User/Details/@item.Id">@item.Name</a>
+                                </td>
+                                <td>
+                                    @*@if (item.ParentMenu != null)
+                                        {
+                                        @Html.Raw(DropDownListHelper.ByParentName(item.ParentMenu));
+                                        }*@
+                                </td>
+                                <td>
+                                    @item.MenuHref
+                                </td>
+                                <td>
+                                    @item.Sort
+                                </td>
+                                <td>
+                                    @item.IsDeleteState
+                                </td>
+                                <td>
+                                    @item.UpdateDate
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-default btn-xs" onclick="showModal('编辑菜单','/Menu/Edit/@item.Id')"><i class="fa fa-edit"></i> 编 辑</button>
+                                    <button type="button" class="btn btn-danger btn-xs" onclick="disable('/Menu/Delete/@item.Id')"><i class="fa fa-frown-o"></i> 禁 用</button>
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>                    
+                </div>
+                <div class="row DTTTFooter">
+                    <div class="col-lg-6">
+                        <div class="dataTables_info">
+                            @Html.PagingInfo(Model.Paging)
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="dataTables_paginate paging_bootstrap hidden-xs">
+                            @Html.Pager(Model.Paging)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

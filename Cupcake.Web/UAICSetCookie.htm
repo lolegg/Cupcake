@@ -1,0 +1,23 @@
+<!-- 
+	统一认证中心用户标识设置页面。
+	
+	该页面将自动被统一认证中心所调用，请不要移动或修改。
+-->
+<html>
+	<head>
+		<title>正在验证用户...</title><script language="javascript">
+	function SetUAICFlag()
+	{
+		var strQueryString	= document.location.search.substr(1);
+		var strFlagValue	= strQueryString.split(';')[0];
+		var strRedirectUrl	= unescape( strQueryString.replace( strFlagValue + ';', '') );
+		SetFlagCookie(strFlagValue);
+    	window.open( strRedirectUrl, '_self' );
+	}
+	function SetFlagCookie( value )
+	{
+		var expireDate	= new Date();
+		expireDate.setFullYear(2070); 
+		document.cookie	= "Reload_UserTokenSign=" + value+ ";expires=" + expireDate.toUTCString()  + ";path=/";
+}                          
+		</script></head><body onload="SetUAICFlag()"><FONT face="宋体"></FONT></body></html>

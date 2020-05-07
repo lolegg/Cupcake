@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div id="Has"><table id="Has"></table></div>
+
+    <div id="Record"><table id="Record"></table></div>
+</body>
+</html>
+<style>
+  
+</style>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        HasShow();
+    });
+    function AllHasChecked(abc) {
+        
+        var AllHasChecked = $(abc).prop("checked");
+        $("input[name='HasChecked']").prop("checked", AllHasChecked);
+    }
+
+
+    function Hasbj(abc) {
+        if ($(abc).text() == "编辑") {
+            $("input[name='AllHasChecked']").prop('style', 'display:')
+            $("input[name='HasChecked']").prop('style', 'display:')
+            $("button[tag='HasDelte']").prop('style', 'display:none')
+            $("button[tag='HasAllDelte']").prop('style', 'display:')
+         
+            $()
+            $(abc).html("取消");
+        } else {
+            $("input[name='AllHasChecked']").prop('style', 'display:none')
+            $("input[name='HasChecked']").prop('style', 'display:none')
+            $("button[tag='HasDelte']").prop('style', 'display:')
+            $("button[tag='HasAllDelte']").prop('style', 'display:none')
+            $(abc).html("编辑");
+        }
+    }
+
+    function HasShow() {
+        $.ajax({
+            type: "post",
+            url: "/Comments_Collect/HasListComments_CollectJson",
+            data: null,
+            dataType: "Json",
+            success: function (data) {
+                HasDivCreate(data);
+            }
+        });
+    }
+
+
+    //创建表
+    function HasDivCreate(data) {
+        var HasTbale=$("table[id='Has']").html("");
+        var HasDiv = $("div[id='Has']");
+        var append = "<tr>";
+        append += "<td><button id='Hasbj' onclick='Hasbj(this)'>编辑</button></td>";
+        append += "<td><button onclick='HasDelte(this)' style='display: none' tag='HasAllDelte'>批量删除</button><td>";
+        append += "<td align='right'><input type='checkbox' name='AllHasChecked' value='全选' style='display: none;height:20px;width:20px' onchange='AllHasChecked(this)'/><td>";
+        append += "</tr>";
+        for (var q = 0; q < data.ListComments_CollectModel.length; q++) {
+            append += "<tr>";
+            append += "<td>" +Number(q+1) + "</td>";
+            append += "<td><a>" + data.ListComments_CollectModel[q].Title + "</a></td>";
+            append += "<td align='right'>" + ChangeDateFormat(data.ListComments_CollectModel[q].CreateDate) + "</td>";
+            append += "<td><button tag='HasDelte' onclick='HasDelte(this)' id=" + data.ListComments_CollectModel[q].Id + ">取消收藏</button></td>";
+            append += "<td><input name='HasChecked' type='checkbox' value='' style='height:20px;width:20px;display: none' id=" + data.ListComments_CollectModel[q].Id + " /></td>";
+            append += "<tr>";
+        }
+        HasTbale.append(append)
+    }
+
+  
+    //删除
+    function HasDelte(abc) {
+        var arry = new Array;
+        var i = 0;
+        if ($(abc).attr("tag") != "HasDelte") {
+            $("input[name='HasChecked']").each(function () {
+                if ($(this).prop("checked") == true) {
+                    arry += $(this).prop("id");
+                    i++;
+                    if (i > 0) {
+                        arry += ",";
+                    }
+                
+                }
+            });
+        } else {
+           arry = $(abc).prop("id")
+        }
+        var Jsondataid = arry;
+        $.ajax({
+            type:"post",
+            url: "/Comments_Collect/HasListDelete",
+            data: "Jsondataid=" + JSON.stringify(Jsondataid),
+            dataType: "json",
+            success: function (data) {
+                if (data > 0) {
+                    alert("成功取消" + data + "条收藏");
+                    HasShow();
+                } else {
+                    alert("未选择")
+                }
+            }
+        });
+    }
+
+    //时间转换
+    function ChangeDateFormat(cellval) {
+
+        var date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+        return date.getFullYear() + "-" + month + "-" + currentDate;
+
+    }
+</script>

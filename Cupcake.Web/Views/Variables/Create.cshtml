@@ -1,0 +1,34 @@
+﻿@model Cupcake.Web.Models.VariablesModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Value, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Value)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Value)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

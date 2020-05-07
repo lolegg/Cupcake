@@ -1,0 +1,208 @@
+﻿@model Cupcake.Plugin.NetInteraction.Models.OnlineCommentsModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetInteraction
+@using Cupcake.Plugin.NetInteraction.Helper
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "在线访谈");}
+            <div class="widget-body">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+
+                 
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            
+
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.TextBoxFor(m => m.Title, new { @readonly = "true", @class = "form-control" })
+                   
+                            </div>
+
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                <div class="row">
+               
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                                <div class="form-control">
+
+                                    @Html.Raw(Model.Content)
+                                    @Html.HiddenFor(model => model.Content)
+                                </div>
+                             
+                                @*@Html.TextAreaFor(model => model.Content, 10, 50, new { @class = "form-control" })*@
+
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                 <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.StartTime, new { @class = "input-group-addon" })
+                                    <div class="form-control">
+                                        @Cupcake.Plugin.NetInteraction.Helper.CommonHelper.ToYYYYMMDD(Model.StartTime)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       </div>
+                
+                
+              <div class="row">
+                 <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.EndTime, new { @class = "input-group-addon" })
+                                    <div class="form-control">
+                                        @Cupcake.Plugin.NetInteraction.Helper.CommonHelper.ToYYYYMMDD(Model.EndTime)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       </div>
+                    
+                    
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.IsEnd, new { @class = "input-group-addon" })
+                                    <div class="form-control">
+                                        <label class="checkbox-inline no-padding-left">
+                                            @Html.RadioButtonFor(m => m.IsEnd, false, new { disabled = "true" })
+                                            <span class="padding-left-20">否</span>
+                                        </label>
+                                        <label class="checkbox-inline no-padding-left">
+                                            @Html.RadioButtonFor(m => m.IsEnd, true, new { disabled = "true" })
+                                            <span class="padding-left-20">是</span>
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @*@Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/SystemMessageInfo/Create')")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")*@
+
+                         
+                            @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加', '/OnlineCommentsOpinion/Create?OnlineCommentsId=" + Model.Id + "')")
+                         
+                        </div>
+                    </div>
+
+                      <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    序号
+                                </th>
+                                <th>
+                                    姓名
+                                </th>
+
+                                <th>
+                                    创建时间
+                                </th>
+                                <th>
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{int i = 1;}
+                            @foreach (var item in Model.OnlineCommentsOpinionInfo)
+                            {
+                                <tr>
+                                    <td>
+                                        @(i++)
+                                    </td>
+                                    <td>
+                                        @item.UserName
+                                    </td>
+
+                                    <td>
+                                        @item.CreateDate.ToString("yyyy-MM-dd")
+                                    </td>
+                                    <td>
+
+                                        @Html.ButtonXS("查看", "fa-info", "showViewModal1('查看','/OnlineCommentsOpinion/Details/" + item.Id + "')")
+
+                                        @*@Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑','/OnlineCommentsOpinion/Edit/" + item.Id + "')")
+                                        @Html.ButtonXS("答复", "fa-edit", "showEditModal1('答复','/OnlineCommentsOpinion/Display/" + item.Id + "')")*@
+                                    
+                                        @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/OnlineCommentsOpinion/Delete/" + item.Id + "')", ButtonCss.Danger)
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+                }
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@*<script>
+        $(document).ready(function () {
+            // initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.OnlineInterviewQuestionAskInfo.Paging.PageIndex',
+                PageSize: '@Model.OnlineInterviewQuestionAskInfo.Paging.PageSize',
+                Total: '@Model.OnlineInterviewQuestionAskInfo.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+
+
+            $("#BeginDate").click(function () {
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+            });
+            $("#EndDate").click(function () {
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+            });
+
+        });
+        //置顶对话框
+        function PlacedDialog(src, completeCallback) {
+            dialog("确定置顶该记录吗?", "提醒", src, completeCallback);
+        }
+        //取消置顶对话框
+        function NoPlacedDialog(src, completeCallback) {
+            dialog("确定取消置顶该记录吗?", "提醒", src, completeCallback);
+        }
+    </script>*@

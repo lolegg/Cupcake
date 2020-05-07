@@ -1,0 +1,88 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Activity.Domain.RegistrationStatus>
+@using Cupcake.Web
+@using Cupcake.Plugin.Activity.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+    @{
+        var ActivitysTitle = ViewBag.ActivitysTitle;
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                    @*@{Html.RenderPartial("_WidgetHeader", ViewBag.ActivitysTitle);}*@
+                @*<span class="_WidgetHeader">@ActivitysTitle</span>*@
+                <div class="widget-header with-footer">
+                    <span class="widget-caption">@ActivitysTitle</span>
+                    <div class="widget-buttons">
+                        <a href="#" data-toggle="maximize">
+                            @Html.IconFonts("fa-expand")
+                        </a>
+                        <a href="#" data-toggle="collapse">
+                            @Html.IconFonts("fa-minus")
+                        </a>
+                    </div>
+                </div>
+                <div class="widget-body">
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        报名人
+                                    </th>
+                                    <th>
+                                        报名时间
+                                    </th>
+                                    <th>
+                                        报名人电话
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i=0;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(@i +=1)
+                                        </td>
+                                        <td>
+                                            @item.RegistrationName
+                                        </td>
+                                        <td>
+                                            @CommonHelper.ToYYYYMMDD(item.RegistrationDate)
+                                        </td>
+                                        <td>
+                                            @item.RegistrationTel
+                                        </td>
+                                    </tr>
+                                }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+    <script>
+        $(document).ready(function () {
+            initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+    </script>

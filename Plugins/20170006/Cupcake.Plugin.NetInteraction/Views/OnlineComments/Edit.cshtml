@@ -1,0 +1,120 @@
+﻿@model Cupcake.Plugin.NetInteraction.Models.OnlineCommentsModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetInteraction
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.Editor("Title", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                                @Html.TextAreaFor(model => model.Content)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+
+
+              
+
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.IsEnd, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    <label class="checkbox-inline no-padding-left">
+                                        @Html.RadioButtonFor(m => m.IsEnd, false)
+                                        <span class="padding-left-20">否</span>
+                                    </label>
+                                    <label class="checkbox-inline no-padding-left">
+                                        @Html.RadioButtonFor(m => m.IsEnd, true)
+                                        <span class="padding-left-20">是</span>
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="ReleaseDate"> 开始时间</label>
+                                @Html.Editor("StartTime", "DateTime4Bootstrap")
+                                <label class="input-group-addon" for="ReleaseDate">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.StartTime)
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="ReleaseDate">结束时间</label>
+                                @Html.Editor("EndTime", "DateTime4Bootstrap")
+                                <label class="input-group-addon" for="ReleaseDate">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.EndTime)
+
+                        </div>
+                    </div>
+
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+
+    $("#StartTime").click(function () {
+        WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+    });
+    $("#EndTime").click(function () {
+        WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+    });
+</script>

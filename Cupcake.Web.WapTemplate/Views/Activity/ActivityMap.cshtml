@@ -1,0 +1,62 @@
+﻿@*<script type="text/javascript" src="scripts/spryMap-2.js"></script>
+    <script type="text/javascript">
+        window.onload = function () {
+            var map = new SpryMap({
+                id: "worldMap",
+                height: 300,
+                width: 800,
+                startX: 200,
+                startY: 200,
+                cssClass: "mappy"
+            });
+        }
+    </script>
+
+    <div class="width_auto">
+            <div class="big_tits">
+                <strong>活动地图</strong>
+            </div>
+            <img id=”worldMap” src="/Content/ditu.png"  />
+            <div class="setDiv"><a href="/Activity/ActivityMapDetails">进入活动地图</a></div>
+    </div>*@
+
+<div class="width_auto">
+    <div class="big_tits">
+        <strong>活动地图</strong>
+    </div>
+    <img id="worldMap" src="/Content/ditu.png" />
+    <div class="setDiv"><a href="/Activity/ActivityMapDetails">进入活动地图</a></div>
+</div> 
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/spryMap-2.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var map = new SpryMap({
+            id: "worldMap",
+            height: 300,
+            width: 800,
+            startX: 200,
+            startY: 200,
+            cssClass: "mappy"
+        });
+
+    })
+</script>
+<style>
+    .setDiv a {
+        display: inline-block;
+        color: #fff;
+        background: #B71818;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-size: 19px;
+        width: 200px;
+        height: 30px;
+        font-weight: bold;
+        text-decoration: none;
+        text-align: center;
+    }
+    .setDiv {
+       margin-left:20%;
+    }
+</style>

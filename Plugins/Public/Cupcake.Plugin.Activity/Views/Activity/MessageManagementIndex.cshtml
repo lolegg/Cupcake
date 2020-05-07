@@ -1,0 +1,96 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Activity.Domain.MessageManagements>
+@using Cupcake.Web
+@using Cupcake.Plugin.Activity.Helper                 
+@using Cupcake.Core.Domain
+
+
+<div class="row">
+     <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "留言管理");}
+                <div class="widget-body">
+                  @using (Html.BeginForm())
+                  { 
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="MessageConent">留言内容</label>
+                                @Html.Editor("MessageConent", "String4Bootstrap")
+                            </div>
+                        </div>                   
+                    </div>
+                  <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            <button type="button" class="btn btn-default shiny" onclick="loadContent();"><i class="fa fa-search"></i> 查 找</button>
+                        </div>
+                    </div>
+                  }
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        留言人
+                                    </th>
+                                    <th>
+                                        留言时间
+                                    </th>
+                                    <th>
+                                        留言内容
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(@i += 1)
+                                        </td>
+                                        <td>
+                                            @item.MessageName
+                                        </td>
+                                        <td>
+                                            @CommonHelper.ToYYYYMMDD(item.MessageDate)
+                                        </td>
+                                        <td>
+                                            @item.MessageConent
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-default btn-xs" onclick="deleteDialog('删除','/Activity/DetailsMessageManagement/@item.Id')"><i class="fa fa-frown-o"></i> 删 除</button>
+                                        </td>
+                                    </tr>
+                                }
+                                    }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+        });
+    </script>

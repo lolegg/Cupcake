@@ -1,0 +1,250 @@
+﻿@model Cupcake.Plugin.Announcement.Models.AnnouncementModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Announcement.Helper
+
+<style>
+    .displaynone {
+        display: none;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布人</label>
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                </div>
+                  <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">所属组织</label>
+                                    <div style="background-color: #fbfbfb; border: 1px solid #d5d5d5;height:auto;">
+                                        @{
+                                          var strOrganization = ViewBag.Organization;
+                                           @Html.Raw(TreeHtml.GetTreeHtml(strOrganization, new Guid("00000000-0000-0000-0000-000000000000"), Model.Department))
+                                        }
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Department)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">内容</label>
+                                @Html.TextAreaFor(m => m.Content)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Content)
+                        </div>
+                    </div>
+                </div>
+                
+                   <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();" ><i class="fa fa-search"></i>资源上传</button>
+                                    @Html.HiddenFor(m => m.Imgurl)
+                                    @Html.HiddenFor(m => m.ImgName)
+                                    @Html.HiddenFor(m => m.ImgSLT)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="imglit">
+                        @{
+                               if (Model.Imgurl != null && Model.ImgName != null && Model.ImgSLT != null)
+                                {
+                                    string[] imge = Model.Imgurl.Split(',');
+                                    string[] imgeName = Model.ImgName.Split(',');
+                                    string[] imgSLT = Model.ImgSLT.Split(',');
+                                    for (int i = 0; i < imge.Count(); i++)
+                                    {
+                                       
+                                           <div><img id="SLT" src="@imgSLT[i]" style='width:15px;' /><a href="@imge[i]" target="_blank" download="@imgeName[i]">@imgeName[i] 下载</a>&nbsp;<a onclick='shanchu(this)'><img src='/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/cha.png' style='width:10px; height:10px;' /></a></div>
+                                   
+                                    }
+                                }
+                        }
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    #imglit {
+        margin-left: 4px;
+    }
+</style>
+<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+</script>
+<script>
+    function uploadMedias() {
+        var settings = {
+            fileType: "媒体类型>Office文件",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+
+    function loadMedias(dt) {
+        var Imgurl = $("#Imgurl").val();
+        var ImgurlName = $("#ImgName").val();
+        var ImgSLT = $("#ImgSLT").val();
+        for (var i = 0; i < dt.length; i++) {
+            debugger;
+            if (Imgurl.length > 0 && ImgurlName.length > 0 && ImgSLT.length > 0) {
+                Imgurl += ",";
+                ImgurlName += ",";
+                ImgSLT += ",";
+            } else {
+                if (i > 0) {
+                    Imgurl += ",";
+                    ImgurlName += ",";
+                    ImgSLT += ",";
+                }
+            }
+            Imgurl += dt[i].RelativePath;
+            ImgurlName += dt[i].Name;
+            ImgSLT += dt[i].thumbnailPath;
+            $("#imglit").append("<div><img id=\"SLT\" src=\"" + dt[i].thumbnailPath + "\" style=\'width:15px;\' />&nbsp;<a href=\"" + dt[i].RelativePath + "\"  target=\"_blank\"   download=\"" + dt[i].Name + "\" >" + dt[i].Name + "下载</a>&nbsp;<a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.WorkNotice/Content/Img/cha.png\' style=\'width:10px; height:10px;\' /></a></div>")
+        }
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgurlName);
+        $("#ImgSLT").val(ImgSLT);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+
+    function shanchu(dbc)
+    {
+        $("#Imgurl").val("");
+        $("#ImgName").val("");
+        $("#ImgSLT").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+        var ImgName = "";
+        var ImgSLT = "";
+        var i = 0;
+        $("#imglit > div").each(function ()
+        {
+            if (i > 0) {
+                Imgurl += ",";
+                ImgName += ",";
+                ImgSLT += ",";
+            }
+            var sss = $(this).children().attr("href");
+            var zzz = $(this).children().attr("download");
+            var xxx = $(this).children("#SLT").attr("src")
+            Imgurl += sss;
+            ImgName += zzz;
+            ImgSLT += xxx;
+            i++;
+        })
+        $("#Imgurl").val(Imgurl);
+        $("#ImgName").val(ImgName);
+        $("#ImgSLT").val(ImgSLT);
+    }
+
+
+
+
+
+
+
+
+
+
+    $("input[name='OrganizationList']").each(function () {
+        if ($(this).prop("id") != "00000000-0000-0000-0000-000000000000") {
+            $(this).parents("p:first").addClass("displaynone")
+        }
+    });
+    function btnCheck(obj) {
+        if ($(obj).prop("checked") == true) {
+            child($(obj).val(), true);
+        }
+        else {
+            child($(obj).val(), false);
+        }
+    }
+    function child(pid, isChecked) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                $(this).prop("checked", isChecked)
+                child($(this).val(), isChecked)
+            }
+        })
+    }
+    function btnShow(obj) {
+        if ($(obj).prop("alt") == "折叠") {
+            $(obj).prop("alt", "展开")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jh.jpg")
+            showchild($(obj).prop("id"), 1);
+        }
+        else {
+            $(obj).prop("alt", "折叠")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jiah.jpg")
+            showchild($(obj).prop("id"), 2);
+        }
+    }
+    function showchild(pid, isshow) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                if (isshow == "1") {
+                    $(this).parents("p:first").removeClass("displaynone")
+                }
+                else {
+                    $(this).parents("p:first").addClass("displaynone")
+                    $(this).prev().prop("alt", "折叠")
+                    $(this).prev().prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jiah.jpg")
+                    showchild($(this).val(), isshow)
+                }
+
+            }
+        })
+    }
+</script>

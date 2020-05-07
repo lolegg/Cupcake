@@ -1,0 +1,165 @@
+﻿
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="DirecUpload();"><i class="fa fa-search"></i>资源上传</button>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="mediaCenter();"><i class="fa fa-search"></i>媒体中心</button>
+        </div>
+
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="FileDocUpload();"><i class="fa fa-search"></i>文件选择</button>
+        </div>
+
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="FileUpload();"><i class="fa fa-search"></i>图片选择</button>
+        </div>
+
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" id="btnSearchData" onclick="SearchData();"><i class="fa fa-search"></i>数据选择</button>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+@*<script src="~/Content/js/layer-v2.1/layer/layer.js"></script>
+<script src="~/Scripts/reloadutility.js"></script>*@
+
+@*上传工具(直接调用即可)*@
+<script type="text/javascript">
+    function mediaCenter() {
+        var settings = {
+            fileType: "媒体类型>图片2",
+            fileExts: "*.*",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("选好了", " fa-check-square-o", "chooseComplete1(ReturnFileUploadData);")'
+        }
+        showModal1("媒体中心", '/MediaCenter', settings, buttonInfos, 'lg');
+    }
+    //不存DB直接上传demo
+    function DirecUpload() {
+        var settings = {
+            fileType: "媒体类型>Office文件",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "ReturnFileUploadData(allFiles);")'
+        }
+    showModal1("文件上传", "/Uploadify", settings, buttonInfos);
+}
+//回调函数
+function ReturnFileUploadData(nodes) {
+    //$('#reloadModal').modal("hide");
+    //alert($("#uploadFiles").val());
+    //alert("上传了:" + json.length + "个文件,第一个的名称:" + json[0].name + ",第一个的路径" + json[0].path);
+    debugger;
+    var str = nodes.length;
+    alert(nodes.length);
+}
+
+</script>
+
+@*文档资源上传选择器(直接调用即可)*@
+<script type="text/javascript">
+    //图片选择demo
+    function FileUpload() {
+        showViewModal("图片选择", '/PicSelect/DataTemplate');
+        //layer.open({
+        //    type: 2,
+        //    title: '图片选择',
+        //    shadeClose: true,
+        //    shade: 0.3,
+
+        //    area: ['760px', '80%'],
+        //    content: '/PicSelect/DataTemplate'
+        //});
+    }
+
+
+    //文档选择demo
+    function FileDocUpload() {
+        showViewModal('文档选择', '/DocSelect/DataTemplate');
+        //layer.open({
+        //    type: 2,
+        //    title: '文档选择',
+        //    shadeClose: true,
+        //    shade: 0.3,
+
+        //    area: ['760px', '80%'],
+        //    content: '/DocSelect/DataTemplate',
+        //    end: function () {
+                
+        //    }
+        //});
+    }
+
+    //回调函数
+    function ReturnMediaData(json) {
+        if (json.length > 0) {
+
+            alert("选择:" + json.length + "个文件,第一个的名称:" + json[0].name + ",第一个的ID" + json[0].id);
+        }
+    }
+
+    //关闭layer
+    function CloseLayer() {
+        layer.closeAll();
+    }
+
+</script>
+
+
+@*数据选择器
+    1:请定义控制器X并从BaseSimpleDataSelectController控制器继承,并实现对应的方法,具体可参考DataSelectDemoController
+    2:调用地址为: /DataSelect/SimpleDataSelectModal?c=X
+*@
+<script type="text/javascript">
+   
+    function SearchData() {
+        showViewModal('权限选择', '/DataSelect/SimpleDataSelectModal?c=DataSelectDemo');
+        //layer.open({
+        //    type: 2,
+        //    title: '权限选择',
+        //    shadeClose: true,
+        //    shade: 0.3,
+
+        //    area: ['760px', '93%'],
+        //    content: '/DataSelect/SimpleDataSelectModal?c=DataSelectDemo'
+        //});
+    }
+
+    //数据选择器 回调函数
+    function ReturnData(json) {
+        var str = "";
+        if (json && json.length > 0) {
+            alert("选择:" + json.length + "个数据,第一个的名称:" + json[0].name + ",第一个的ID" + json[0].id);
+        }
+    }
+
+    //关闭layer
+    function CloseLayer() {
+        layer.closeAll();
+    }
+</script>
+
+

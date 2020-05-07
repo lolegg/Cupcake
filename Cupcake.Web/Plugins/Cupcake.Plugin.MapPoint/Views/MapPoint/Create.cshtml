@@ -1,0 +1,64 @@
+﻿@model Cupcake.Plugin.MapPoint.Models.MapModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<link href="~/Content/css/media-checked.css" rel="stylesheet" />
+<script src="~/Scripts/mediaselect.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(m => m.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(m => m.ImageIds, new { @class = "input-group-addon" })
+                                @Html.ButtonShiny("上传", "fa-upload", "uploadImage();")                                
+                            </div>                            
+                            @Html.ValidationMessageFor(m => m.ImageIds)
+                            @Html.HiddenFor(m => m.ImageIdsHtml)
+                        </div>
+                    </div>
+                </div>
+            <div class="grid">
+                @Html.Raw(Model.ImageIdsHtml)
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function uploadImage() {
+        var settings = {
+            fileType: "媒体类型>图片",
+            fileExts: "*.*",
+            fileLimit: 1,
+            fileSizeLimit: "5mb",
+            scopes: "private",//private
+            thumbnail: "",
+            width: "",
+            height: ""
+        };
+        
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias2(allFiles,@.grid@,@ImageIds@);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }    
+</script>

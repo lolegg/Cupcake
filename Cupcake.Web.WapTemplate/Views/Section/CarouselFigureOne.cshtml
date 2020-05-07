@@ -1,0 +1,118 @@
+﻿@model Cupcake.Web.WapTemplate.Models.CarouselFigureModel
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<style>
+    .box {
+        margin:auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .box_img {
+        overflow: hidden;
+    }
+
+    .box_img ul li {
+       position: absolute;
+       display: none;
+        }
+
+        .box_img ul li a {
+          display: block;
+          font-size: 100px;
+          text-align: center;
+          line-height: 250px;
+          color: #fff;
+            }
+          .box_img ul li a img {
+             width: 100%;
+             height: 100%;
+          }
+
+    .box_tab {
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+     .box_tab a {
+        display: inline-block;
+        border-radius: 50%;
+        height: 12px;
+        width: 12px;
+        font-size: 0px;
+        background: #fff;
+        margin: 0 5px;
+        color: #333;
+        }
+        .box_tab a.active {
+         background: #09b;
+         color: #fff;
+            }
+    .box_img li {
+        list-style-type: none;
+    }
+</style>
+    <div class="box">
+        <div class="box_img">
+            <ul>
+                @{
+                    if (Model != null && Model.carouselFigureDetailModels != null && Model.carouselFigureDetailModels.Count>0)
+                    {
+                        if (Model.PictureCount <= 0 || Model.PictureCount >= Model.carouselFigureDetailModels.Count)
+                        {
+                           foreach (var item in Model.carouselFigureDetailModels)
+                            {
+                              <li><a href="@item.PictureJumpPath"><img src="@item.PictureUrl" /></a></li>
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 0; i < Model.PictureCount; i++)
+                            {
+                                <li><a href="@Model.carouselFigureDetailModels[i].PictureJumpPath"><img src="@Model.carouselFigureDetailModels[i].PictureUrl" /></a></li>
+                            }
+                        }
+                  }
+                }
+            </ul>
+        </div>
+        <div class="box_tab"></div>
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".box").css("height", '@Model.PictureHeight'+"px");
+        $(".box").css("width", '@Model.PictureWidth' + "px");
+        $(".box_img ul li a").css("height", '@Model.PictureHeight' + "px");
+        $(".box_img ul li a").css("width", '@Model.PictureWidth' + "px");
+        var timejg = '@Model.PictureScrollSeconds';//轮播间隔时间
+        var size = $('.box_img ul li').size();
+        for (var i = 1; i <= size; i++) {
+            $('.box_tab').append('<a href="javascript:(void)">' + i + '</a>')
+        }
+        $('.box_img ul li').eq(0).show();
+        $('.box_tab a').eq(0).addClass('active')
+        $('.box_tab a').mouseover(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = $(this).index();
+            i = index;
+            $('.box_img ul li').eq(index).stop().fadeIn(300).siblings().stop().fadeOut(300);
+        });
+        var i = 0;
+        var time = setInterval(move, timejg);
+        function move() {
+            i++;
+            if (i == size) {
+                i = 0;
+            }
+            $('.box_tab a').eq(i).addClass('active').siblings().removeClass('active');
+            $('.box_img ul li').eq(i).fadeIn(300).siblings().fadeOut(300);
+        }
+        $('.box').hover(function () {
+            clearInterval(time);
+        }, function () {
+            time = setInterval(move, timejg);
+        });
+    });
+</script>

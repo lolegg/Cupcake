@@ -1,0 +1,181 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.TaskModule.Domain.TaskIssuedInfo>
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.TaskModule.Helper
+<style type="text/css">
+    .heightdate {
+        height: 34px;
+    }
+
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            <div class="widget-header  with-footer">
+                <span class="widget-caption">任务处置</span>
+                <div class="widget-buttons">
+                    <a href="#" data-toggle="maximize">
+                        <i class="fa fa-expand"></i>
+                    </a>
+                    <a href="#" data-toggle="collapse">
+                        <i class="fa fa-minus"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div>
+                    @using (Ajax.BeginForm(new AjaxOptions() { }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row"> 
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <label class="input-group-addon" for="UserName">任务概述</label>
+                                        @Html.Editor("TaskOverview", "String4Bootstrap")
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <div class="input-group">
+                                            <label class="input-group-addon" for="BeginDate">下发日期开始</label>
+                                            @Html.Editor("IssuedDateStart", "DateTime4Bootstrap")
+                                            <span class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <div class="input-group">
+                                            <label class="input-group-addon" for="IssuedDateEnd">下发日期结束</label>
+                                            @Html.Editor("IssuedDateEnd", "DateTime4Bootstrap")
+                                            <span class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <div class="input-group">
+                                            <label class="input-group-addon" for="TaskType">任务类型</label>
+                                            @Html.Editor("TaskType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("任务类型") })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="controls">
+                                        <div class="input-group">
+                                            <label class="input-group-addon" for="TaskManagement">任务处置</label>
+                                            @Html.Editor("TaskManagement", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetTaskManagementSelectList() })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content table-fixed">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th width="10%">
+                                    任务概述
+                                </th>
+                                <th width="10%">
+                                    任务类型
+                                </th>
+                                <th width="10%">
+                                    下发时间
+                                </th>
+                                <th width="10%">
+                                    处置情况
+                                </th>
+                                <th width="10%">
+                                    完成日期
+                                </th>
+                                <th width="20%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.TaskOverview
+                                    </td>
+                                    <td>
+                                        @DataDictionaryHelper.GetName(Guid.Parse(item.TaskType))
+                                    </td>
+                                    <td>
+                                        @item.IssuedDate.ToString("yyyy/MM/dd")
+                                    </td>
+                                    <td>
+                                        @{
+                                           string taskManagement=item.TaskManagement == false ? "未处置" : "已处置"; 
+                                         }
+                                        @taskManagement
+                                    </td>
+                                    <td>
+                                        @item.CompleteDate.ToString("yyyy/MM/dd")
+                                    </td>
+                                    <td style="text-align:center"> 
+                                        @Html.ButtonXS("查看", "fa-edit", "showViewModal1('查看','/TaskDisposal/Details/" + item.Id + "')")
+                                        @if (item.TaskManagement)
+                                        {
+                                            <button disabled="disabled" class="btn btn-default btn-xs">处置完成</button>
+                                        }
+                                        else
+                                        {
+                                            @Html.ButtonXS("处置", "fa-edit", "showEditModal1('任务处置','/TaskDisposal/Disposal/" + item.Id + "')") 
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table> 
+                </div>
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+        //$("#IssuedDateStart,#IssuedDateEnd").addClass("Wdate,heightdate");
+        $("#IssuedDateStart").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+        });
+        $("#IssuedDateEnd").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true, minDate: '#F{$dp.$D(\'IssuedDateStart\')}' });
+        });
+
+    });
+
+</script>

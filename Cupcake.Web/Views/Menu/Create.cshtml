@@ -1,0 +1,115 @@
+﻿@model Cupcake.Web.Models.MuenModel
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name, new { @class = "form-control", @placeholder = "请输入" })
+                                @Html.ValidationMessageFor(m => m.Name)
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ParentMenu, new { @class = "input-group-addon" })
+                                @Html.DropDownListFor(m => m.ParentMenu, Cupcake.Web.DropDownListHelper.ParentList("请选择"), new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.MenClass, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.MenClass, new { @class = "form-control" })
+                                <label class="input-group-addon" onclick="SelectFontIcon()">选择</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.MenuHref, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.MenuHref, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Sort, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Sort, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        </div>
+    </div>
+
+    <script>
+    $(function (event) {
+        if ("@ViewBag.result" != "" && "@ViewBag.result" == "1") {
+            var result = "@ViewBag.result";
+            if (result == "1") {
+                bootbox.dialog({
+                    title: "提示框",
+                    message: "<div class=\"alert alert-block alert-success\">添加成功</div>"
+                });
+                window.setTimeout(function () {
+                    bootbox.hideAll();
+                    //prentClosedialog();
+                    //$('#example').dialog('open').css('display', 'inline');
+                    //$('#example').dialog('close');
+                }, 1000); // 1秒钟自动关闭
+            } else {
+                bootbox.dialog({
+                    title: "提示框",
+                    message: "<div class=\"alert alert-block alert-success\">添加失败</div>"
+                });
+
+            }
+
+        }
+    })
+
+
+
+    function SelectFontIcon() {
+        layer.open({
+            type: 2,
+            title: '图文选择',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['720px', '80%'],
+            content: '/DataSelect/SimpleDataSelectModal?c=FontIcon'
+        });
+    }
+
+    //数据选择器 回调函数
+    function ReturnData(json) {
+        var str = "";
+        if (json && json.length > 0) {
+            $("#MenClass").val(json[0].name);
+        }
+    }
+
+    //关闭layer
+    function CloseLayer() {
+        layer.closeAll();
+    }
+
+    </script>

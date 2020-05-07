@@ -1,0 +1,128 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.Comments.Domain.CommentsInfo>
+    @using Cupcake.Web
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.Comments.Helper
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="widget">
+                @{Html.RenderPartial("_WidgetHeader", "二级评论");}
+                <div class="widget-body">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="col-md-3 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">评论人</label>
+                                    @Html.Editor("Name", "String4Bootstrap")
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="BeginDate">创建时间从</label>
+                                    @Html.Editor("BeginDate", "DateTime4Bootstrap")
+                                    <span class="input-group-addon">
+                                        @Html.IconFonts("fa-calendar")
+                                    </span>
+                                    <label class="input-group-addon">到</label>
+                                    @Html.Editor("EndDate", "DateTime4Bootstrap")
+                                    <span class="input-group-addon">
+                                        @Html.IconFonts("fa-calendar")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 form-group text-right">
+                                @*@Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加','/Comments_Comments/Create')")*@
+                                @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                            </div>
+                        </div>
+                    }
+
+                    <div class="flip-scroll">
+                        <table class="table table-bordered table-striped table-condensed flip-content">
+                            <thead class="flip-content bordered-palegreen">
+                                <tr>
+                                    <th>
+                                        序号
+                                    </th>
+                                    <th>
+                                        所属信息
+                                    </th>
+                                    <th>
+                                        评论人
+                                    </th>
+                                    <th>
+                                        评论时间
+                                    </th>
+                                    <th>
+                                        操作
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{int i = 1;}
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(i++)
+                                        </td>
+                                        <td>
+                                            @item.MessageName
+                                        </td>
+                                        <td>
+                                            @item.Name
+                                        </td>
+                                        <td>
+                                            @item.PublicDate.ToString("yyyy-MM-dd HH:mm")
+                                        </td>
+                                        <td>
+                                           
+                                            <button type="button" class="btn btn-danger btn-xs" onclick="dialog('是否删除?','警告','/Comments/ChildDelete?Id=@item.Id&ToCommentsId=@item.ToCommentsId')"><i class="fa fa-frown-o"></i> 删 除</button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="DTTTFooter text-right">
+                    </div>
+                    <div class="form-group" style="text-align:center;margin-top:20px;">
+                        <button type="button" class="btn btn-default shiny" onclick="groupLoad('Comments/Index?ChildId=@ViewBag.ChildId')"> 返 回</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function groupLoad(href) {
+            $('.page-body').load(href);
+        }
+        $(document).ready(function () {
+            // initFormDate();
+
+            var pageInfo = {
+                PageIndex: '@Model.Paging.PageIndex',
+                PageSize: '@Model.Paging.PageSize',
+                Total: '@Model.Paging.Total'
+            };
+            initPager(".DTTTFooter", pageInfo, loadListView);
+
+
+            $("#BeginDate").click(function () {
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+            });
+            $("#EndDate").click(function () {
+                WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+            });
+
+        });
+    
+    </script>

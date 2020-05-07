@@ -1,0 +1,176 @@
+﻿@model Cupcake.Plugin.ImportantNews.Models.CarouselModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                     <div class="col-md-12">
+                         <div class="form-group">
+                             <div class="input-group">
+                                 <label class="input-group-addon" for="Title">轮播图所属模块</label>
+                                 @Html.DropDownListFor(m => m.CarouselType, DataDictionaryHelper.GetSelectList("轮播图所属模块"), new { @class = "form-control" })
+                             </div>
+                             @Html.ValidationMessageFor(m => m.CarouselType)
+
+                         </div>
+                     </div>
+                </div>
+                 <div class="row">
+                     <div class="col-md-12">
+                         <div class="form-group">
+                             <div class="input-group">
+                                 <label class="input-group-addon" for="Title">路径所属模块</label>
+                                 @Html.DropDownListFor(m => m.DetailsType, DataDictionaryHelper.GetSelectList("路径所属模块"), new { @class = "form-control",@onchange="func()"})
+                              
+                             </div>
+                             @Html.ValidationMessageFor(m => m.DetailsType)
+
+                         </div>
+                     </div>
+                </div>
+                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">路径ID</label>
+                                @Html.EditorFor(m => m.PictureJumpPath)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.PictureJumpPath)
+                        </div>
+                    </div>
+                </div>
+               
+                
+                 <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="uploadMedias();" ><i class="fa fa-search"></i>资源上传</button>
+                                    @Html.HiddenFor(m => m.PictureUrl)
+                                  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" id="imglit">
+
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+
+        .img_pailie a {
+            position: absolute;
+            top: -14px;
+            right: -7px;
+        }
+
+    #ReleaseDate {
+        height: 34px;
+    }
+
+    #BeginDate {
+        height: 34px;
+    }
+
+    #EndDate {
+        height: 34px;
+    }
+</style>
+
+<script>
+ 
+    //function func() {
+    //    //获取被选中的option标签  
+    //    var vs = $('select  option:selected').val();
+    //    alert(vs);
+    //}
+
+        function uploadMedias() {
+            var settings = {
+                fileType: "媒体类型>图片",
+                fileExts: "*.zip",
+                fileLimit: 1,
+                fileSizeLimit: "5mb",
+                scopes: "public",//private
+                thumbnail: "w",
+                width: "32",
+                height: ""
+            };
+
+            var buttonInfos = {
+                button1: '@Html.ButtonShiny("上传好了", "fa-save", "loadMedias(allFiles);")'
+            }
+            showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+        }
+    function loadMedias(dt) {
+        var Imgurl = "";
+        for (var i = 0; i < dt.length; i++) {
+            if (i > 0) {
+                Imgurl += ",";
+            }
+            Imgurl += dt[i].RelativePath;
+            $("#imglit").append("<div class=\'img_pailie\'><img src=\"" + dt[i].RelativePath + "\" style=\"width:100px; height:100px;margin-left:10px;\"/><a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.Activity/Content/Img/cha.png\' style=\'width:20px; height:20px;\' /></a></div>")
+        }
+        $("#PictureUrl").val(Imgurl);
+        $("#cupcakeModal2").parent().modal("hide")
+    }
+
+    function shanchu(dbc)
+    {
+        $("#PictureUrl").val("");
+        $(dbc).parent().remove();
+        var Imgurl = "";
+        var i = 0;
+        $("#imglit > div").each(function ()
+        {
+            if (i > 0) {
+                Imgurl += ",";
+            }
+            var sss = $(this).children().attr("src");
+            Imgurl += sss;
+            i++;
+        })
+        $("#PictureUrl").val(Imgurl);
+    }
+</script>

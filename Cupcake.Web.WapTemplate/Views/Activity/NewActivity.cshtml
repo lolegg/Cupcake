@@ -1,0 +1,302 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModels
+@using Cupcake.Web.WapTemplate.edmx
+<div class="width_auto">
+    <div class="big_tits">
+        <strong>最新活动</strong>
+    </div>
+    <ul class="clearfix nav_liast">
+        @{
+            if (Model.DataDictionary!=null)
+            {
+                int i = 1;
+                foreach (var item in Model.DataDictionary)
+                {
+                    if (i == 1)
+                    {
+                        <li><a style="color:red" href="javascript:;" onclick="Switch('@item.Id',this)">@item.Name</a></li>
+                    }
+                    else 
+                    {
+                        <li><a href="javascript:;" onclick="Switch('@item.Id',this)">@item.Name</a></li>
+                    }
+                    i++;
+                }
+            }
+        }
+    </ul>
+    <div id="wrap3">
+        <ul class="clearfix list_image ygb_ch_img" id="Activity">
+            @{
+                var list = ViewBag.ActivityBytype as List<Activity_Activitys>;
+                if (list != null && list.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        <li>
+                            <a href="/Activity/Details?Id=@item.Id">
+                                @if (item.Imgurl != null)
+                                {
+                                    string[] imge = item.Imgurl.Split(',');
+                                    <img src="@imge[0]" />
+                                }
+                                <span>@item.Title</span>
+                            </a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+    <div class="mod_ft"></div>
+
+    <p class="look_more">
+        <a href="/Activity/SeeMore">查看更多</a>
+    </p>
+</div>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/marquee.js"></script>
+<script>
+    $(function () {
+        $('#wrap3').marquee({
+            auto: true,
+            interval: 3000,
+            speed: 1000,
+            showNum: 4,
+            stepLen: 1
+        });
+    })
+
+    function Switch(Sort,obj) {
+        $("[class='clearfix nav_liast']").children().each(function()
+        {
+            $(this).children().css("color","")
+        })
+        $("#Activity").html("");
+        $(obj).css("color","red")
+        var tt = Sort;
+        var ajax = $.ajax({
+            type: "post",
+            url: "/Activity/NewActivity?ActivityType=" + Sort,
+            success: function (data) {
+                $("#Activity").append(data);
+            }
+        });
+    }
+</script>
+
+<style>
+    .list_image li {
+        margin: 0px 15px 15px 15px;
+        float: left;
+        padding: 10px;
+        width: 245px;
+        margin: 0 15px 15px 0;
+        border: solid 1px #B8B1B1;
+    }
+    ul, ol, li {
+        list-style: none;
+    }
+
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .more_imgShow li {
+        float: left;
+        width: 200px;
+    }
+
+    .list_image li {
+        float: left;
+        width: 200px;
+    }
+
+    .width_auto {
+        margin: 0 auto;
+        width: 1100px;
+    }
+
+    .big_tits {
+        margin: 30px 0;
+        text-align: center;
+    }
+
+        .big_tits strong {
+            font-size: 20px;
+            color: #000;
+            padding-bottom: 5px;
+            border-bottom: solid 1px #333;
+            
+        }
+
+    .nav_liast {
+        margin-bottom: 20px;
+    }
+
+        .nav_liast li {
+            float: left;
+            margin-right: 30px;
+            font-size: 20px;
+        }
+
+            .nav_liast li.content a {
+                color: #d41616;
+            }
+
+            .nav_liast li a {
+                color: #444444;
+                text-decoration: none;
+            }
+
+    .look_more {
+        height: 35px;
+        width: 1100px;
+        text-align: center;
+        line-height: 35px;
+        background: #e1e1e1;
+    }
+
+        .look_more a {
+            display: block;
+            height: 100%;
+            color: #858585;
+            font-size: 16px;
+            text-decoration: none;
+        }
+    .ygb_ch_img img {
+        width: 100%;
+        height: 150px;
+    }
+
+    .setDiv a {
+        display: inline-block;
+        color: #fff;
+        background: #B71818;
+        padding: 10px 25px;
+        border-radius: 15px;
+        font-size: 19px;
+        width: 241px;
+        height: 45px;
+        font-weight: bold;
+    }
+
+    .setDiv {
+        margin-top: -50px;
+        text-align: center;
+    }
+
+    .list_image li {
+        margin: 0px 15px 15px 15px;
+    }
+
+        .list_image li span {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 14px;
+            color: #000000;
+        }
+
+    .zui {
+        font-size: 17px;
+        margin-top: 10px;
+        padding-bottom: 21px;
+        font-weight: bold;
+    }
+
+    .box {
+        width: 732px;
+        height: 340px;
+        margin: 10px auto 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .box_img {
+        width: 732px;
+        height: 340px;
+        overflow: hidden;
+    }
+
+        .box_img ul li {
+            position: absolute;
+            display: none;
+        }
+
+            .box_img ul li a {
+                display: block;
+                width: 732px;
+                height: 340px;
+                font-size: 100px;
+                text-align: center;
+                line-height: 250px;
+                color: #fff;
+            }
+
+                .box_img ul li a img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+    .box_tab {
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+
+        .box_tab a {
+            display: inline-block;
+            border-radius: 50%;
+            height: 12px;
+            width: 12px;
+            font-size: 0px;
+            background: #fff;
+            margin: 0 5px;
+            color: #333;
+        }
+
+            .box_tab a.active {
+                background: #09b;
+                color: #fff;
+            }
+
+    .zui {
+        background: url(/Content/zuixin.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    #wenjuan {
+        background: url(/Content/img/bi.png) no-repeat left top;
+        background-size: 25px 25px;
+        -webkit-background-size: 25px 25px;
+        padding-left: 35px;
+    }
+
+    .title {
+        width: 330px;
+        height: 20px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding-bottom: 0px;
+    }
+    ul, ol, li, dl, dd, dt {
+        list-style: none;
+    }
+</style>

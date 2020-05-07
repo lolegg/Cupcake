@@ -1,0 +1,145 @@
+﻿    @model Cupcake.Plugin.MessageOpen.Models.MessageOpenAnnualModel
+    @using Cupcake.Web
+@using Cupcake.Web.Models
+    @using Cupcake.Web.Framework
+    @using Cupcake.Core.Domain
+    @using Cupcake.Plugin.MessageOpen.Helper
+    <style>
+        .displaynone {
+            display: none;
+        }
+    </style>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">标题</label>
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布人</label>
+                                @Html.EditorFor(m => m.publicName)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.publicName)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">发布时间</label>
+                                @Html.Editor("publicTime", "DateTime4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.publicTime)
+                        </div>
+                    </div>
+                 
+                </div>
+                 <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="input-group-addon" for="Title">所属组织</label>
+                                    <div style="background-color: #fbfbfb; border: 1px solid #d5d5d5;height:auto;">
+                                        @{
+                                             var strOrganization = ViewBag.Organization;
+                                           @Html.Raw(TreeHtml.GetTreeHtml(strOrganization, new Guid("00000000-0000-0000-0000-000000000000"), Model.Department))
+                                        }
+                                    </div>
+                                    @Html.ValidationMessageFor(m => m.Department)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <div class="input-group">
+                    <label class="input-group-addon" for="Title">内容</label>
+                    @Html.TextAreaFor(m => m.Content)
+                </div>
+                @Html.ValidationMessageFor(m => m.Content)
+            </div>
+        </div>
+    </div>
+            }
+        </div>
+    </div>
+</div>
+<!-- 配置文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('Content');
+    $("#publicTime").click(function () {
+        WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+    });
+    $(function () {
+        $("#publicTime").val('@DataDictionaryHelper.GetYYYYMMDD(Model.publicTime)')
+    });
+
+    $("input[name='OrganizationList']").each(function () {
+        if ($(this).prop("id") != "00000000-0000-0000-0000-000000000000") {
+            $(this).parents("p:first").addClass("displaynone")
+        }
+    });
+    function btnCheck(obj) {
+        if ($(obj).prop("checked") == true) {
+            child($(obj).val(), true);
+        }
+        else {
+            child($(obj).val(), false);
+        }
+    }
+    function child(pid, isChecked) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                $(this).prop("checked", isChecked)
+                child($(this).val(), isChecked)
+            }
+        })
+    }
+    function btnShow(obj) {
+        if ($(obj).prop("alt") == "折叠") {
+            $(obj).prop("alt", "展开")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jh.jpg")
+            showchild($(obj).prop("id"), 1);
+        }
+        else {
+            $(obj).prop("alt", "折叠")
+            $(obj).prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jiah.jpg")
+            showchild($(obj).prop("id"), 2);
+        }
+    }
+    function showchild(pid, isshow) {
+        $("input[name='OrganizationList']").each(function () {
+            if ($(this).prop("id") == pid) {
+                if (isshow == "1") {
+                    $(this).parents("p:first").removeClass("displaynone")
+                }
+                else {
+                    $(this).parents("p:first").addClass("displaynone")
+                    $(this).prev().prop("alt", "折叠")
+                    $(this).prev().prop("src", "/Plugins/Cupcake.Plugin.Announcement/Content/img/jiah.jpg")
+                    showchild($(this).val(), isshow)
+                }
+
+            }
+        })
+    }
+    $("#publicName").prop('readonly', 'readonly')
+</script>

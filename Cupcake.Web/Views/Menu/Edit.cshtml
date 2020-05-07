@@ -1,0 +1,213 @@
+﻿@model Cupcake.Web.Models.MenuModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions()))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name)
+                                @Html.HiddenFor(m => m.Id)
+                                @Html.HiddenFor(m => m.ParentId)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Href, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Href)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ClassName, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.ClassName)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Sort, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Sort, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Sort)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@*@model Cupcake.Web.Models.MuenModel
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+                @using (Ajax.BeginForm(new AjaxOptions()))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        <div class="input-group">
+                            @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                            @Html.EditorFor(m => m.Name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            @Html.LabelFor(model => model.ParentMenu, new { @class = "input-group-addon" })
+                            @Html.DropDownListFor(m => m.ParentMenu, Cupcake.Web.DropDownListHelper.ParentList("请选择", Model.ParentMenu), new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            @Html.LabelFor(model => model.MenClass, new { @class = "input-group-addon" })
+                            @Html.EditorFor(m => m.MenClass, new { @class = "form-control" })
+                            <label class="input-group-addon" onclick="SelectFontIcon()">选择</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            @Html.LabelFor(model => model.MenuHref, new { @class = "input-group-addon" })
+                            @Html.EditorFor(m => m.MenuHref, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            @Html.LabelFor(model => model.Sort, new { @class = "input-group-addon" })
+                            @Html.EditorFor(m => m.Sort, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Sort)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function SelectFontIcon() {
+            layer.open({
+                type: 2,
+                title: '图文选择',
+                shadeClose: true,
+                shade: 0.3,
+                area: ['720px', '80%'],
+                content: '/DataSelect/SimpleDataSelectModal?c=FontIcon'
+            });
+        }
+
+        //数据选择器 回调函数
+        function ReturnData(json) {
+            var str = "";
+            if (json && json.length > 0) {
+                $("#MenClass").val(json[0].name);
+            }
+        }
+
+        //关闭layer
+        function CloseLayer() {
+            layer.closeAll();
+        }
+    </script>*@
+
+
+    @*@using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-xs-12">
+                    <div class="widget flat radius-bordered">
+                        <div class="widget-header bg-blue">
+                            <span class="widget-caption">编辑栏目</span>
+                        </div>
+                        <div class="widget-body">
+                            <div id="registration-form">
+                                <form role="form">
+                                    <div class="form-title">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                            @Html.EditorFor(m => m.Name, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.Name)
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            @Html.LabelFor(model => model.ParentMenu, new { @class = "input-group-addon" })
+                                            @Html.DropDownListFor(m => m.ParentMenu, Cupcake.Web.DropDownListHelper.ParentList("请选择", Model.ParentMenu), new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            @Html.LabelFor(model => model.MenClass, new { @class = "input-group-addon" })
+                                            @Html.EditorFor(m => m.MenClass, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            @Html.LabelFor(model => model.MenuHref, new { @class = "input-group-addon" })
+                                            @Html.EditorFor(m => m.MenuHref, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            @Html.LabelFor(model => model.Sort, new { @class = "input-group-addon" })
+                                            @Html.EditorFor(m => m.Sort, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m=>m.Sort)
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-blue">保存</button>
+                                    <button type="submit" class="btn btn-blue">返回</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <script src="~/Scripts/jquery-1.12.0.min.js"></script>
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+            <script src="~/Content/js/pym.js"></script>
+        }
+        <script src="~/Content/js/bootbox/bootbox.js"></script>
+        <script src="~/Scripts/jquery-ui.min.js"></script>
+        <script src="~/Content/js/layer-v2.1/layer/layer.js"></script>
+        <script>
+            $(function (event) {
+                if ("@ViewBag.result" != "" && "@ViewBag.result" == "1") {
+                    var result = "@ViewBag.result";
+                    if (result == "1") {
+                        layer.msg('修改成功!', { icon: 1 });
+                        setTimeout(function () {
+                            parent.layer.closeAll();
+
+                        }, 1000);
+
+
+                    } else {
+                        layer.msg('修改失败!请刷新后重试s', { icon: 3 });
+                    }
+
+                }
+            })
+
+        </script>*@

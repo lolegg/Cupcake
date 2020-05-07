@@ -1,0 +1,321 @@
+﻿@model Cupcake.Plugin.TaskModule.Models.TaskIssuedModel
+@using Cupcake.Plugin.TaskModule.Helper
+@using Cupcake.Web.Framework
+@*@{
+        ViewBag.Title = "Index";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }*@
+<style type="text/css">
+    .biaoti {
+       margin-bottom:5px;
+       margin-left:5px;
+    }
+    .form-controlimg {
+        width: auto;
+        float: right;
+        height: 32px;
+    }
+    .heightdate {
+        height: 34px;
+    }
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+
+        .img_pailie a {
+            position: absolute;
+            top: -14px;
+            right: -7px;
+        }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        
+            <div class="biaoti">
+                <span class="widget-caption">任务下发</span>
+            </div>
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                 <div class="col-sm-12">
+                    @Html.AntiForgeryToken()
+                     <div class="row">
+                         <div class="col-xs-12">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.TaskOverview, new { @class = "input-group-addon" })
+                                     <div class="form-control">@Model.TaskOverview</div>
+                                     @Html.HiddenFor(m => m.TaskOverview)
+                                 </div>
+
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         <div class="col-xs-12">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.Description, new { @class = "input-group-addon" })
+                                     <div class="form-control">@Model.Description</div>
+                                     @Html.HiddenFor(m => m.Description)
+                                 </div>
+                             </div>
+                         </div>
+
+                     </div>
+                     <div class="row">
+                         <div class="col-xs-6">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.IssuedDate, new { @class = "input-group-addon" })
+                                     <div class="form-control">@Model.IssuedDate.ToString("yyyy/MM/dd")</div>
+                                     @Html.HiddenFor(m => m.IssuedDate)
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="col-xs-6">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.Publisher, new { @class = "input-group-addon" })
+                                     <div class="form-control">@Model.Publisher</div>
+                                     @Html.HiddenFor(m => m.Publisher)
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         <div class="col-xs-6">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.CompleteDate, new { @class = "input-group-addon" })
+                                     <div class="form-control">@Model.CompleteDate.ToString("yyyy/MM/dd")</div>
+                                     @Html.HiddenFor(m => m.CompleteDate)
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="col-xs-6">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.TaskType, new { @class = "input-group-addon" })
+                                     <div class="form-control">@DataDictionaryHelper.GetName(Guid.Parse(Model.TaskType))</div>
+                                     @Html.HiddenFor(m => m.TaskType)
+                                 </div>
+                             </div>
+                         </div>
+                         
+                     </div>
+                     <div class="row">
+                         <div class="col-xs-12">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @Html.LabelFor(model => model.Department, new { @class = "input-group-addon" })
+                                     <div class="form-control">@DataDictionaryHelper.GetOrganizationName(Model.Department)</div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="row">
+                         <div class="col-xs-12">
+                             <div class="form-group">
+                                 <div class="input-group">
+                                     @if (!string.IsNullOrEmpty(Model.EnclosureUrl))
+                                        {
+                                            <div>
+                                                附件:
+                                                @{
+                                            string[] sArray = Model.EnclosureUrl.Split(new char[] { ',' });
+                                            string[] sArrayName = Model.EnclosureName.Split(new char[] { ',' });
+                                            string[] sThumbnail = Model.Thumbnail.Split(new char[] { ',' });
+                                                }
+                                                @for (int i = 0; i < sArray.Count(); i++)
+                                                {
+                                                  <div style="margin-top:5px;"><img src="@sThumbnail[i]" style=" width:25px;height:25px;" /><a href="@sArray[i]" target="_blank" download="@sArrayName[i]">@sArrayName[i] 下载</a></div>
+                                                }
+
+                                            </div>
+                                        }
+                                        @Html.HiddenFor(m => m.EnclosureUrl)
+                                        @Html.HiddenFor(m => m.EnclosureName)
+                                        @Html.HiddenFor(m => m.Thumbnail)
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+              </div>
+
+                <div class="biaoti">
+                    <span class="widget-caption">处理结果</span>
+                </div>
+                <div class="col-sm-12">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.taskDisposalModel.DisposalCompletedDate, new { @class = "input-group-addon" })
+                                    @Html.Editor("taskDisposalModel.DisposalCompletedDate", "DateTime4Bootstrap")
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.taskDisposalModel.DisposalCompletedDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.taskDisposalModel.DisposalResult, new { @class = "input-group-addon" })
+                                    @Html.TextAreaFor(m => m.taskDisposalModel.DisposalResult, new { @class = "form-control" })
+                                </div>
+                                @Html.ValidationMessageFor(m => m.taskDisposalModel.DisposalResult)
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" id="btnFileUpload" onclick="DirecUpload();"><i class="fa fa-search"></i>资源上传</button>
+                                    <div id="FileDiv" style="margin-top: 10px">
+                                        @if (Model.taskDisposalModel.EnclosureUrl != null)
+                                        {
+                                            string[] sArray = Model.taskDisposalModel.EnclosureUrl.Split(new char[] { ',' });
+                                            string[] sArrayName = Model.taskDisposalModel.EnclosureName.Split(new char[] { ',' });
+                                            string[] sThumbnail = Model.taskDisposalModel.Thumbnail.Split(new char[] { ',' });
+                                            for (int i = 0; i < sArray.Count(); i++)
+                                            {
+                                                 <div style="margin-top:5px;"><img src="@sThumbnail[i]" style=" width:25px;height:25px;" /><a href="@sArray[i]" target="_blank" download="@sArrayName[i]">@sArrayName[i] 下载</a><a onclick=shanchu(this)><img src="/Plugins/Cupcake.Plugin.TaskModule/Content/img/cha.png" style="width:15px; height:15px;cursor: pointer" /></a></div>
+                                            }
+                                        }
+                                    </div>
+                                    @Html.HiddenFor(m => m.taskDisposalModel.EnclosureUrl)
+                                    @Html.HiddenFor(m => m.taskDisposalModel.EnclosureName)
+                                    @Html.HiddenFor(m => m.taskDisposalModel.Thumbnail)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.taskDisposalModel.DisposalPerson, new { @class = "input-group-addon" })
+                                    @Html.EditorFor(m => m.taskDisposalModel.DisposalPerson)
+                                </div>
+                                @Html.ValidationMessageFor(m => m.taskDisposalModel.DisposalPerson)
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.taskDisposalModel.EventDisposalDate, new { @class = "input-group-addon" })
+                                    @Html.Editor("taskDisposalModel.EventDisposalDate", "DateTime4Bootstrap")
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.taskDisposalModel.EventDisposalDate)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+                }
+            
+           
+          
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        //$("#taskDisposalModel_DisposalCompletedDate,#taskDisposalModel_EventDisposalDate").addClass("Wdate,heightdate");
+        $("#taskDisposalModel_DisposalCompletedDate,#taskDisposalModel_EventDisposalDate").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+        });
+        if ('@Model.taskDisposalModel.DisposalCompletedDate.ToString("yyyy/MM/dd")' == "0001/01/01") {
+            $('#taskDisposalModel_DisposalCompletedDate').val("")
+        }
+        if ('@Model.taskDisposalModel.EventDisposalDate.ToString("yyyy/MM/dd")' == "0001/01/01") {
+            $('#taskDisposalModel_EventDisposalDate').val("")
+        }
+        $('#IssuedDate').val('@Model.IssuedDate.ToString("yyyy/MM/dd")')
+        $('#CompleteDate').val('@Model.CompleteDate.ToString("yyyy/MM/dd")')
+    });
+    function DirecUpload() {
+        var settings = {
+            fileType: "媒体类型>Office文件",
+            fileExts: "*.zip",
+            fileLimit: 3,
+            fileSizeLimit: "5mb",
+            scopes: "public",//private
+            thumbnail: "w",
+            width: "32",
+            height: ""
+        };
+
+        var buttonInfos = {
+            button1: '@Html.ButtonShiny("上传好了", "fa-save", "ReturnFileUploadData(allFiles);")'
+        }
+        showModal2("文件上传", "/Uploadify", settings, buttonInfos);
+    }
+    //回调函数
+    function ReturnFileUploadData(nodes) {
+        var enclosureUrl = $("#taskDisposalModel_EnclosureUrl").val();
+        var enclosureName = $("#taskDisposalModel_EnclosureName").val();
+        var thumbnail = $("#taskDisposalModel_Thumbnail").val();
+        for (var i = 0; i < nodes.length; i++) {
+            if (i > 0) {
+                enclosureUrl += ",";
+                enclosureName += ",";
+                thumbnail += ",";
+            }
+            else if (enclosureUrl.length > 0) {
+                enclosureUrl += ",";
+                enclosureName += ",";
+                thumbnail += ",";
+            }
+            enclosureUrl += nodes[i].RelativePath;
+            enclosureName += nodes[i].Name;
+            thumbnail += nodes[i].thumbnailPath;
+            $("#FileDiv").append("<div style=\'margin-top:5px;\'><img src=\'" + nodes[i].thumbnailPath + "\' style=\'width:25px; height:25px;\'/><a href=\"" + nodes[i].RelativePath + "\"  target=\"_blank\"   download=\"" + nodes[i].Name + "\">" + nodes[i].Name + "下载</a><a onclick=\'shanchu(this)\'><img src=\'/Plugins/Cupcake.Plugin.TaskModule/Content/img/cha.png\' style=\'width:15px; height:15px;cursor: pointer\' /></a></div>")
+        }
+
+        $("#taskDisposalModel_EnclosureUrl").val(enclosureUrl);
+        $("#taskDisposalModel_EnclosureName").val(enclosureName);
+        $("#taskDisposalModel_Thumbnail").val(thumbnail);
+        $("#cupcakeModal2").parent().modal("hide");
+    }
+    function shanchu(dbc) {
+        $("#taskDisposalModel_EnclosureUrl").val("");
+        $("#taskDisposalModel_EnclosureName").val("");
+        $("#taskDisposalModel_Thumbnail").val("");
+        $(dbc).parent().remove();
+        var EnclosureUrl = "";
+        var EnclosureName = "";
+        var Thumbnail = "";
+        var i = 0;
+        $("#FileDiv > div").each(function () {
+            if (i > 0) {
+                EnclosureUrl += ",";
+                EnclosureName += ",";
+                Thumbnail += ",";
+            }
+            var href = $(this).children().next().prop("href");
+            var name = $(this).children().next().prop("download");
+            var thumb = $(this).children().prop("src");
+            EnclosureUrl += href;
+            EnclosureName += name;
+            Thumbnail += thumb;
+            i++;
+        })
+        $("#taskDisposalModel_EnclosureUrl").val(EnclosureUrl);
+        $("#taskDisposalModel_EnclosureName").val(EnclosureName);
+        $("#taskDisposalModel_Thumbnail").val(Thumbnail);
+    }
+    //关闭layer
+    function CloseLayer() {
+        layer.closeAll();
+    }
+</script>

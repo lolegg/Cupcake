@@ -1,0 +1,55 @@
+﻿@model Cupcake.Web.Models.UserModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.UserName, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.UserName)
+                                @Html.HiddenFor(p => p.NodeId)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Name)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Password, new { @class = "input-group-addon" })
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "请输入" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.UserType, new { @class = "input-group-addon" })
+                                @Html.Editor("UserType", "Enum4Bootstrap", new { selectList = EnumExtensions.GetSelectList(typeof(UserType), "", "0") })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.UserType)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 工作提醒
+SystemName: WorkNotice
+Version: 1.0
+SupportedVersions: 2.0
+Author: 曾志豪
+DisplayOrder: 1
+FileName: Cupcake.Plugin.WorkNotice.dll
+Description: plugin example that show how to develop a plugin

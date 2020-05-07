@@ -1,0 +1,99 @@
+﻿@model Cupcake.Plugin.Activity.Models.ActivityStyleModel
+@using Cupcake.Web
+@using Cupcake.Plugin.Activity.Helper
+@using Cupcake.Core.Domain
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                    <div class="form-control">@Model.Title</div>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.DeliveryTime, new { @class = "input-group-addon" })
+                                    <div class="form-control">
+                                        @CommonHelper.ToYYYYMMDD(Model.DeliveryTime)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Address, new { @class = "input-group-addon" })
+                                    <div class="form-control">@Model.Address</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix" id="imglit">
+                        @{
+                            if (Model.Imgurl != null)
+                            {
+                                string[] imge = Model.Imgurl.Split(',');
+                                foreach (var it in imge)
+                                {
+                                    if (it != "")
+                                    {
+                                        <div class="img_pailie"><img src="@it" style="width:100px; height:100px;margin-left:10px;"></div>
+                                    }
+                                }
+                            }
+                        }
+                 </div>
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                <div style=" width: 460px; border: solid 1px #ccc; padding: 7px;">
+                                    @Html.Raw(Model.Content)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+<style>
+    .clearfix:after {
+        content: '';
+        display: block;
+        height: 0;
+        clear: both;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .clear {
+        clear: both;
+    }
+
+    .img_pailie {
+        position: relative;
+        float: left;
+    }
+
+        .img_pailie a {
+            position: absolute;
+            top: -14px;
+            right: -7px;
+        }
+</style>

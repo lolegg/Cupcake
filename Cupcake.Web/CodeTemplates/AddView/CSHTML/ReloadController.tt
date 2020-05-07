@@ -1,0 +1,120 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".txt" #>
+<#
+	string controllerName="ElderlyPerson";
+	string repeatErrorMsg="身份证不能重复";
+	string viewModelClassName="ElderlyPersonInfo";
+	string modelsName=viewModelClassName.ToLower() + "s";
+	string modelName=viewModelClassName.ToLower();
+#>
+using AutoMapper;
+using CommunityServiceInfo.Admin.Models;
+using CommunityServiceInfo.Model;
+using CommunityServiceInfo.Service;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+
+namespace CommunityServiceInfo.Admin.Controllers
+{
+    public class <#= controllerName #>Controller : BaseController
+    {
+        //[ClientAuthorize(Roles = "")]
+        public ActionResult Index(<#= controllerName #>Condition condition)
+        {
+            <#= controllerName #>Service service = new <#= controllerName #>Service();            
+            Paging paging = new Paging(condition);
+            var <#= modelsName #> = service.GetListByCondition(condition, ref paging);
+            <#= viewModelClassName #>ListModel model = new <#= viewModelClassName #>ListModel(<#= modelsName #>);            
+            model.Paging = paging;
+            return View(model);
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Details(Guid id)
+        {
+            <#= controllerName #>Service service = new <#= controllerName #>Service();
+            var <#= modelName #> = service.Get(id);
+
+            var model = Mapper.Map<<#= viewModelClassName #>Model>(<#= modelName #>);
+            return View(model);
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Create(<#= viewModelClassName #>Model model)
+        {
+            if (ModelState.IsValid)
+            {
+                <#= controllerName #>Service service = new <#= controllerName #>Service();
+                if (service.IsExist(expression))
+                {
+                    return JavaScript("alert('<#= repeatErrorMsg #>');");
+                }
+                else
+                {
+                    service.Add(model.To<#= viewModelClassName #>());
+                    return JavaScript("window.parent.close();");
+                }
+            }
+            return JavaScript("ModelState.IsValid==false");
+        }
+
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Edit(Guid id)
+        {
+            <#= controllerName #>Service service = new <#= controllerName #>Service();
+            var <#= modelName #> = service.Get(id);
+            var model = Mapper.Map<<#= viewModelClassName #>Model>(<#= modelName #>);
+            return View(model);
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Edit(<#= viewModelClassName #>Model model)
+        {
+            if (ModelState.IsValid)
+            {
+                <#= controllerName #>Service service = new <#= controllerName #>Service();
+                if (service.IsExist(expression))
+                {                    
+                    return JavaScript("alert('<#= repeatErrorMsg #>');");
+                }
+                else
+                {
+                    service.Modify(model.To<#= viewModelClassName #>());
+                    return JavaScript("window.parent.close();");
+                }
+            }
+            return JavaScript("ModelState.IsValid==false");
+        }
+
+        [HttpPost]
+		//[ClientAuthorize(Roles = "")]
+        public ActionResult Delete(Guid id)
+        {
+            <#= controllerName #>Service service = new <#= controllerName #>Service();
+            var <#= modelName #> = service.Get(id);
+			int r = service.Remove(<#= modelName #>);
+			if(r == 1)
+			{
+				return Json(new { result = "success" });
+			}
+            else
+			{
+				return Json(new { result = "error" });
+			}
+        }
+    }
+}

@@ -1,0 +1,33 @@
+﻿using CommunityServiceInfo.Data;
+using CommunityServiceInfo.Infrastructure;
+using CommunityServiceInfo.Model;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Linq.Expressions;
+
+namespace CommunityServiceInfo.Service
+{
+    public class ElderlyPersonService : BaseService<ElderlyPersonInfo>
+    {
+        public IList<ElderlyPersonInfo> GetListByCondition(ElderlyPersonCondition condition, ref Paging paging)
+        {
+            using (var repository = new Repository<ElderlyPersonInfo>())
+            {
+                Expression<Func<ElderlyPersonInfo, bool>> where = PredicateExtensions.True<ElderlyPersonInfo>();
+
+                if (condition.BeginDate != null) where = where.And(u => u.CreateDate >= condition.BeginDate);
+                if (condition.EndDate != null) where = where.And(u => u.CreateDate <= condition.EndDate);
+
+                return repository.GetPaged(ref paging, where, m => m.CreateDate).ToList();
+            }
+        }
+
+        public bool IsExist(string name, Guid id)
+        {
+            return base.IsExist(m => m.Name == name.Trim() && m.Id != id);
+        }
+    }
+}

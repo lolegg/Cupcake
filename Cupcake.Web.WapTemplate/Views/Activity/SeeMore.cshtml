@@ -1,0 +1,434 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModelsListModel
+@using Cupcake.Web.WapTemplate.Models
+@using Cupcake.Web.WapTemplate.Helper
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jqueryPage.js"></script>
+<style>
+    .gyhuod {
+        margin: 30px auto;
+        width: 500px;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+
+    .gyhuod li.cons {
+        background: #B71818;
+    }
+    .gyhuod li {
+        float: left;
+        width: 25%;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 16px;
+        background: #1b96fe;
+    }
+
+    :hov .cls element.style {
+    }
+
+    .gyhuod li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    .clearfix {
+        zoom: 1;
+    }
+    ul, ol, li, dl, dd, dt {
+        list-style: none;
+    }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .width_auto {
+        width: 1100px;
+        margin: 0px auto;
+    }
+
+    .clearfix {
+        zoom: 1;
+    }
+    ul, ol, li, dl, dd, dt {
+        list-style: none;
+    }
+    .list_bigt li {
+        border: solid 1px #B8B1B1;
+    }
+    .list_bigt li {
+        width: 335px;
+        padding: 12px;
+        border: solid 1px #f40;
+        float: left;
+        margin: 0 15px 15px 0;
+    }
+</style>
+<div id="content">
+    @*<div class="box">
+        <div class="box_img">
+            <ul>
+                @{
+                    System.Data.DataTable lun = ViewBag.Lunbo;
+                    if (lun != null && lun.Rows.Count > 0)
+                    {
+                        foreach (System.Data.DataRow item in lun.Rows)
+                        {
+
+                            <li><a href="@item["LuJin"]"><img src="@(item["ImageUrl"] == null ? "" : item["ImageUrl"].ToString())" height="176" width="256" alt="" /></a></li>
+
+                        }
+                    }
+                }
+            </ul>
+        </div>
+        <div class="box_tab"></div>
+    </div>*@
+    <ul class="clearfix gyhuod">
+        @{
+            int i = 1;
+            foreach (var item in Model.DataDictionary)
+            {
+                if(i==1)
+                {
+                 <li class="cons"><a onclick="Switch('@item.Id')">@item.Name</a></li>
+                }
+                else 
+                {
+                <li><a onclick="Switch('@item.Id')">@item.Name</a></li>
+                }
+                i++;
+            }
+         }
+    </ul>
+    <p id="asd" style="display:none">@Model.DataDictionary.Where(n=>n.Name=="公益活动").FirstOrDefault().Id</p>
+    <ol class="clearfix list_bigt width_auto ygb_ch_img" id="Activity">
+        @foreach (var item in this.Model.List)
+        {
+            <li>
+                <a href="/Activity/Details?Id=@item.Id">
+                    @if (item.Imgurl != null)
+                    {
+                        string[] imge = item.Imgurl.Split(',');
+                        <img src="@imge[0]" />
+                    }
+                    <span class="font16">@item.Title</span>
+                </a>
+                <span class="font14">
+                    活动时间：@DateHelper.GetDateYYYYMMDD(item.BeginDate)
+                        <em style="margin-right:10px;">至</em>@DateHelper.GetDateYYYYMMDD(item.EndDate)
+                </span>
+            </li>
+        }
+    </ol>
+    @Html.HiddenFor(m => m.Total)
+    @Html.HiddenFor(m => m.Index)
+    @Html.HiddenFor(m => m.Size)
+        <div class="jqueryPage" id="jqueryPage">
+        </div>
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //FenList();
+
+        $(".gyhuod li").click(function () {
+            $(this).addClass("cons");
+            $(this).siblings().removeClass("cons");
+        })
+        //分页
+       
+
+        //轮播js
+        var timejg = 3000;//轮播间隔时间
+        var size = $('.box_img ul li').size();
+        for (var i = 1; i <= size; i++) {
+            $('.box_tab').append('<a href="javascript:(void)">' + i + '</a>')
+        }
+
+        $('.box_img ul li').eq(0).show();
+        $('.box_tab a').eq(0).addClass('active')
+        $('.box_tab a').mouseover(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            var index = $(this).index();
+            i = index;
+            $('.box_img ul li').eq(index).stop().fadeIn(300).siblings().stop().fadeOut(300);
+        });
+        var i = 0;
+        var time = setInterval(move, timejg);
+        function move() {
+            i++;
+            if (i == size) {
+                i = 0;
+            }
+            $('.box_tab a').eq(i).addClass('active').siblings().removeClass('active');
+            $('.box_img ul li').eq(i).fadeIn(300).siblings().fadeOut(300);
+        }
+        $('.box').hover(function () {
+            clearInterval(time);
+        }, function () {
+            time = setInterval(move, timejg);
+        });
+    });
+
+
+        $("#jqueryPage").html("");
+        $("#Total").html("");
+        $("#jqueryPage").pagination({
+        count: $("#Total").val(), //总数
+        index: $("#Index").val(),//当前页
+        sizes: $("#Size").val(),
+        lrCount: 3,//当前页左右最多显示的数量
+        lCount: 1,//最开始预留的数量
+        rCount: 1,//最后预留的数量
+        callback: function (options) {
+            $("#Activity").html("");
+            var atype = $("#asd").html();
+            var pageindex = options.index - 1;
+            var ajax = $.ajax({
+                type: "post",
+                url: "/Activity/FenyeSeeMoreNew?type=" + atype + "&pagings=" + pageindex,
+                dataType: "json",
+                success: function (mmdata) {
+                    var conte = "";
+                    for (var i = 0; i < mmdata.List.length; i++) {
+                        var data = new Date(parseInt(mmdata.List[i].BeginDate.slice(6)))
+                        var data1 = new Date(parseInt(mmdata.List[i].EndDate.slice(6)))
+                        var year = data.getFullYear();
+                        var month = data.getMonth() + 1;
+                        var day = data.getDate();
+                        var year1 = data1.getFullYear();
+                        var month1 = data1.getMonth() + 1;
+                        var day1 = data1.getDate();
+                        var imge = mmdata.List[i].Imgurl
+                        var aa = imge.split(",");
+                        conte += "  <li ><a href=\"/Activity/Details?Id=" + mmdata.List[i].Id + "\"> <img src=\"" + aa[0] + "\">"
+                                      + " <span class=\"font16\">" + mmdata.List[i].Title + "</span>"
+                                      + "</a>"
+                                      + " <span>"
+                                      + "活动时间：" + year + "-" + month + "-" + day + "至" + year1 + "-" + month1 + "-" + day1 + "</span></li>"
+                    }
+                    $("#Total").val(mmdata.Total);
+                    $("#Activity").append(conte);
+                }
+            });
+        },
+        beforeRender: function (jA) {
+        }
+    });
+
+
+
+
+    function FenList() {
+        $("#jqueryPage").html("");
+        $("#Total").html("");
+        $("#jqueryPage").pagination({
+            count: $("#Total").val(), //总数
+            index: $("#Index").val(),//当前页
+            sizes: $("#Size").val(),
+            lrCount: 3,//当前页左右最多显示的数量
+            lCount: 1,//最开始预留的数量
+            rCount: 1,//最后预留的数量
+            callback: function (options) {
+                $("#Activity").html("");
+                var atype = $("#asd").html();
+                var pageindex = options.index - 1;
+                var ajax = $.ajax({
+                    type: "post",
+                    url: "/Activity/FenyeSeeMoreNew?type=" + atype + "&pagings=" + pageindex,
+                    dataType: "json",
+                    success: function (mmdata) {
+                        var conte = "";
+                        for (var i = 0; i < mmdata.List.length; i++) {
+                            var data = new Date(parseInt(mmdata.List[i].BeginDate.slice(6)))
+                            var data1 = new Date(parseInt(mmdata.List[i].EndDate.slice(6)))
+                            var year = data.getFullYear();
+                            var month = data.getMonth() + 1;
+                            var day = data.getDate();
+                            var year1 = data1.getFullYear();
+                            var month1 = data1.getMonth() + 1;
+                            var day1 = data1.getDate();
+                            var imge = mmdata.List[i].Imgurl.split(",");
+                            conte += "  <li ><a href=\"/Activity/Details?Id=" + mmdata.List[i].Id + "\"> <img src=\"" + imge[0] + "\">"
+                                          + " <span class=\"font16\">" + mmdata.List[i].Title + "</span>" 
+                                          + "</a>"
+                                          + " <span>"
+                                          + "活动时间：" + year + "-" + month + "-" + day + "至" + year1 + "-" + month1 + "-" + day1 + "</span></li>"
+                        }
+                        $("#Total").val(mmdata.Total);
+                        $("#Activity").append(conte);
+                    }
+                });
+            },
+            beforeRender: function (jA) {
+            }
+        });
+    }
+
+
+
+    //切换显示
+    function Switch(Sort) {
+        $("#Activity").html("");
+        $("#asd").html(Sort);
+        var See = Sort;
+        var pageindex = 2;
+        var ajax = $.ajax({
+            type: "post",
+            url: "/Activity/SeeAjaxIndex?ActivityType=" + Sort,
+            data: Sort,
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                var conte = "";
+                for (var i = 0; i < data.List.length; i++) {
+                    var dt = new Date(parseInt(data.List[i].BeginDate.slice(6)))
+                    var dt1 = new Date(parseInt(data.List[i].EndDate.slice(6)))
+                    var zz = data.List[i].Imgurl.split(",");
+                    var year = dt.getFullYear();
+                    var month = dt.getMonth() + 1;
+                    var day = dt.getDate();
+                    var year1 = dt1.getFullYear();
+                    var month1 = dt1.getMonth() + 1;
+                    var day1 = dt1.getDate();
+
+                    conte += "  <li ><a href=\"/Activity/Details?Id=" + data.List[i].Id + "\"><img src=\"" + zz[0] + "\">"
+                                  + " <span class=\"font16\">" + data.List[i].Title + "</span>"
+                                  + "</a>"
+                                  + "<span class=\"font14\">"
+                                  + "活动时间：" + year + "-" + month + "-" + day + "至" + year1 + "-" + month1 + "-" + day1 + "</span></li>"
+                }
+                $("#Total").val(data.Total);
+                $("#Activity").append(conte);
+
+                debugger;
+                $.ajax({
+                    type: "GET",
+                    async:false,
+                    url: "/Scripts/jqueryPage.js",
+                    dataType: "script"
+                });
+                FenList();
+            }
+
+        });
+    }
+
+</script>
+
+
+
+<style>
+    .pager {
+        height: 30px;
+        line-height: 30px;
+        font-size: 12px;
+        margin: 25px 0px;
+        text-align: center;
+        color: #2E6AB1;
+        overflow: hidden;
+    }
+
+        .pager a {
+            border: 1px solid #9AAFE5;
+            color: #2E6AB1;
+            margin: 0px 5px;
+            padding: 5px 8px;
+            text-decoration: none;
+        }
+
+            .pager a.hover, .pager a.active {
+                background-color: #2E6AB1;
+                border-color: #000080;
+                color: #FFF;
+            }
+
+            .pager a.disabled {
+                color: #C8CDD2;
+                cursor: auto;
+            }
+
+    .ygb_ch_img img {
+        width: 100%;
+        height: 200px;
+    }
+
+    .list_bigt li span {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #000000;
+    }
+
+    .list_bigt li {
+        border: solid 1px #B8B1B1;
+    }
+
+    /*轮播样式*/
+    .box {
+        width: 1100px;
+        height: 400px;
+        margin: 0px auto 0;
+        margin-top: 10px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .box_img {
+        width: 1100px;
+        height: 400px;
+        overflow: hidden;
+    }
+
+        .box_img ul li {
+            position: absolute;
+            display: none;
+        }
+
+            .box_img ul li a {
+                display: block;
+                width: 1100px;
+                height: 400px;
+                font-size: 100px;
+                text-align: center;
+                line-height: 250px;
+                color: #fff;
+            }
+
+                .box_img ul li a img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+    .box_tab {
+        position: absolute;
+        bottom: 10px;
+        text-align: center;
+        width: 346px;
+        transform: translateX(-50%);
+        left: 50%;
+    }
+
+        .box_tab a {
+            display: inline-block;
+            border-radius: 50%;
+            height: 12px;
+            width: 12px;
+            font-size: 0;
+            background: #fff;
+            margin: 0 5px;
+            color: #333;
+        }
+
+            .box_tab a.active {
+                background: #09b;
+                color: #fff;
+            }
+    .font16 {
+         text-decoration:none;
+    }
+</style>

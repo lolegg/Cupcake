@@ -1,0 +1,39 @@
+﻿@model Cupcake.Plugin.PublicService.Models.TipsForConvenienceModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                @using (Ajax.BeginForm(new AjaxOptions { }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                    <div class="form-control">
+                                        @Model.Title
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Content, new { @class = "input-group-addon" })
+                                <div style=" width: 500px; border: solid 1px #ccc; padding: 7px;">
+                                    @Html.Raw(Model.Content)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+

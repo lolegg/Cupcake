@@ -1,0 +1,69 @@
+﻿@model IEnumerable<RoleModel>
+@using Cupcake.Web.Models
+@using Cupcake.Core.Domain
+
+<div class="flip-scroll">
+    @using (Ajax.BeginForm(new AjaxOptions()))
+    {
+        <table class="table table-bordered table-striped table-condensed flip-content">
+            <thead class="flip-content bordered-palegreen">
+                <tr>
+                    <th>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="colored-success" onchange="checkboxAll('#tbody', $(this))" />
+                                <span class="text"></span>
+                            </label>
+                        </div>
+                        @Html.Hidden("UserId", (Guid)ViewBag.UserId)
+                    </th>
+                    <th>
+                        角色名
+                    </th>
+                    <th>
+                        描述
+                    </th>
+                    <th>
+                        创建时间
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.IsCheck)
+                            {
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="@item.Id" name="selectedRoleIds" class="colored-success" checked="checked" />
+                                        <span class="text"></span>
+                                    </label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="@item.Id" name="selectedRoleIds" class="colored-success" />
+                                        <span class="text"></span>
+                                    </label>
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Desc
+                        </td>
+                        <td>
+                            @item.CreateDate
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

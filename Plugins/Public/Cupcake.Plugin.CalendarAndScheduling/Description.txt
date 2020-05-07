@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 工作排班
+SystemName: CalendarAndScheduling
+Version: 1.0
+SupportedVersions: 2.0
+Author: WHY
+DisplayOrder: 1
+FileName: Cupcake.Plugin.CalendarAndScheduling.dll
+Description: plugin example that show how to develop a plugin

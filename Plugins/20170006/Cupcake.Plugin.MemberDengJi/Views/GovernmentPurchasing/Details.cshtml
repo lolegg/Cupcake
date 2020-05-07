@@ -1,0 +1,75 @@
+﻿@model Cupcake.Plugin.MemberDengJi.Models.GovernmentPurchasingModel
+@using Cupcake.Web
+@using Cupcake.Plugin.MemberDengJi.Helper
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.PurchasingDepartment, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.PurchasingDepartment
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ServiceName, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.ServiceName
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.PurchasingTime, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @CommonHelper.ToYYYYMMDD(Model.PurchasingTime)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ServiceCharge, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    @Model.ServiceCharge
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.DetailsSituation, new { @class = "input-group-addon" })
+                                <div class="form-control" style="height:200px">
+                                    @Model.DetailsSituation
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

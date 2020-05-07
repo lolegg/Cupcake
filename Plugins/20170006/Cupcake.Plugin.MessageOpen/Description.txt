@@ -1,0 +1,9 @@
+﻿Group: Reloadsoft
+FriendlyName: 信息公开
+SystemName: MessageOpen
+Version: 1.0
+SupportedVersions: 2.0
+Author: 郑小明
+DisplayOrder: 1
+FileName: Cupcake.Plugin.MessageOpen.dll
+Description:信息公开

@@ -1,0 +1,114 @@
+﻿@model Cupcake.Plugin.NetInteraction.Models.OnlineInterviewModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.NetInteraction
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">主题</label>
+                                @Html.Editor("theme", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.theme)
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                <div class="row">
+               
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">嘉宾</label>
+                          
+                                @Html.Editor("Guest", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Guest)
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="ReleaseDate">时间</label>
+                                @Html.Editor("shijian", "DateTime4Bootstrap")
+                                <label class="input-group-addon" for="ReleaseDate">
+                                    <i class="fa fa-calendar"></i>
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.shijian)
+
+                        </div>
+                    </div>
+
+
+                </div>
+                
+                <div class="row">
+               
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">地点</label>
+                          
+                                @Html.Editor("Address", "String4Bootstrap")
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.IsEnabled, new { @class = "input-group-addon" })
+                                <div class="form-control">
+                                    <label class="checkbox-inline no-padding-left">
+                                        @Html.RadioButtonFor(m => m.IsEnabled, false)
+                                        <span class="padding-left-20">否</span>
+                                    </label>
+                                    <label class="checkbox-inline no-padding-left">
+                                        @Html.RadioButtonFor(m => m.IsEnabled, true)
+                                        <span class="padding-left-20">是</span>
+                                    </label>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+     
+        $("#shijian").click(function () {
+            WdatePicker({ dateFmt: 'yyyy-MM-dd', readOnly: true });
+        });
+
+    })
+</script>

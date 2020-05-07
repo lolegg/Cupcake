@@ -1,0 +1,293 @@
+﻿@model Cupcake.Web.WapTemplate.Models.ActivityModelsListModel
+@using Cupcake.Web.WapTemplate.Helper
+<style>
+    .address_ph {
+        width: 100%;
+        padding: 0 5px 0;
+        margin-top: 10px;
+    }
+
+    .dtbottom {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+        .dtbottom a {
+            font-size: 13px;
+            color: black;
+            margin-left: 20px;
+        }
+
+            .dtbottom a img {
+                width: 20px;
+            }
+
+    .anchorBL {
+        display: none;
+    }
+
+    a {
+        cursor: pointer;
+    }
+</style>
+
+@using (Ajax.BeginForm(new AjaxOptions { }))
+{
+
+    <div class="width_auto clearfix">
+
+        <!-- 地图 -->
+        <div id="allmap" style="height:600px; width:1000px;">
+
+        </div>
+
+
+        <div class="dtbottom">
+         @{
+            if (Model.DataDictionary!=null)
+            {
+                foreach (var item in Model.DataDictionary)
+                {
+                    <a onclick="ChangeActivityType(this)" activitytype="@item.Id" class="aa"><img src="@item.Tips" /><span>@item.Name</span></a>
+                }
+            }
+         }
+        </div>
+
+        <!-- 地图 -->
+        <div class="clearfix padd15" id="addCont" style="margin-top:205px; display:none">
+            @if (Model != null && Model.List.Count > 0)
+            {
+                int i = 0;
+                foreach (var item in this.Model.List)
+                {
+                    i++;
+                    <div class="address_ph fl" address="@item.Address" atitle="@item.Title" atype="@item.ActityType" atel="@item.Tel" lng="@item.Longitude" lat="@item.Dimension"></div>
+                }
+            }
+        </div>
+
+    </div>
+
+}
+
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZMtqRARPIk09nUpWnNKSmMPBVpwTvsci"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    // 百度地图API功能
+    var map = new BMap.Map("allmap");
+
+    //var point = new BMap.Point(116.404, 39.915);
+    //map.centerAndZoom(point, 15);
+    map.addControl(new BMap.NavigationControl());
+
+    var bottom_left_control = new BMap.ScaleControl({ offset: new BMap.Size(5, 10) });
+    map.addControl(bottom_left_control);
+    map.addControl(new BMap.OverviewMapControl());
+    map.centerAndZoom(new BMap.Point(121.55319, 31.24436), 14);
+    map.addEventListener('dragend', function (e) {
+        //var center = this.getCenter();
+        //var activityType = $("#activityType").val();
+        //GetLifeCommunityList(center.lng, center.lat, activityType);
+        $(".dtbottom a").each(function ()
+        {
+            var type = $(this).attr("activitytype");
+            GetLifeCommunityList(121.55319, 31.24436,type);
+        })
+      
+    });
+
+    var adds = new Array();
+
+    var k = 0;
+    $("#addCont div").each(function () {
+
+        adds[k] = new Array();
+        adds[k][0] = $(this).attr("lng");
+        adds[k][1] = $(this).attr("lat");
+        adds[k][2] = $(this).attr("atype");
+        adds[k][3] = "<p class=\"AddTitle\">" + $(this).attr("atitle") + "</p><p>地址：" + $(this).attr("address") + "</p><p>电话：" + $(this).attr("tel") + "</p><p><img style='float:right;margin:4px' id='imgDemo' src='" + $(this).attr("imagepurl") + "' width='139' height='104' /></p>";
+        k++;
+    })
+
+    //function bdGEO() {
+    //    if (index < adds.length) {
+    //        var add = adds[index][0];
+    //        geocodeSearch(add, index);
+    //        index++;
+    //    }
+    //}
+    //var pointArray = new Array();
+    //var myGeo = new BMap.Geocoder();
+    //function geocodeSearch(add, index) {
+    //    if (index < adds.length) {
+    //        setTimeout(window.bdGEO, 100);
+    //    }
+    //    myGeo.getPoint(add, function (point) {
+    //        if (point) {
+    //            var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25), {
+    //                offset: new BMap.Size(10, 25),
+    //                imageOffset: new BMap.Size(0, 0 - index * 25)
+    //            });
+    //            var marker = new BMap.Marker(new BMap.Point(point.lng, point.lat), { icon: myIcon });  // 创建标注
+
+    //            map.addOverlay(marker);
+    //            pointArray[i] = new BMap.Point(point.lng, point.lat);
+    //            marker.addEventListener("click", function (e) {
+    //                alert("marker的位置是" + p.getPosition().lng + "," + p.getPosition().lat);
+    //            });
+
+    //        }
+    //    }, "上海市");
+    //}
+
+    ////让所有点在视野范围内
+    //map.setViewport(pointArray);
+
+    // var json_data = [[116.404, 39.915], [116.383752, 39.91334], [116.384502, 39.932241]];
+    var Ssite = new Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+    var pointArray = new Array();
+    for (var i = 0; i < adds.length; i++) {
+
+        //var myIcon = new BMap.Icon("http://api.map.baidu.com/img/markers.png", new BMap.Size(23, 25), {
+        //    offset: new BMap.Size(10, 25),
+        //    imageOffset: new BMap.Size(0, 0 - i * 25)
+        //});
+        var dd = adds[i][2];
+
+        $(".dtbottom a").each(function () {
+            var ss = $(this).attr("activitytype");
+    
+            if (dd == ss) {
+                var aa = $(this).children().attr("src")
+                var myIcon = new BMap.Icon(aa, new BMap.Size(35, 35));
+                var marker = new BMap.Marker(new BMap.Point(adds[i][0], adds[i][1]), { icon: myIcon }); // 创建点
+                var content = adds[i][3];
+                map.addOverlay(marker);    //增加点
+                pointArray[i] = new BMap.Point(adds[i][0], adds[i][1]);
+                addClickHandler(content, marker);
+            }
+
+        })
+
+    }
+    //让所有点在视野范围内
+    map.setViewport(pointArray);
+    //获取覆盖物位置
+    function attribute(e) {
+        var p = e.target;
+    
+        $(".address_ph").attr("style", "background:#fff")
+        $("div[lng$='" + p.getPosition().lng + "'][lat$='" + p.getPosition().lat + "']").attr("style", "background:#ffebcd")
+
+    }
+
+    function LoadNewMap() {
+        map.clearOverlays();
+        var adds = new Array();
+        var k = 0;
+        $("#addCont div").each(function () {
+            adds[k] = new Array();
+            adds[k][0] = $(this).attr("lng");
+            adds[k][1] = $(this).attr("lat");
+            adds[k][2] = $(this).attr("atype");
+            debugger;
+            adds[k][3] = "<p class=\"AddTitle\">" + $(this).attr("atitle") + "</p><p>地址：" + $(this).attr("address") + "</p><p>电话：" + $(this).attr("aTel") + "</p></p>";
+            k++;
+        });
+
+        var pointArray1 = new Array();
+        for (var i = 0; i < adds.length; i++) {
+            var dd = adds[i][2];
+            $(".dtbottom  a").each(function ()
+            {
+                var ss = $(this).attr("activitytype");
+       
+                if (dd == ss)
+                {
+                    var aa = $(this).children().attr("src")
+                   var myIcon = new BMap.Icon(aa, new BMap.Size(35, 35));
+                   var marker = new BMap.Marker(new BMap.Point(adds[i][0], adds[i][1]), { icon: myIcon }); // 创建点
+                   var content = adds[i][3];
+                   map.addOverlay(marker);    //增加点
+                   pointArray1[i] = new BMap.Point(adds[i][0], adds[i][1]);
+                   addClickHandler(content, marker);
+                }
+
+            })
+
+        }
+        //让所有点在视野范围内
+        map.setViewport(pointArray1);
+    }
+
+
+    function addClickHandler(content, marker) {
+        marker.addEventListener("click", function (e) {
+            openInfo(content, e)
+        }
+        );
+    }
+
+    function openInfo(content, e) {
+        var opts = {
+            width: 300,     // 信息窗口宽度
+            height: 200,     // 信息窗口高度
+
+        };
+        var p = e.target;
+        var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+        var infoWindow = new BMap.InfoWindow(content, opts);  // 创建信息窗口对象
+        map.openInfoWindow(infoWindow, point); //开启信息窗口
+        ////图片加载完毕重绘infowindow
+        //document.getElementById('imgDemo').onload = function () {
+        //    infoWindow.redraw();   //防止在网速较慢，图片未加载时，生成的信息框高度比图片的总高度小，导致图片部分被隐藏
+        //}
+
+    }
+
+    function GetLifeCommunityList(lng, lat, Type) {
+        var kg = false;
+        var ajax = $.ajax({
+            type: "post",
+            url: "/Activity/ActivityMapList",
+            data: "lng=" + lng + "&lat=" + lat + "&Type=" + Type,
+            success: function (data) {
+                $("#addCont").children("div").remove();
+                //var atype=$("#addCont").children("div").attr("atype");
+                //$("#addCont div").each(function ()
+                //{
+                //    debugger;
+                //    var at=$(this).attr("atype")
+                //    if (at == Type) {
+                //        $(this).remove();
+                //    }
+                //})
+                if (data != null && data.List.length > 0) {
+                    debugger;
+                    var datajson = data;
+                    for (var i = 0; i < datajson.List.length; i++) {
+                        var append = "";
+                        append += "<div class=\"address_ph fl\" address=\"" + datajson.List[i].Address + "\" atitle=\"" + datajson.List[i].Title + "\"  atype=\"" + datajson.List[i].ActityType + "\" aTel=\"" + datajson.List[i].Tel + "\"  lng=\"" + datajson.List[i].Longitude + "\" lat=\"" + datajson.List[i].Dimension + "\">";
+                        append += "  </div>";
+                        $("#addCont").append(append);
+                    }
+                }
+                
+                LoadNewMap();
+            }
+        });
+    }
+
+    function ChangeActivityType(date) {
+        var Type = $(date).attr('activitytype');
+        GetLifeCommunityList(121.55319, 31.24436, Type);
+    }
+
+</script>
+
+
+
+

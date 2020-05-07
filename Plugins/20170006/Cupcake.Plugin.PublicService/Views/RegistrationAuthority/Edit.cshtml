@@ -1,0 +1,117 @@
+﻿@model Cupcake.Plugin.PublicService.Models.RegistrationAuthorityModel
+@using Cupcake.Web
+@using Cupcake.Core.Domain
+@using Cupcake.Web.Framework
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.RegistrationAuthorityType, new { @class = "input-group-addon" })
+                                @Html.Editor("RegistrationAuthorityType", "Enum4Bootstrap", new { selectList = Cupcake.Web.Helper.DataDictionaryHelper.GetSelectList("登记管理机关类别", Model.RegistrationAuthorityType) })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.RegistrationAuthorityType)
+                        </div>
+                    </div>
+
+                    <div class="col-xs-6" id="ExecutiveStreetId">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.ExecutiveStreet, new { @class = "input-group-addon" })
+                                @Html.Editor("ExecutiveStreet", "Enum4Bootstrap", new { selectList = Cupcake.Web.Helper.DataDictionaryHelper.GetSelectList("行政街道", Model.ExecutiveStreet) })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.ExecutiveStreet)
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Address, new { @class = "input-group-addon" })
+                                @Html.TextBoxFor(m => m.Address, new { @class = "form-control", onblur = "GetLD()" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon">经纬度</label>
+                                @Html.TextBoxFor(m => m.lng, new { @class = "form-control", style = "width:80px;" })
+                                <span class="form-control" style="width:20px;">-</span>
+                                @Html.TextBoxFor(m => m.lat, new { @class = "form-control", style = "width:80px;" })
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Telephone, new { @class = "input-group-addon" })
+                                @Html.TextBoxFor(m => m.Telephone, new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Telephone)
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.WorkingHours, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(m => m.WorkingHours, new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.WorkingHours)
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function GetLD() {
+
+        var address = $("#Address").val();
+        if (address != null && address != "undefined" && address != "") {
+            // 创建地址解析器实例
+            var myGeo = new BMap.Geocoder();
+            // 将地址解析结果显示在地图上,并调整地图视野
+            myGeo.getPoint(address, function (point) {
+                if (point) {
+                    $("#lng").val(point.lng);
+                    $("#lat").val(point.lat);
+                } else {
+                    alert("您选择地址没有解析到结果!");
+                }
+            }, "上海市");
+        }
+    }
+    $(document).ready(function () {
+        if ($("#RegistrationAuthorityType").val() == "5ace6ffa-3b5d-e711-9354-0023248142a5") {
+            $("#ExecutiveStreetId").css("display", "none")
+        }
+        $("#RegistrationAuthorityType").change(function () {
+            if ($(this).val() == "5ace6ffa-3b5d-e711-9354-0023248142a5") {
+                $("#ExecutiveStreetId").css("display", "none")
+                $("#ExecutiveStreet").val("")
+            }
+            else {
+                $("#ExecutiveStreetId").css("display", "block")
+            }
+
+        })
+    });
+</script>

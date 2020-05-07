@@ -1,0 +1,129 @@
+﻿@model Cupcake.Core.IPagedList<Cupcake.Plugin.MembersForWeb.Domain.Members>
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="widget">
+            @{Html.RenderPartial("_WidgetHeader", "用户");}
+            <div class="widget-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="Title">用户名</label>
+                                @Html.Editor("UserName", "String4Bootstrap")
+                            </div>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="NewsType">用户类型</label>
+                                @Html.Editor("UserType", "Enum4Bootstrap", new { selectList = DataDictionaryHelper.GetSelectList("用户类型") })
+                            </div>
+                        </div>  
+                        <div class="col-md-6 form-group">
+                            <div class="input-group">
+                                <label class="input-group-addon" for="BeginDate">最后登录</label>
+                                @Html.Editor("LastLoginDateBegin", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                                <label class="input-group-addon">到</label>
+                                @Html.Editor("LastLoginDateEnd", "DateTime4Bootstrap")
+                                <span class="input-group-addon">
+                                    @Html.IconFonts("fa-calendar")
+                                </span>
+                            </div>
+                        </div>                          
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 form-group text-right">
+                            @Html.ButtonShiny("添加", "fa-plus", "showEditModal1('添加用户','/MembersForWeb/Create')")
+                            @Html.ButtonShiny("查找", "fa-search", "loadListView();")
+                        </div>
+                    </div>
+                }
+
+                <div class="flip-scroll">
+                    <table class="table table-bordered table-striped table-condensed flip-content">
+                        <thead class="flip-content bordered-palegreen">
+                            <tr>
+                                <th>
+                                    用户名
+                                </th>
+                                <th>
+                                    昵称
+                                </th>
+                                <th>
+                                    头像
+                                </th>
+                                <th>
+                                    用户类型
+                                </th>
+                                <th>
+                                    上次登录时间
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    @item.UserName
+                                </td>
+                                <td>
+                                    @item.UserRealName
+                                </td>
+                                <td>
+                                    <img  style="height:50px" src="@item.ImageUrl" />
+                                </td>
+                                <td>
+                                  @DataDictionaryHelper.GetName(item.UserType)
+                                </td>
+                                <td>
+                                    @item.LastLoginDate
+                                </td>
+                                <td>
+                                    @Html.ButtonXS("编辑", "fa-edit", "showEditModal1('编辑用户','/MembersForWeb/Edit/" + item.Id + "')")
+                                    @Html.ButtonXS("修改密码", "fa-edit", "showEditModal1('修改密码','/MembersForWeb/PasswordEdit/" + item.Id + "')")
+                                    @if (DataDictionaryHelper.GetName(item.Status) == "启用")
+                                    { 
+                                    @Html.ButtonXS("禁用", "glyphicon-trash", "disableDialog('/MembersForWeb/Disabled/" + item.Id + "')", ButtonCss.Warning)
+                                    }
+                                    else { 
+                                     @Html.ButtonXS("启用", "glyphicon-trash", "disableDialog('/MembersForWeb/Enable/" + item.Id + "')", ButtonCss.Warning)
+                                    }
+                                    @Html.ButtonXS("删除", "glyphicon-trash", "deleteDialog('/MembersForWeb/Delete/" + item.Id + "')", ButtonCss.Danger)
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="DTTTFooter text-right">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        initFormDate();
+
+        var pageInfo = {
+            PageIndex: '@Model.Paging.PageIndex',
+            PageSize: '@Model.Paging.PageSize',
+            Total: '@Model.Paging.Total'
+        };
+        initPager(".DTTTFooter", pageInfo, loadListView);
+    });
+</script>

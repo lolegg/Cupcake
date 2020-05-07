@@ -1,0 +1,10 @@
+微软股票再创新高，市值超越google，仅次于苹果，,,,,,,,,
+简洁、优雅、高效的C#语言，神一样的C#创始人Anders Heilsberg，
+async/await编译器级异步语法，N年前就有的lambda表达式，
+.NET Native媲美C++的原生编译性能，
+新一代.NET全面开源、免费、跨平台，支持Windows、Linux、Mac，老板再也不用担心服务器授权费用了，
+即将发布的Win10一统物联网、手机、平板、PC用户体验，
+Unity3D跨平台游戏开发引擎（基于C#），Xamarin跨平台开发原生app，
+无数的创业公司，只需要几名C#工程师就可以用一种语言（C#）开发物联网系统、桌面系统、Web系统、云端应用、移动系统（基于Xamarin跨平台开发原生app，一次开发，运行于三大平台安卓、iOS、Win Phone），
+宇宙第一IDE（Visual Studio）社区版完全免费，Azure云平台每年营收增长率100%以上，
+这是C#最好的时代，曾经的霸主Microsoft正羞羞地唱着Mobile First，Cloud First之歌，胸怀开源、王者归来……

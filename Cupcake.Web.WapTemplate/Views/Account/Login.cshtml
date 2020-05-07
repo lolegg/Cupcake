@@ -1,0 +1,216 @@
+﻿@model  Cupcake.Web.WapTemplate.Models.LoginModel
+@{
+    ViewBag.Title = "";
+    Layout = null;
+}
+
+<html >
+<head>
+   
+    <title>上天猫，就够了</title>
+   
+</head>
+<body>
+ 
+    <style>
+      
+        .header {
+            padding: 22px 0px;
+            height: 44px;
+            width: 1190px;
+            margin: auto;
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            margin-bottom: 40px;
+        }
+
+            .content .form {
+                display: none;
+                position: absolute;
+                top: 91px;
+                right: 60px;
+                background: #fff;
+            }
+
+            .content .form-content {
+                position: relative;
+            }
+
+            .content  {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+    
+            .content .form-layer {
+                margin-top: 2px;
+                height: 45px;
+                width: 326px;
+                background: url(//img.alicdn.com/tps/i3/T1d9NTXl4pXXXXXXXX-325-45.png) no-repeat;
+            }
+
+            .content .m-taobao-com {
+                color: #333;
+            }
+
+                .content .m-taobao-com a, .content .m-taobao-com a:visited {
+                    color: #2953A6;
+                }
+
+        .header .tm-logo {
+            margin-top: 8px;
+            width: 190px;
+        }
+
+        #mallPage .header #mallLogo {
+            float: none;
+            padding-top: 0px;
+            position: static;
+        }
+
+            #mallPage .header #mallLogo .mlogo {
+                margin-right: 0;
+            }
+
+        #login-banner-wrap img {
+            display: block;
+            margin: auto;
+        }
+
+        #login-banner-wrap .inner {
+            position: relative;
+            width: 1190px;
+            margin: auto;
+        }
+
+            #login-banner-wrap .inner a {
+                display: block;
+                position: absolute;
+                top: 80px;
+                left: 75px;
+                width: 630px;
+                height: 440px;
+                border: none;
+                outline: none;
+            }
+
+        ol li {
+         height:50px;
+         color:black;
+         font-weight:normal;
+    
+        
+        }
+        ol {
+            list-style-type: none;
+        }
+
+        .submitButton {
+            width: 225px;
+            height: 42px;
+            border: 0;
+            display: inline-block;
+            overflow: hidden;
+            vertical-align: middle;
+            line-height: 42px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            background: #f40;
+            border-radius: 3px;
+            cursor: pointer;
+            zoom: 1;
+        }
+
+        .passcalss {
+            margin-left: 13px;
+            width: 146px;
+            height: 23px;
+        }
+        .nameclass {
+            width: 145px;
+            height: 23px;
+        }
+    </style>
+   
+   
+    <div id="site-nav"></div>
+    <div id="mallPage" >
+        <div class="header" >
+            <a href="//www.tmall.com" title="天猫Tmall.com" target="_top">
+                <img class="tm-logo" src="//img.alicdn.com/tfs/TB1_Gn8RXXXXXXqaFXXXXXXXXXX-380-54.png">
+            </a>
+
+        </div>
+        <div class="content">
+
+            <div id="login-banner-wrap" style="width: 100%; background-color: rgb(102, 10, 119);" title="">
+                <div class="inner">
+                    <img src="https://img.alicdn.com/tfs/TB1dkhJRFXXXXbfaXXXXXXXXXXX-1190-600.png" alt="">
+                   
+                </div>
+            </div>
+
+            <div class="form J_form" style="display: block; right: 148px; background: #f6fbfb; height: 303px;width:300px;">
+                <div >
+                    <div class="form-content">
+                    
+                        @using (Ajax.BeginForm(new AjaxOptions { }))
+                        {
+
+                            <div>
+                                <form  name="loginform" action="" method="post">
+                                    <ol>
+                                        <li><h4 style="margin-left:66px;">你必须先登录！</h4></li>
+                                        <li>
+
+                                            <strong>用户名：</strong>
+
+
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "nameclass" })
+
+
+
+                                        </li>
+                                        <li>
+
+                                            <strong>密码：</strong>
+
+                                            @Html.PasswordFor(m => m.Password, new { @class = "passcalss" })
+
+
+
+                                        </li>
+                                        <li>
+                                            @Html.CheckBoxFor(m => m.RememberMe)
+                                            @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                                        </li>
+                                        <li><input class="btn btn-primary submitButton" type="submit" name="submit" value=" 登 录 " /></li>
+                                    </ol>
+
+                                    <div style="margin-top: -6px; text-align: center; color: red; ">@Html.ValidationMessageFor(m => m.messageValue)</div>
+                                </form>
+                            </div>
+
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

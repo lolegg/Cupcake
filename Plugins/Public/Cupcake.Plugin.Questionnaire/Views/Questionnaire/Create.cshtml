@@ -1,0 +1,53 @@
+﻿@model Cupcake.Plugin.Questionnaire.Models.QuestionnaireModel
+@using Cupcake.Web
+@using Cupcake.Web.Models
+@using Cupcake.Web.Helper
+@using Cupcake.Web.Framework
+@using Cupcake.Core.Domain
+@using Cupcake.Plugin.Questionnaire
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            @using (Ajax.BeginForm(new AjaxOptions { }))
+            {
+                @Html.AntiForgeryToken()
+                @*@Html.HiddenFor(m=>m.month)
+                    @Html.HiddenFor(m => m.dayNum)*@
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Title, new { @class = "input-group-addon" })
+                                @Html.EditorFor(m => m.Title)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Title)
+                        </div>
+                    </div>
+                    <div class="col-md-12 ">
+                        <div class="form-group">
+                            <div class="input-group">
+                                @Html.LabelFor(model => model.Desc, new { @class = "input-group-addon" })
+                                @Html.TextAreaFor(model => model.Desc, new { @class = "form-control" })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Desc)
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.fa-save').parent().prop('style', 'display:')
+
+    });
+</script>
+@*<script type="text/javascript" src="~/Content/js/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="~/Content/js/ueditor/ueditor.all.js"></script>
+<script type="text/javascript">
+    var ue = UE.getEditor('Desc');
+</script>*@
